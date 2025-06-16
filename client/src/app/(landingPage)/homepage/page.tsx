@@ -3,6 +3,7 @@ import Hero from "./Hero";
 import FeaturedSection from "./FeaturedSection";
 import Container from "@/components/code/Container";
 import WhySection from "./WhySection";
+import CtaSection from "./CtaSection";
 
 const page = () => {
   return (
@@ -12,6 +13,7 @@ const page = () => {
         <FeaturedSection />
         <WhySection />
       </Container>
+      <CtaSection />
     </div>
   );
 };

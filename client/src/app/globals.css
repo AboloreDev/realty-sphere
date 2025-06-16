@@ -1,4 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Prata&display=swap");
+@import "swiper/css";
+@import "swiper/css/navigation";
+@import "swiper/css/pagination";
 
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -197,4 +200,28 @@
     width: 100%;
     opacity: 1;
   }
+}
+
+.swiper-pagination-bullets {
+  display: flex;
+  justify-content: center;
+  margin-top: 80rem;
+}
+.swiper-pagination-bullet {
+  width: 10px;
+  height: 10px;
+  background: #cbd5e1;
+  opacity: 1;
+  margin: 0 4px;
+  border-radius: 50%;
+  transition: background 0.3s;
+}
+.swiper-pagination-bullet-active {
+  background: #0f172a;
+}
+html.dark .swiper-pagination-bullet {
+  background: #475569;
+}
+html.dark .swiper-pagination-bullet-active {
+  background: #ffffff;
 }
