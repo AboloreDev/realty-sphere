@@ -1,25 +1,17 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Loader from "../components/code/Loader";
 
 const ClientWrapper = ({ children }: { children: React.ReactNode }) => {
-  const [loading, setLoading] = useState(false);
-  const pathname = usePathname();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setLoading(true);
-    const timer = setTimeout(() => setLoading(false), 3000); //
+    const timer = setTimeout(() => setLoading(false), 3000); // shows for 3 seconds
     return () => clearTimeout(timer);
-  }, [pathname]);
+  }, []); // ← empty dependency array = only runs on first load
 
-  return (
-    <>
-      {loading && <Loader />}
-      {!loading && children}
-    </>
-  );
+  return <>{loading ? <Loader /> : children}</>;
 };
 
 export default ClientWrapper;

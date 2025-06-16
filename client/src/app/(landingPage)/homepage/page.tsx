@@ -4,8 +4,9 @@ import FeaturedSection from "./FeaturedSection";
 import Container from "@/components/code/Container";
 import WhySection from "./WhySection";
 import CtaSection from "./CtaSection";
+import Testimonials from "./Testimonials";
 
-const page = () => {
+const Homepage = () => {
   return (
     <div>
       <Hero />
@@ -14,8 +15,9 @@ const page = () => {
         <WhySection />
       </Container>
       <CtaSection />
+      <Testimonials />
     </div>
   );
 };
 
-export default page;
+export default Homepage;

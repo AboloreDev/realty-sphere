@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import FeaturedCard from "@/components/code/FeaturedCard";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
-import { House } from "lucide-react";
+import { BedDouble, Bath, Car, ChartArea } from "lucide-react";
 
 // Defining animation variants
 const AnimationContainerVariants = {
@@ -82,12 +82,24 @@ const FeaturedSection = () => {
                   "99 Park Ave, NY",
                 ][index]
               }
-              Icon={[House, House, House, House, House, House][index]}
-              beds={[2, 3, 2, 4][index]}
-              baths={[1, 2, 2, 3][index]}
-              garages={[1, 1, 1, 2][index]}
-              area={[300, 400, 250, 600][index]}
-              price={["$750/mo", "$1150/mo", "$650/mo", "$2000/mo"][index]}
+              bedIcon={BedDouble}
+              bathIcon={Bath}
+              garageIcon={Car}
+              areaIcon={ChartArea}
+              beds={[2, 3, 2, 4, 3, 1][index]}
+              baths={[1, 2, 2, 3, 1, 1][index]}
+              garages={[1, 1, 1, 2, 0, 1][index]}
+              area={[300, 400, 250, 600, 400, 450][index]}
+              price={
+                [
+                  "$750/mo",
+                  "$1150/mo",
+                  "$650/mo",
+                  "$2000/mo",
+                  "$700/mo",
+                  "$900/mo",
+                ][index]
+              }
               agentImage={`/featured-image${6 - index}.jpg`}
             />
           </SwiperSlide>

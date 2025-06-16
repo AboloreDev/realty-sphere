@@ -9,7 +9,10 @@ interface FeaturedCardProps {
   title: string;
   address: string;
   price: string;
-  Icon: LucideIcon;
+  bedIcon: LucideIcon;
+  bathIcon: LucideIcon;
+  garageIcon: LucideIcon;
+  areaIcon: LucideIcon;
   beds: number;
   baths: number;
   garages: number;
@@ -31,13 +34,16 @@ const FeaturedCard = ({
   isForRent = false,
   isFeatured = false,
   agentImage,
-  Icon,
+  bedIcon: BedIcon,
+  bathIcon: BathIcon,
+  garageIcon: GarageIcon,
+  areaIcon: AreaIcon,
 }: FeaturedCardProps) => {
   return (
     <div className="bg-white dark:bg-zinc-900 shadow rounded-lg overflow-hidden">
       <div className="relative h-48 w-full">
         <Image src={imageSrc} alt={title} fill className="object-cover" />
-        <div className="absolute top-2 left-2 flex gap-2">
+        <div className="absolute top-2 flex justify-between w-full px-2 items-center">
           {isFeatured && (
             <span className="bg-blue-600 text-white text-xs px-2 py-1 rounded">
               Featured
@@ -58,16 +64,22 @@ const FeaturedCard = ({
         <p className="text-sm text-gray-500 mb-3">{address}</p>
 
         <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400 mb-4">
-          <div className="flex items-center gap-2">
-            <div>
-              <Icon />
-            </div>
+          <div className="flex items-center flex-col gap-2 w-1/2">
+            <BedIcon className="w-4 h-4" />
             <span>{beds} Beds</span>
           </div>
-
-          <span>{baths} Baths</span>
-          <span>{garages} Garages</span>
-          <span>{area} sqft</span>
+          <div className="flex items-center flex-col gap-2 w-1/2">
+            <BathIcon className="w-4 h-4" />
+            <span>{baths} Baths</span>
+          </div>
+          <div className="flex items-center flex-col gap-2 w-1/2">
+            <GarageIcon className="w-4 h-4" />
+            <span>{garages} Garages</span>
+          </div>
+          <div className="flex items-center flex-col gap-2 w-1/2">
+            <AreaIcon className="w-4 h-4" />
+            <span>{area} sqft</span>
+          </div>
         </div>
 
         <div className="flex items-center justify-between">
@@ -77,9 +89,9 @@ const FeaturedCard = ({
           <Image
             src={agentImage}
             alt="Agent"
-            width={32}
-            height={32}
-            className="rounded-full border-2 border-white"
+            width={30}
+            height={30}
+            className="rounded-full w-10 h-10 border-2 border-white"
           />
         </div>
       </div>

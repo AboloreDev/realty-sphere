@@ -4,6 +4,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import WhySectionCard from "@/components/code/WhySectionCard";
 import { House, MapPinHouse, TowerControl, HouseWifi } from "lucide-react";
+
 // Defining animation variants
 const AnimationContainerVariants = {
   hidden: { opacity: 0, y: 50 },

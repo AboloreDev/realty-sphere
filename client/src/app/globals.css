@@ -205,7 +205,7 @@
 .swiper-pagination-bullets {
   display: flex;
   justify-content: center;
-  margin-top: 80rem;
+  margin-top: 2rem;
 }
 .swiper-pagination-bullet {
   width: 10px;

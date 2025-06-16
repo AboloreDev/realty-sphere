@@ -9,9 +9,8 @@ import ThemeToggle from "./ThemeToggle";
 import { usePathname } from "next/navigation";
 
 const navLinks = [
+  { label: "Home", href: "/" },
   { label: "About", href: "/about" },
-  { label: "Deals", href: "/deals" },
-  { label: "Property List", href: "/properties" },
   { label: "Contact Us", href: "/contact" },
 ];
 

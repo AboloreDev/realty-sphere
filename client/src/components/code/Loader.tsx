@@ -26,7 +26,7 @@ const Loader = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          Realty <span className="font-extrabold text-black">Sphere</span>
+          Nes<span className="font-extrabold text-black">tora</span>
         </motion.h1>
       </motion.div>
     </AnimatePresence>
