@@ -146,7 +146,7 @@ const ContactPage = () => {
           <h2 className="text-xl font-medium uppercase mb-2">FAQ</h2>
           <h4 className="text-lg font-bold">Frequently Asked Questions</h4>
           <p className="text-gray-500 dark:text-gray-400 mt-2 text-sm">
-            We're here to help. Find answers to common questions below.
+            We&apos;re here to help. Find answers to common questions below.
           </p>
         </div>
 

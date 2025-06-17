@@ -17,8 +17,9 @@ const AboutPage = () => {
         >
           <h1 className="text-4xl font-bold mb-4 ">About Nestora</h1>
           <p className="text-lg text-slate-4000 max-w-2xl mx-auto">
-            We're committed to connecting people with homes that speak to their
-            lifestyle and aspirations. Discover the story behind our platform.
+            We&apos;re committed to connecting people with homes that speak to
+            their lifestyle and aspirations. Discover the story behind our
+            platform.
           </p>
         </motion.div>
 
@@ -57,8 +58,9 @@ const AboutPage = () => {
               and beyond.
             </p>
             <p className="text-slate-400">
-              Whether you're a first-time buyer, an investor, or just exploring,
-              Nestora is your trusted companion on every step of the journey.
+              Whether you&apos;re a first-time buyer, an investor, or just
+              exploring, Nestora is your trusted companion on every step of the
+              journey.
             </p>
           </motion.div>
         </div>

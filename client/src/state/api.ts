@@ -6,7 +6,11 @@ export const api = createApi({
   }),
   reducerPath: "api",
   tagTypes: [],
-  endpoints: (build) => ({}),
+  endpoints: (builder) => ({
+    getKpis: builder.query<void, void>({
+      query: () => "/api/kpis/",
+    }),
+  }),
 });
 
 export const {} = api;

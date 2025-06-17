@@ -52,9 +52,9 @@ const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.2 }}
         >
-          Looking for a home that truly fits your life? Whether you're searching
-          for your first apartment, house, or a luxury villa, we’ve got you
-          covered.
+          Looking for a home that truly fits your life? Whether you&apos;re
+          searching for your first apartment, house, or a luxury villa,
+          we&apos;ve got you covered.
         </motion.p>
 
         <motion.div

@@ -47,9 +47,9 @@ const WhySection = () => {
         className="text-sm text-center mb-12 w-full max-w-lg mx-auto  text-slate-600"
       >
         We combine cutting-edge technology with real-world expertise to help you
-        buy, rent, or list with total confidence. Whether you're a first-time
-        renter or a seasoned investor, our team is here to guide you every step
-        of the way.
+        buy, rent, or list with total confidence. Whether you&apos;re a
+        first-time renter or a seasoned investor, our team is here to guide you
+        every step of the way.
       </motion.h6>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 px-6 py-3 gap-6 lg:gap-10">
         {[0, 1, 2, 3].map((index) => (
