@@ -1,0 +1,15 @@
+[
+  {
+    "userId": "87654321-90ab-cdef-1234-567890abcdef",
+    "favorites": { "connect": [{ "id": 2 }] }
+  },
+  {
+    "userId": "98765432-90ab-cdef-1234-567890abcdef",
+    "tenantProperties": { "connect": [] },
+    "favorites": { "connect": [] }
+  },
+  {
+    "userId": "817b3540-a061-707b-742a-a28391181149",
+    "tenantProperties": { "connect": [] }
+  }
+]

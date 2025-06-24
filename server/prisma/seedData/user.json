@@ -1,0 +1,46 @@
+[
+  {
+    "id": "010be580-60a1-70ae-780e-18a6fd94ad32",
+    "email": "john.smith@example.com",
+    "password": "$2a$10$examplehashedpassword1234567890abcdef",
+    "name": "John Smith",
+    "role": "MANAGER",
+    "createdAt": "2023-05-01T00:00:00Z"
+  },
+  {
+    "id": "23456789-90ab-cdef-1234-567890abcdef",
+    "email": "sarah.johnson@example.com",
+    "password": "$2a$10$examplehashedpassword1234567890abcdef",
+    "name": "Sarah Johnson",
+
+    "role": "MANAGER",
+    "createdAt": "2023-05-01T00:00:00Z"
+  },
+  {
+    "id": "98765432-90ab-cdef-1234-567890abcdef",
+    "email": "alice.brown@example.com",
+    "password": "$2a$10$examplehashedpassword1234567890abcdef",
+    "name": "Alice Brown",
+
+    "role": "TENANT",
+    "createdAt": "2023-05-01T00:00:00Z"
+  },
+  {
+    "id": "87654321-90ab-cdef-1234-567890abcdef",
+    "email": "bob.green@example.com",
+    "password": "$2a$10$examplehashedpassword1234567890abcdef",
+    "name": "Bob Green",
+
+    "role": "TENANT",
+    "createdAt": "2023-05-01T00:00:00Z"
+  },
+  {
+    "id": "817b3540-a061-707b-742a-a28391181149",
+    "email": "carol.white@example.com",
+    "password": "$2a$10$examplehashedpassword1234567890abcdef",
+    "name": "Carol White",
+
+    "role": "TENANT",
+    "createdAt": "2023-05-01T00:00:00Z"
+  }
+]

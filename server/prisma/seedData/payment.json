@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1,
+    "amountDue": 1500.0,
+    "amountPaid": 1500.0,
+    "dueDate": "2023-07-01T00:00:00Z",
+    "paymentDate": "2023-06-28T00:00:00Z",
+    "paymentStatus": "Paid",
+    "leaseId": 1
+  }
+]

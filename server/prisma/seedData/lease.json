@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1,
+    "startDate": "2023-07-01T00:00:00Z",
+    "endDate": "2024-06-30T00:00:00Z",
+    "rent": 1500.0,
+    "deposit": 1500.0,
+    "propertyId": 1,
+    "tenantId": "98765432-90ab-cdef-1234-567890abcdef"
+  }
+]

@@ -9,7 +9,7 @@ const ClientWrapper = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 3000); // shows for 3 seconds
     return () => clearTimeout(timer);
-  }, []); // ← empty dependency array = only runs on first load
+  }, []);
 
   return <>{loading ? <Loader /> : children}</>;
 };

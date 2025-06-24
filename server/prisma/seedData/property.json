@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1,
+    "name": "Sunny Downtown Apartment",
+    "description": "A beautiful apartment in the heart of downtown with plenty of natural light.",
+    "pricePerMonth": 1500.0,
+    "securityDeposit": 1500.0,
+    "applicationFee": 50.0,
+    "photoUrls": [
+      "https://example.com/apartment1_1.jpg",
+      "https://example.com/apartment1_2.jpg"
+    ],
+    "amenities": ["AirConditioning", "WasherDryer", "Parking"],
+    "highlights": ["HighSpeedInternetAccess", "CloseToTransit"],
+    "isPetsAllowed": true,
+    "isParkingIncluded": false,
+    "beds": 2,
+    "baths": 1,
+    "squareFeet": 800,
+    "propertyType": "Apartment",
+    "postedDate": "2023-05-15T00:00:00Z",
+    "averageRating": 4.5,
+    "numberOfReviews": 10,
+    "locationId": 1,
+    "managerId": "010be580-60a1-70ae-780e-18a6fd94ad32"
+  },
+  {
+    "id": 2,
+    "name": "Cozy Beach House",
+    "description": "A charming beach house with stunning ocean views.",
+    "pricePerMonth": 2000.0,
+    "securityDeposit": 2000.0,
+    "applicationFee": 75.0,
+    "photoUrls": [
+      "https://example.com/beachhouse1.jpg",
+      "https://example.com/beachhouse2.jpg"
+    ],
+    "amenities": ["AirConditioning", "WasherDryer", "Parking", "Pool"],
+    "highlights": ["GreatView", "CloseToTransit"],
+    "isPetsAllowed": true,
+    "isParkingIncluded": true,
+    "beds": 3,
+    "baths": 2,
+    "squareFeet": 1200,
+    "propertyType": "Villa",
+    "postedDate": "2023-06-01T00:00:00Z",
+    "averageRating": 4.8,
+    "numberOfReviews": 5,
+    "locationId": 2,
+    "managerId": "23456789-90ab-cdef-1234-567890abcdef"
+  }
+]

@@ -1,0 +1,36 @@
+[
+  {
+    "id": 1,
+    "applicationDate": "2023-05-20T00:00:00Z",
+    "status": "Approved",
+    "propertyId": 1,
+    "tenantId": "98765432-90ab-cdef-1234-567890abcdef",
+    "name": "Alice Brown",
+    "email": "alice.brown@example.com",
+    "phoneNumber": "+1 (555) 111-2222",
+    "message": "I am interested in this property.",
+    "leaseId": 1
+  },
+  {
+    "id": 2,
+    "applicationDate": "2023-05-25T00:00:00Z",
+    "status": "Pending",
+    "propertyId": 2,
+    "tenantId": "87654321-90ab-cdef-1234-567890abcdef",
+    "name": "Bob Green",
+    "email": "bob.green@example.com",
+    "phoneNumber": "+1 (555) 333-4444",
+    "message": "Looking forward to viewing this apartment."
+  },
+  {
+    "id": 3,
+    "applicationDate": "2023-06-01T00:00:00Z",
+    "status": "Denied",
+    "propertyId": 2,
+    "tenantId": "817b3540-a061-707b-742a-a28391181149",
+    "name": "Carol White",
+    "email": "carol.white@example.com",
+    "phoneNumber": "+1 (555) 555-6666",
+    "message": "Excited about the possibility of renting this house."
+  }
+]
