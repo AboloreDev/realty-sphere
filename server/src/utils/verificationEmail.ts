@@ -31,7 +31,7 @@ export const sendPasswordResetEmail = async (email: string, code: string) => {
   });
 
   await transporter.sendMail({
-    from: process.env.EMAIL_USER,
+    from: process.env.SENDER_EMAIL,
     to: email,
     subject: "Password Reset Request",
     text: `Your password reset code is: ${code}`,

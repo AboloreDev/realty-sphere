@@ -16,3 +16,19 @@ export interface verifyEmail {
 export interface resendVerificationEmail {
   email: string;
 }
+
+export interface forgotPassword {
+  email: string;
+}
+
+export interface resetPassword {
+  email: string;
+  code: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+export interface verifyResendCode {
+  email: string;
+  code: string;
+}

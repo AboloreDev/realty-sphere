@@ -23,3 +23,23 @@ export const verifyEmailSchema = z.string().min(1).max(50);
 export const resendVerificationSchema = z.object({
   email: z.string().email("A valid email is required"),
 });
+export const forgotPasswordSchema = z.object({
+  email: z.string().email("A valid email is required"),
+});
+
+export const resetPasswordSchema = z
+  .object({
+    email: z.string().email(),
+    code: z.string().length(6),
+    newPassword: z.string().min(8),
+    confirmPassword: z.string().min(8),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "Passwords do not match",
+  });
+
+export const verifyResetCodeSchema = z.object({
+  email: z.string().email(),
+  code: z.string().length(6),
+});

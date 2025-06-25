@@ -2,19 +2,27 @@ import { Role } from "@prisma/client";
 import prisma from "../prismaClient";
 import {
   CreateAccount,
+  forgotPassword,
   LoginUser,
   resendVerificationEmail,
+  resetPassword,
   verifyEmail,
+  verifyResendCode,
 } from "../types/auth.types";
 import { compareValue, hashPassword } from "../utils/bcrypt";
 import { generateVerificationCode } from "../utils/generateVerificationCode";
-import { sendVerificationEmail } from "../utils/verificationEmail";
+import {
+  sendPasswordResetEmail,
+  sendVerificationEmail,
+} from "../utils/verificationEmail";
 import jwt from "jsonwebtoken";
 import appAssert from "../utils/appAssert";
 import {
   BAD_REQUEST,
   CONFLICT,
   INTRENAL_SERVER_ERROR,
+  NOT_FOUND,
+  TOO_MANY_REQUEST,
   UNAUTHORIZED,
 } from "../constants/httpStatus";
 
@@ -53,6 +61,7 @@ export const createAccount = async (data: CreateAccount) => {
       userId: user.id,
       code: code,
       expiresAt: new Date(Date.now() + 10 * 60 * 1000),
+      createdAt: new Date(),
     },
   });
 
@@ -246,6 +255,7 @@ export const resendVerificationEmailService = async (
       userId: user.id,
       code,
       expiresAt: new Date(Date.now() + 15 * 60 * 1000),
+      createdAt: new Date(),
     },
   });
 
@@ -259,5 +269,130 @@ export const resendVerificationEmailService = async (
       role: user.role,
     },
     message: "Verification Email sent successfully",
+  };
+};
+
+export const forgotPasswordService = async (data: forgotPassword) => {
+  // destructure the edata and get the email
+  const { email } = data;
+  // find the user by mail
+  const user = await prisma.user.findUnique({ where: { email } });
+  // assert an error if the user does not existassert an error if there is no user with that mail
+  appAssert(user, NOT_FOUND, "User with this email doesn't exist");
+
+  // CREATE a rate limit for the user
+  const count = await prisma.otp.count({
+    where: {
+      userId: user.id,
+      createdAt: {
+        gte: new Date(Date.now() - 5 * 60 * 1000),
+      },
+    },
+  });
+  // assert an error if the user has exceeded rate limit
+  appAssert(
+    count <= 1,
+    TOO_MANY_REQUEST,
+    "Too many requests, please try again later"
+  );
+
+  // generate a code for the user
+  const otp = generateVerificationCode();
+  // create an expiry for the new code
+  const expiresAt = new Date(Date.now() + 30 * 60 * 1000);
+
+  // CREATE AN OTP in the database
+  await prisma.otp.create({
+    data: {
+      userId: user.id,
+      code: otp,
+      expiresAt,
+      createdAt: new Date(),
+    },
+  });
+
+  // send the vrification code to the user
+  await sendPasswordResetEmail(email, otp);
+
+  // retturn a response
+  return {
+    user: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    },
+    message: "Password reset code sent to your email",
+  };
+};
+
+export const resetPasswordService = async (data: resetPassword) => {
+  const { email, code, newPassword, confirmPassword } = data;
+  // find the user by email
+  const user = await prisma.user.findUnique({ where: { email } });
+  // assert an error if there is no user found
+  appAssert(user, NOT_FOUND, "User with this email doesn't exist");
+  // FIND THE OTP CODE
+  const validOtp = await prisma.otp.findFirst({
+    where: {
+      userId: user.id,
+      code,
+      expiresAt: { gt: new Date() },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  // assset an error if the code has expired or it is invalid
+  appAssert(validOtp, BAD_REQUEST, "Invalid or expired reset code");
+
+  // hash the new password
+  const hashedPassword = await hashPassword(newPassword, 12);
+  // update the user password in the database
+  const updatedUser = await prisma.user.update({
+    where: { id: user.id },
+    data: { password: hashedPassword },
+  });
+
+  // delete all otp code for the user
+  await prisma.otp.deleteMany({
+    where: { userId: user.id },
+  });
+
+  // return a response
+  return {
+    message: "Password reset successful",
+    user: {
+      id: updatedUser.id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+    },
+  };
+};
+
+export const verifyResetCodeService = async (data: verifyResendCode) => {
+  // destructure the data
+  const { email, code } = data;
+  // get the user by email
+  const user = await prisma.user.findUnique({ where: { email } });
+  appAssert(user, NOT_FOUND, "User with this email doesn't exist");
+  // send an otp code to the user
+  const otp = await prisma.otp.findFirst({
+    where: {
+      userId: user.id,
+      code,
+      expiresAt: { gt: new Date() },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  appAssert(otp, BAD_REQUEST, "Invalid or expired code");
+
+  return {
+    message: "Reset code verified. You can now reset your password.",
+    user: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    },
   };
 };

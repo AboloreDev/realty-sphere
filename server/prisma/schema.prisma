@@ -78,7 +78,6 @@ model User {
   role                Role
   emailVerified        Boolean   @default(false)
   resetPasswordToken  String?
-
   resetPasswordExpires DateTime?
   createdAt           DateTime  @default(now())
   managedProperties Property[] @relation("ManagerProperties")
@@ -95,6 +94,7 @@ model Otp {
   code      String
   userId    String
   expiresAt DateTime
+  createdAt DateTime
   emailVerified Boolean @default(false)
   user      User     @relation("UserOtps", fields: [userId], references: [id], onDelete: Cascade)
   @@index([userId])

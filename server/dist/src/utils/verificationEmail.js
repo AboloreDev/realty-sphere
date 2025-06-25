@@ -43,7 +43,7 @@ const sendPasswordResetEmail = (email, code) => __awaiter(void 0, void 0, void 0
         },
     });
     yield transporter.sendMail({
-        from: process.env.EMAIL_USER,
+        from: process.env.SENDER_EMAIL,
         to: email,
         subject: "Password Reset Request",
         text: `Your password reset code is: ${code}`,

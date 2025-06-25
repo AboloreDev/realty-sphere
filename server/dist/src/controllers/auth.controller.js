@@ -9,13 +9,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logout = exports.resetPassword = exports.forgotPassword = exports.resendVerificationMail = exports.verifyEmail = exports.loginUser = exports.registerUser = void 0;
+exports.logout = exports.verifyResetPasswordCode = exports.resetPassword = exports.forgotPassword = exports.resendVerificationMail = exports.verifyEmail = exports.loginUser = exports.registerUser = void 0;
 const httpStatus_1 = require("../constants/httpStatus");
 const auth_schema_1 = require("../schema/auth.schema");
 const auth_service_1 = require("../services/auth.service");
 const authCookies_1 = require("../utils/authCookies");
 const catchAsyncErrors_1 = require("../utils/catchAsyncErrors");
-const JWT_SECRET = process.env.JWT_SECRET;
 exports.registerUser = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // validate the request
     const request = auth_schema_1.registerSchema.parse(req.body);
@@ -81,8 +80,47 @@ exports.resendVerificationMail = (0, catchAsyncErrors_1.catchAsyncError)((req, r
         user,
     });
 }));
-exports.forgotPassword = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () { }));
-exports.resetPassword = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () { }));
+exports.forgotPassword = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // validate the request
+    const request = auth_schema_1.forgotPasswordSchema.parse(req.body);
+    // use the srvice
+    const { user, message } = yield (0, auth_service_1.forgotPasswordService)(request);
+    // return a response
+    return res.status(httpStatus_1.OK).json({
+        success: true,
+        message,
+        user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+        },
+    });
+}));
+exports.resetPassword = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // validate the request
+    const request = auth_schema_1.resetPasswordSchema.parse(req.body);
+    // use the service
+    const { user, message } = yield (0, auth_service_1.resetPasswordService)(request);
+    // return a response
+    return res.status(httpStatus_1.OK).json({
+        succes: true,
+        message,
+        user,
+    });
+}));
+exports.verifyResetPasswordCode = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // validate the request
+    const request = auth_schema_1.verifyResetCodeSchema.parse(req.body);
+    // use the service
+    const { user, message } = yield (0, auth_service_1.verifyResetCodeService)(request);
+    // return a response
+    return res.status(httpStatus_1.OK).json({
+        succes: true,
+        message,
+        user,
+    });
+}));
 exports.logout = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const accessToken = req.cookies.accessToken;
     const cookieOptions = {

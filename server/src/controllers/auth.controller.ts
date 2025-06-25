@@ -1,20 +1,24 @@
 import { CREATED, OK } from "../constants/httpStatus";
 import {
+  forgotPasswordSchema,
   loginSchema,
   registerSchema,
   resendVerificationSchema,
+  resetPasswordSchema,
   verifyEmailSchema,
+  verifyResetCodeSchema,
 } from "../schema/auth.schema";
 import {
   createAccount,
+  forgotPasswordService,
   Login,
   resendVerificationEmailService,
+  resetPasswordService,
   verifyEmailService,
+  verifyResetCodeService,
 } from "../services/auth.service";
 import { setAuthCookies } from "../utils/authCookies";
 import { catchAsyncError } from "../utils/catchAsyncErrors";
-
-const JWT_SECRET = process.env.JWT_SECRET;
 
 export const registerUser = catchAsyncError(async (req, res) => {
   // validate the request
@@ -88,8 +92,51 @@ export const resendVerificationMail = catchAsyncError(async (req, res) => {
     user,
   });
 });
-export const forgotPassword = catchAsyncError(async (req, res) => {});
-export const resetPassword = catchAsyncError(async (req, res) => {});
+export const forgotPassword = catchAsyncError(async (req, res) => {
+  // validate the request
+  const request = forgotPasswordSchema.parse(req.body);
+  // use the srvice
+
+  const { user, message } = await forgotPasswordService(request);
+
+  // return a response
+  return res.status(OK).json({
+    success: true,
+    message,
+    user: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    },
+  });
+});
+export const resetPassword = catchAsyncError(async (req, res) => {
+  // validate the request
+  const request = resetPasswordSchema.parse(req.body);
+
+  // use the service
+  const { user, message } = await resetPasswordService(request);
+  // return a response
+  return res.status(OK).json({
+    succes: true,
+    message,
+    user,
+  });
+});
+export const verifyResetPasswordCode = catchAsyncError(async (req, res) => {
+  // validate the request
+  const request = verifyResetCodeSchema.parse(req.body);
+
+  // use the service
+  const { user, message } = await verifyResetCodeService(request);
+  // return a response
+  return res.status(OK).json({
+    succes: true,
+    message,
+    user,
+  });
+});
 export const logout = catchAsyncError(async (req, res) => {
   const accessToken = req.cookies.accessToken;
 

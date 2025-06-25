@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.resendVerificationEmailService = exports.verifyEmailService = exports.Login = exports.createAccount = void 0;
+exports.verifyResetCodeService = exports.resetPasswordService = exports.forgotPasswordService = exports.resendVerificationEmailService = exports.verifyEmailService = exports.Login = exports.createAccount = void 0;
 const client_1 = require("@prisma/client");
 const prismaClient_1 = __importDefault(require("../prismaClient"));
 const bcrypt_1 = require("../utils/bcrypt");
@@ -51,6 +51,7 @@ const createAccount = (data) => __awaiter(void 0, void 0, void 0, function* () {
             userId: user.id,
             code: code,
             expiresAt: new Date(Date.now() + 10 * 60 * 1000),
+            createdAt: new Date(),
         },
     });
     // send verification code
@@ -199,6 +200,7 @@ const resendVerificationEmailService = (data) => __awaiter(void 0, void 0, void 
             userId: user.id,
             code,
             expiresAt: new Date(Date.now() + 15 * 60 * 1000),
+            createdAt: new Date(),
         },
     });
     // return the user and send a verification email
@@ -214,3 +216,113 @@ const resendVerificationEmailService = (data) => __awaiter(void 0, void 0, void 
     };
 });
 exports.resendVerificationEmailService = resendVerificationEmailService;
+const forgotPasswordService = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    // destructure the edata and get the email
+    const { email } = data;
+    // find the user by mail
+    const user = yield prismaClient_1.default.user.findUnique({ where: { email } });
+    // assert an error if the user does not existassert an error if there is no user with that mail
+    (0, appAssert_1.default)(user, httpStatus_1.NOT_FOUND, "User with this email doesn't exist");
+    // CREATE a rate limit for the user
+    const count = yield prismaClient_1.default.otp.count({
+        where: {
+            userId: user.id,
+            createdAt: {
+                gte: new Date(Date.now() - 5 * 60 * 1000),
+            },
+        },
+    });
+    // assert an error if the user has exceeded rate limit
+    (0, appAssert_1.default)(count <= 1, httpStatus_1.TOO_MANY_REQUEST, "Too many requests, please try again later");
+    // generate a code for the user
+    const otp = (0, generateVerificationCode_1.generateVerificationCode)();
+    // create an expiry for the new code
+    const expiresAt = new Date(Date.now() + 30 * 60 * 1000);
+    // CREATE AN OTP in the database
+    yield prismaClient_1.default.otp.create({
+        data: {
+            userId: user.id,
+            code: otp,
+            expiresAt,
+            createdAt: new Date(),
+        },
+    });
+    // send the vrification code to the user
+    yield (0, verificationEmail_1.sendPasswordResetEmail)(email, otp);
+    // retturn a response
+    return {
+        user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+        },
+        message: "Password reset code sent to your email",
+    };
+});
+exports.forgotPasswordService = forgotPasswordService;
+const resetPasswordService = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email, code, newPassword, confirmPassword } = data;
+    // find the user by email
+    const user = yield prismaClient_1.default.user.findUnique({ where: { email } });
+    // assert an error if there is no user found
+    (0, appAssert_1.default)(user, httpStatus_1.NOT_FOUND, "User with this email doesn't exist");
+    // FIND THE OTP CODE
+    const validOtp = yield prismaClient_1.default.otp.findFirst({
+        where: {
+            userId: user.id,
+            code,
+            expiresAt: { gt: new Date() },
+        },
+        orderBy: { createdAt: "desc" },
+    });
+    // assset an error if the code has expired or it is invalid
+    (0, appAssert_1.default)(validOtp, httpStatus_1.BAD_REQUEST, "Invalid or expired reset code");
+    // hash the new password
+    const hashedPassword = yield (0, bcrypt_1.hashPassword)(newPassword, 12);
+    // update the user password in the database
+    const updatedUser = yield prismaClient_1.default.user.update({
+        where: { id: user.id },
+        data: { password: hashedPassword },
+    });
+    // delete all otp code for the user
+    yield prismaClient_1.default.otp.deleteMany({
+        where: { userId: user.id },
+    });
+    // return a response
+    return {
+        message: "Password reset successful",
+        user: {
+            id: updatedUser.id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+        },
+    };
+});
+exports.resetPasswordService = resetPasswordService;
+const verifyResetCodeService = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    // destructure the data
+    const { email, code } = data;
+    // get the user by email
+    const user = yield prismaClient_1.default.user.findUnique({ where: { email } });
+    (0, appAssert_1.default)(user, httpStatus_1.NOT_FOUND, "User with this email doesn't exist");
+    // send an otp code to the user
+    const otp = yield prismaClient_1.default.otp.findFirst({
+        where: {
+            userId: user.id,
+            code,
+            expiresAt: { gt: new Date() },
+        },
+        orderBy: { createdAt: "desc" },
+    });
+    (0, appAssert_1.default)(otp, httpStatus_1.BAD_REQUEST, "Invalid or expired code");
+    return {
+        message: "Reset code verified. You can now reset your password.",
+        user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+        },
+    };
+});
+exports.verifyResetCodeService = verifyResetCodeService;
