@@ -118,6 +118,22 @@ export const resetPassword = catchAsyncError(async (req, res) => {
   // use the service
   const { user, message } = await resetPasswordService(request);
   // return a response
+
+  // first define the cokies options
+  const cookieOptions = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict" as const,
+  };
+
+  // clear the cookies (access and refresh token)
+  res.clearCookie("accessToken", cookieOptions);
+  res.clearCookie("refreshToken", {
+    ...cookieOptions,
+    path: "/auth/refresh",
+  });
+
+  // return the response
   return res.status(OK).json({
     succes: true,
     message,

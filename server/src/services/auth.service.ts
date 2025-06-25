@@ -352,10 +352,21 @@ export const resetPasswordService = async (data: resetPassword) => {
     where: { id: user.id },
     data: { password: hashedPassword },
   });
+  // assert an errr message
+  appAssert(
+    updatedUser,
+    INTRENAL_SERVER_ERROR,
+    "Failed to reset password, please try again"
+  );
 
   // delete all otp code for the user
   await prisma.otp.deleteMany({
     where: { userId: user.id },
+  });
+
+  // delete all sessions
+  await prisma.session.deleteMany({
+    where: { userId: updatedUser.id },
   });
 
   // return a response

@@ -285,9 +285,15 @@ const resetPasswordService = (data) => __awaiter(void 0, void 0, void 0, functio
         where: { id: user.id },
         data: { password: hashedPassword },
     });
+    // assert an errr message
+    (0, appAssert_1.default)(updatedUser, httpStatus_1.INTRENAL_SERVER_ERROR, "Failed to reset password, please try again");
     // delete all otp code for the user
     yield prismaClient_1.default.otp.deleteMany({
         where: { userId: user.id },
+    });
+    // delete all sessions
+    yield prismaClient_1.default.session.deleteMany({
+        where: { userId: updatedUser.id },
     });
     // return a response
     return {

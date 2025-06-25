@@ -103,6 +103,16 @@ exports.resetPassword = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __
     // use the service
     const { user, message } = yield (0, auth_service_1.resetPasswordService)(request);
     // return a response
+    // first define the cokies options
+    const cookieOptions = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+    };
+    // clear the cookies (access and refresh token)
+    res.clearCookie("accessToken", cookieOptions);
+    res.clearCookie("refreshToken", Object.assign(Object.assign({}, cookieOptions), { path: "/auth/refresh" }));
+    // return the response
     return res.status(httpStatus_1.OK).json({
         succes: true,
         message,
