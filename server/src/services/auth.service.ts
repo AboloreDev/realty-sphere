@@ -53,21 +53,6 @@ export const createAccount = async (data: CreateAccount) => {
       role: roleMap[data.role],
     },
   });
-  // create a verification code
-  const code = generateVerificationCode();
-  // send verification code to user
-  await prisma.otp.create({
-    data: {
-      userId: user.id,
-      code: code,
-      expiresAt: new Date(Date.now() + 10 * 60 * 1000),
-      createdAt: new Date(),
-    },
-  });
-
-  // send verification code
-  await sendVerificationEmail(data.email, code);
-
   // create session
   const activeSessions = await prisma.session.findMany({
     where: {
@@ -90,15 +75,15 @@ export const createAccount = async (data: CreateAccount) => {
 
   // sign refresh token
   const refreshToken = jwt.sign(
-    { userId: user.id, email: user.email },
+    { userId: user.id, email: user.email, role: user.role },
     process.env.JWT_REFRESH_SECRET as string,
     { expiresIn: "15d", audience: roleMap[data.role] }
   );
   // sign access token
   const accessToken = jwt.sign(
-    { userId: user.id, email: user.email },
+    { userId: user.id, email: user.email, role: user.role },
     process.env.JWT_SECRET as string,
-    { expiresIn: "20m", audience: roleMap[data.role] }
+    { expiresIn: "2h", audience: roleMap[data.role] }
   );
 
   // 9. Store new session
@@ -164,15 +149,15 @@ export const Login = async (data: LoginUser) => {
 
   // sign refresh token
   const refreshToken = jwt.sign(
-    { userId: user.id, email: user.email },
+    { userId: user.id, email: user.email, role: user.role },
     process.env.JWT_REFRESH_SECRET as string,
     { expiresIn: "15d" }
   );
   // sign access token
   const accessToken = jwt.sign(
-    { userId: user.id, email: user.email },
+    { userId: user.id, email: user.email, role: user.role },
     process.env.JWT_SECRET as string,
-    { expiresIn: "20m" }
+    { expiresIn: "2h" }
   );
 
   // 9. Store new session

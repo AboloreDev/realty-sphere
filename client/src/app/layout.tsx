@@ -3,6 +3,7 @@ import "./globals.css";
 import Providers from "./providers";
 import ClientWrapper from "./wrapper";
 import { ThemeProvider } from "next-themes";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "Realty Sphere Website",
@@ -17,6 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <Toaster />
         <Providers>
           <ThemeProvider attribute="class" enableSystem defaultTheme="system">
             <ClientWrapper>{children}</ClientWrapper>

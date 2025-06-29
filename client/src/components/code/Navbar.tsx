@@ -54,9 +54,11 @@ const Navbar = () => {
 
         <div className="hidden md:flex justify-center items-center gap-4">
           <ThemeToggle />
-          <Button size="sm">Sign In</Button>
+          <Button size="sm">
+            <Link href={"/auth/login"}>Login</Link>
+          </Button>
           <Button variant="outline" size="sm">
-            Sign Up
+            <Link href={"/auth/register"}>Register</Link>
           </Button>
         </div>
 

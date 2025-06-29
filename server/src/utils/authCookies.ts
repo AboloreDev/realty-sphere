@@ -21,8 +21,7 @@ const getAccessTokenCookieOptions = (): CookieOptions => ({
 
 const getRefreshTokenCookieOptions = (): CookieOptions => ({
   ...defaults,
-  expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
-  path: "/auth/refresh",
+  expires: new Date(Date.now() + 2 * 60 * 60 * 1000),
 });
 
 // Interface for the parameters required to set authentication cookies

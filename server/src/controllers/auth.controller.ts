@@ -167,7 +167,6 @@ export const logout = catchAsyncError(async (req, res) => {
     res.clearCookie("accessToken", cookieOptions);
     res.clearCookie("refreshToken", {
       ...cookieOptions,
-      path: "/auth/refresh",
     });
     return res.status(OK).json({
       success: true,
@@ -180,7 +179,6 @@ export const logout = catchAsyncError(async (req, res) => {
     res.clearCookie("accessToken", cookieOptions);
     res.clearCookie("refreshToken", {
       ...cookieOptions,
-      path: "/auth/refresh",
     });
 
     return res.status(OK).json({
@@ -192,7 +190,6 @@ export const logout = catchAsyncError(async (req, res) => {
     res.clearCookie("accessToken", cookieOptions);
     res.clearCookie("refreshToken", {
       ...cookieOptions,
-      path: "/auth/refresh",
     });
 
     return res.status(OK).json({

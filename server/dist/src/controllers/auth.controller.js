@@ -141,7 +141,7 @@ exports.logout = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter
     // No token? Clear both cookies anyway
     if (!accessToken) {
         res.clearCookie("accessToken", cookieOptions);
-        res.clearCookie("refreshToken", Object.assign(Object.assign({}, cookieOptions), { path: "/auth/refresh" }));
+        res.clearCookie("refreshToken", Object.assign({}, cookieOptions));
         return res.status(httpStatus_1.OK).json({
             success: true,
             message: "User logged out successfully",
@@ -150,7 +150,7 @@ exports.logout = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter
     try {
         // Clear both cookies with full options
         res.clearCookie("accessToken", cookieOptions);
-        res.clearCookie("refreshToken", Object.assign(Object.assign({}, cookieOptions), { path: "/auth/refresh" }));
+        res.clearCookie("refreshToken", Object.assign({}, cookieOptions));
         return res.status(httpStatus_1.OK).json({
             success: true,
             message: "User logged out from all devices",
@@ -159,7 +159,7 @@ exports.logout = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter
     catch (error) {
         // On error, still clear both
         res.clearCookie("accessToken", cookieOptions);
-        res.clearCookie("refreshToken", Object.assign(Object.assign({}, cookieOptions), { path: "/auth/refresh" }));
+        res.clearCookie("refreshToken", Object.assign({}, cookieOptions));
         return res.status(httpStatus_1.OK).json({
             success: true,
             message: "Invalid token. Cookies cleared.",

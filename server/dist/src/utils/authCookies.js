@@ -14,7 +14,7 @@ const defaults = {
     secure,
 };
 const getAccessTokenCookieOptions = () => (Object.assign(Object.assign({}, defaults), { expires: new Date(Date.now() + 20 * 60 * 1000) }));
-const getRefreshTokenCookieOptions = () => (Object.assign(Object.assign({}, defaults), { expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000), path: "/auth/refresh" }));
+const getRefreshTokenCookieOptions = () => (Object.assign(Object.assign({}, defaults), { expires: new Date(Date.now() + 2 * 60 * 60 * 1000) }));
 // Setting the cookies for authentication
 const setAuthCookies = ({ res, accessToken, refreshToken, }) => {
     res

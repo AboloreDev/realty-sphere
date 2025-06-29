@@ -43,19 +43,6 @@ const createAccount = (data) => __awaiter(void 0, void 0, void 0, function* () {
             role: roleMap[data.role],
         },
     });
-    // create a verification code
-    const code = (0, generateVerificationCode_1.generateVerificationCode)();
-    // send verification code to user
-    yield prismaClient_1.default.otp.create({
-        data: {
-            userId: user.id,
-            code: code,
-            expiresAt: new Date(Date.now() + 10 * 60 * 1000),
-            createdAt: new Date(),
-        },
-    });
-    // send verification code
-    yield (0, verificationEmail_1.sendVerificationEmail)(data.email, code);
     // create session
     const activeSessions = yield prismaClient_1.default.session.findMany({
         where: {
@@ -72,9 +59,9 @@ const createAccount = (data) => __awaiter(void 0, void 0, void 0, function* () {
         });
     }
     // sign refresh token
-    const refreshToken = jsonwebtoken_1.default.sign({ userId: user.id, email: user.email }, process.env.JWT_REFRESH_SECRET, { expiresIn: "15d", audience: roleMap[data.role] });
+    const refreshToken = jsonwebtoken_1.default.sign({ userId: user.id, email: user.email, role: user.role }, process.env.JWT_REFRESH_SECRET, { expiresIn: "15d", audience: roleMap[data.role] });
     // sign access token
-    const accessToken = jsonwebtoken_1.default.sign({ userId: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: "20m", audience: roleMap[data.role] });
+    const accessToken = jsonwebtoken_1.default.sign({ userId: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET, { expiresIn: "2h", audience: roleMap[data.role] });
     // 9. Store new session
     yield prismaClient_1.default.session.create({
         data: {
@@ -127,9 +114,9 @@ const Login = (data) => __awaiter(void 0, void 0, void 0, function* () {
         });
     }
     // sign refresh token
-    const refreshToken = jsonwebtoken_1.default.sign({ userId: user.id, email: user.email }, process.env.JWT_REFRESH_SECRET, { expiresIn: "15d" });
+    const refreshToken = jsonwebtoken_1.default.sign({ userId: user.id, email: user.email, role: user.role }, process.env.JWT_REFRESH_SECRET, { expiresIn: "15d" });
     // sign access token
-    const accessToken = jsonwebtoken_1.default.sign({ userId: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: "20m" });
+    const accessToken = jsonwebtoken_1.default.sign({ userId: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET, { expiresIn: "2h" });
     // 9. Store new session
     yield prismaClient_1.default.session.create({
         data: {
