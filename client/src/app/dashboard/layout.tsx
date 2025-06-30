@@ -5,7 +5,11 @@ interface DashboardLayoutProps {
 }
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
-  return <div>{children}</div>;
+  return (
+    <main className="min-h-screen bg-gray-100">
+      <div className="flex-grow transition-all duration-500">{children}</div>
+    </main>
+  );
 };
 
 export default DashboardLayout;

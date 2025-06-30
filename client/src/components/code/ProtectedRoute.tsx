@@ -21,8 +21,17 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   // get the data from the query
   const { data, isLoading, isError } = useGetUserProfileQuery();
 
+  console.log("user:", user);
+
   // using use effect hook to render user data
   useEffect(() => {
+    // Check if user data exists in localStorage on initial load
+    const storedUser = localStorage.getItem("user");
+    if (storedUser && !user) {
+      // If user data exists in localStorage, set it to Redux store
+      dispatch(setUser(JSON.parse(storedUser)));
+    }
+
     if (isLoading) return; // waiting for user data
     // check for error
     if (!data?.success || isError) {

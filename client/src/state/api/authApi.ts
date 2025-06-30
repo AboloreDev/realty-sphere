@@ -60,6 +60,12 @@ export const authApi = createApi({
         body: data,
       }),
     }),
+    logout: builder.mutation<ApiResponse<object>, void>({
+      query: () => ({
+        url: "/auth/logout",
+        method: "POST",
+      }),
+    }),
     // Authenticate the user
     getUserProfile: builder.query<AuthResponse, void>({
       query: () => "/user",
@@ -74,4 +80,5 @@ export const {
   useVerifyOtpMutation,
   useResetPasswordMutation,
   useGetUserProfileQuery,
+  useLogoutMutation,
 } = authApi;

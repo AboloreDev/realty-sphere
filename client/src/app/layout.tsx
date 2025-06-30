@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Providers from "./providers";
-import ClientWrapper from "./wrapper";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "sonner";
 
@@ -21,7 +20,7 @@ export default function RootLayout({
         <Toaster />
         <Providers>
           <ThemeProvider attribute="class" enableSystem defaultTheme="system">
-            <ClientWrapper>{children}</ClientWrapper>
+            {children}
           </ThemeProvider>
         </Providers>
       </body>
