@@ -13,5 +13,5 @@ router.post("/resend-email", auth_controller_1.resendVerificationMail);
 router.post("/forgot-password", auth_controller_1.forgotPassword);
 router.post("/reset-password/verify", auth_controller_1.verifyResetPasswordCode);
 router.post("/reset-password", auth_controller_1.resetPassword);
-router.get("/logout", auth_controller_1.logout);
+router.post("/logout", auth_controller_1.logout);
 exports.default = router;

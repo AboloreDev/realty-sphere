@@ -71,7 +71,7 @@ export default function DashboardSidebar({
       />
       <aside
         className={cn(
-          "fixed md:sticky bg-white text-black h-full w-64 shadow-md z-30 transform transition-transform md:translate-x-0",
+          "fixed bg-white text-black h-full w-64 shadow-md z-30 transform transition-transform md:translate-x-0",
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >

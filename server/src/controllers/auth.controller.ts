@@ -153,6 +153,7 @@ export const verifyResetPasswordCode = catchAsyncError(async (req, res) => {
     user,
   });
 });
+
 export const logout = catchAsyncError(async (req, res) => {
   const accessToken = req.cookies.accessToken;
 

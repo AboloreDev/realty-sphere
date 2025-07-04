@@ -11,6 +11,8 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const authRoutes_1 = __importDefault(require("./routes/authRoutes"));
 const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
+const tenantRoutes_1 = __importDefault(require("./routes/tenantRoutes"));
+const landlordRoutes_1 = __importDefault(require("./routes/landlordRoutes"));
 const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const errorHandler_1 = require("./middleware/errorHandler");
@@ -19,7 +21,7 @@ const httpStatus_1 = require("./constants/httpStatus");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 4000;
-const APP_ORIGIN = "http://localhost:3000";
+const APP_ORIGIN = " http://localhost:3000";
 // initialisation
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
@@ -42,8 +44,15 @@ app.use("/api/auth", (0, express_rate_limit_1.default)({
     windowMs: 15 * 60 * 1000,
     max: 100,
 }));
+// routes
+// AUTH ROUTES
 app.use("/api/auth", authRoutes_1.default);
+// USER ROUTES
 app.use("/api/user", userRoutes_1.default);
+// TENANT ROUTES
+app.use("/api/tenant", tenantRoutes_1.default);
+// manager ROUTES
+app.use("/api/landlord", landlordRoutes_1.default);
 // error handler
 app.use(errorHandler_1.errorHandler);
 //LISTEN ON PORT NUMBER

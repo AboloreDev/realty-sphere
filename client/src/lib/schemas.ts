@@ -37,13 +37,10 @@ export const applicationSchema = z.object({
 export type ApplicationFormData = z.infer<typeof applicationSchema>;
 
 export const settingsSchema = z.object({
-  fullName: z.string().min(1, "Name is required"),
+  name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email address"),
-  phoneNumber: z.string().min(10, "Phone number must be at least 10 digits"),
-  photoUrls: z
-    .array(z.instanceof(File))
-    .min(1, "At least one photo is required"),
 });
+export type SettingsFormData = z.infer<typeof settingsSchema>;
 
 export const registerSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -80,5 +77,3 @@ export const resetPasswordSchema = z
     message: "Passwords must match",
     path: ["confirmNewPassword"],
   });
-
-export type SettingsFormData = z.infer<typeof settingsSchema>;

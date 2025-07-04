@@ -6,19 +6,23 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import userReducer from "./slice/userSlice";
+import tenantReducer from "./slice/tenantSlice";
 import { authApi } from "./api/authApi";
+import { tenantApi } from "./api/tenantApi";
 
 /* REDUX STORE */
 const rootReducer = combineReducers({
   user: userReducer,
+  tenant: tenantReducer,
   [authApi.reducerPath]: authApi.reducer,
+  [tenantApi.reducerPath]: tenantApi.reducer,
 });
 
 export const makeStore = () => {
   return configureStore({
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(authApi.middleware),
+      getDefaultMiddleware().concat(authApi.middleware, tenantApi.middleware),
   });
 };
 
