@@ -3,15 +3,18 @@ import morgan from "morgan";
 import cors from "cors";
 import helmet from "helmet";
 import bodyParser from "body-parser";
+import multer from "multer";
 import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
 import tenantRoutes from "./routes/tenantRoutes";
 import landlordRoutes from "./routes/landlordRoutes";
+import propertyRoutes from "./routes/propertyRoutes";
 import rateLimit from "express-rate-limit";
 import cookieParser from "cookie-parser";
 import { errorHandler } from "./middleware/errorHandler";
 import { OK } from "./constants/httpStatus";
+import { cloudinaryConfig } from "./utils/cloudinaryConfig";
 // Cofigurations
 dotenv.config();
 const app = express();
@@ -33,6 +36,12 @@ app.use(
   })
 );
 app.use(cookieParser());
+
+// cloudinary config
+cloudinaryConfig();
+
+// multer configurations for file uploads
+const uploads = multer({ storage: multer.memoryStorage() });
 
 // routes definition
 app.get("/", (req, res) => {
@@ -58,6 +67,8 @@ app.use("/api/user", userRoutes);
 app.use("/api/tenant", tenantRoutes);
 // manager ROUTES
 app.use("/api/landlord", landlordRoutes);
+// property routes
+app.use("/api/properties", propertyRoutes);
 
 // error handler
 app.use(errorHandler);
