@@ -33,25 +33,6 @@ const appAssert_1 = __importDefault(require("../utils/appAssert"));
 const wkt_1 = require("@terraformer/wkt");
 const cloudinary_1 = require("cloudinary");
 const axios_1 = __importDefault(require("axios"));
-// // Define interfaces for request body and property data
-// interface LocationData {
-//   address: string;
-//   city: string;
-//   state: string;
-//   country: string;
-//   postalCode: string;
-// }
-// interface PropertyData {
-//   title: string;
-//   description?: string;
-//   pricePerMonth?: number;
-//   beds?: number;
-//   bath?: number;
-//   squareFeet?: number;
-//   propertyType?: string;
-//   amenities?: string[];
-//   [key: string]: any; // Allow additional fields
-// }
 exports.getAllProperties = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // get the property filters from utils folder
     const whereConditions = (0, propertyFilter_1.buildPropertyWhereConditions)(req.query);
@@ -62,18 +43,18 @@ exports.getAllProperties = (0, catchAsyncErrors_1.catchAsyncError)((req, res) =>
         p.*,
         json_build_object(
         'id', l.id,
-        "address", l.address,
+        'address', l.address,
         'state', l.state,
         'city', l.city,
         'country', l.country,
-        'postalCode', l.'postalCode',
+        'postalCode', l."postalCode",
         'coordinates', json_build_object(
-          'longitude', ST_X(l.'coordinates'::geometry),
-          'latitude', ST_Y(l.'coordinates'::geometry)
+          'longitude', ST_X(l."coordinates"::geometry),
+          'latitude', ST_Y(l."coordinates"::geometry)
           )
         ) as location
         FROM "Property" p
-        JOIN "Location" l ON p."locationId" * l.id
+        JOIN "Location" l ON p."locationId" = l.id
         ${whereConditions.length > 0
         ? client_1.Prisma.sql `WHERE ${client_1.Prisma.join(whereConditions, " AND ")}`
         : client_1.Prisma.empty}
@@ -170,10 +151,20 @@ exports.createPropertyListing = (0, catchAsyncErrors_1.catchAsyncError)((req, re
       `;
     // create the property
     const newProperty = yield prismaClient_1.default.property.create({
-        data: Object.assign(Object.assign({}, propertyData), { photoUrls: imageUrls, locationId: location.id, managerId: manager.id, amenities: typeof propertyData.amenities == "string"
+        data: Object.assign(Object.assign({}, propertyData), { photoUrls: imageUrls, locationId: location.id, managerId, amenities: typeof propertyData.amenities == "string"
                 ? propertyData.amenities.split(",")
                 : "", highlights: typeof propertyData.highlights == "string"
                 ? propertyData.highlights.split(",")
                 : "", isPetsAllowed: propertyData.isPetsAllowed === "true", isParkingIncluded: propertyData.isParkingIncluded === "true", priceperMonth: parseFloat(propertyData.pricePerMonth), securityDeposit: parseFloat(propertyData.securityDeposit), applicationFee: parseFloat(propertyData.applicationFee), beds: parseInt(propertyData.beds), baths: parseInt(propertyData.baths), squareFeet: parseInt(propertyData.squareFeet) }),
+        include: {
+            location: true,
+            manager: true,
+        },
+    });
+    // return a response
+    res.status(httpStatus_1.OK).json({
+        success: true,
+        message: "Property Listed Successfully",
+        newProperty,
     });
 }));

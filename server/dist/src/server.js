@@ -8,13 +8,13 @@ const morgan_1 = __importDefault(require("morgan"));
 const cors_1 = __importDefault(require("cors"));
 const helmet_1 = __importDefault(require("helmet"));
 const body_parser_1 = __importDefault(require("body-parser"));
-const multer_1 = __importDefault(require("multer"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const authRoutes_1 = __importDefault(require("./routes/authRoutes"));
 const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
 const tenantRoutes_1 = __importDefault(require("./routes/tenantRoutes"));
 const landlordRoutes_1 = __importDefault(require("./routes/landlordRoutes"));
 const propertyRoutes_1 = __importDefault(require("./routes/propertyRoutes"));
+const leaseRoutes_1 = __importDefault(require("./routes/leaseRoutes"));
 const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const errorHandler_1 = require("./middleware/errorHandler");
@@ -39,8 +39,6 @@ app.use((0, cors_1.default)({
 app.use((0, cookie_parser_1.default)());
 // cloudinary config
 (0, cloudinaryConfig_1.cloudinaryConfig)();
-// multer configurations for file uploads
-const uploads = (0, multer_1.default)({ storage: multer_1.default.memoryStorage() });
 // routes definition
 app.get("/", (req, res) => {
     res.status(httpStatus_1.OK).json({
@@ -62,6 +60,8 @@ app.use("/api/tenant", tenantRoutes_1.default);
 app.use("/api/landlord", landlordRoutes_1.default);
 // property routes
 app.use("/api/properties", propertyRoutes_1.default);
+// lease router
+app.use("/api/lease", leaseRoutes_1.default);
 // error handler
 app.use(errorHandler_1.errorHandler);
 //LISTEN ON PORT NUMBER

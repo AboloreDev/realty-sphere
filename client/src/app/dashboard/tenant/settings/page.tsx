@@ -7,12 +7,12 @@ import { useAppDispatch, useAppSelector } from "@/state/redux";
 import { useUpdateTenantMutation } from "@/state/api/tenantApi";
 import { toast } from "sonner";
 import { setUser } from "@/state/slice/userSlice";
+import BouncingLoader from "@/components/code/BouncingLoader";
 
 const TenantSettingsPage = () => {
   const dispatch = useAppDispatch();
   // get the user from the redux state using predefined AppSelector
   const user = useAppSelector((state) => state.user.user);
-  console.log("user:", user);
   // get the useTenantMutation from the API
   const [updateTenant, { isLoading }] = useUpdateTenantMutation();
   // set Initial Data
@@ -21,7 +21,6 @@ const TenantSettingsPage = () => {
     email: user?.email,
   };
 
-  console.log(initialData);
   // handle the submit using the api
   const handleSubmit = async (data: typeof initialData) => {
     try {
@@ -49,7 +48,11 @@ const TenantSettingsPage = () => {
 
   return (
     <DashboardPage>
-      {isLoading && <p>Loading....</p>}
+      {isLoading && (
+        <div>
+          <BouncingLoader />
+        </div>
+      )}
       <Settings
         initialData={initialData}
         onSubmit={handleSubmit}

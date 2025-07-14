@@ -6,6 +6,7 @@ import { setUser } from "@/state/slice/userSlice";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { toast } from "sonner";
+import BouncingLoader from "./BouncingLoader";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -55,7 +56,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        Loading...
+        <BouncingLoader />
       </div>
     );
   }

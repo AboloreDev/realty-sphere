@@ -50,7 +50,7 @@ export const tenantNavSecondary = [
     href: "/dashboard/tenant/settings",
     icon: Settings2Icon,
   },
-  { name: "Get Help", href: "/dashboard/tenant/help", icon: HelpCircle },
+  { name: "Get Help", href: "/dashboard/tenant/faq", icon: HelpCircle },
   { name: " Logout", href: "/logout", icon: LogOut },
 ];
 export const landlordNavSecondary = [
@@ -59,6 +59,6 @@ export const landlordNavSecondary = [
     href: "/dashboard/landlord/settings",
     icon: Settings2Icon,
   },
-  { name: "Get Help", href: "/dashboard/landlord/help", icon: HelpCircle },
+  { name: "Get Help", href: "/dashboard/landlord/faq", icon: HelpCircle },
   { name: " Logout", href: "/logout", icon: LogOut },
 ];

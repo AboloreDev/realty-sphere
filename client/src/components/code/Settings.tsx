@@ -34,7 +34,6 @@ const Settings = ({ initialData, onSubmit, userType }: SettingsFormProps) => {
 
   // handle submit to submit form
   const handleSubmit = async (data: SettingsFormData) => {
-    console.log("Data Submitted:", data);
     await onSubmit(data);
     setEditMode(false);
   };

@@ -1,8 +1,11 @@
 import express from "express";
-import { isAuthenticated } from "../middleware/isAuthenticated";
+import { isAuthenticated, restrictTo } from "../middleware/isAuthenticated";
 import {
+  addTenantFavoriteProperty,
   createTenant,
   getTenant,
+  getTenantResidences,
+  removeFromFavorite,
   updateTenantDetails,
 } from "../controllers/tenant.controller";
 
@@ -15,5 +18,26 @@ router.get("/:id", isAuthenticated, getTenant);
 router.post("/", isAuthenticated, createTenant);
 // UPDATE A TENANT DETAILS
 router.patch("/:id", isAuthenticated, updateTenantDetails);
+// GET TENANT SINGLE PROPERTY
+router.get(
+  "/:id/residencies",
+  isAuthenticated,
+  restrictTo("TENANT"),
+  getTenantResidences
+);
+// ADD TO FAVORITE
+router.post(
+  "/:id/favorites/:propertyId",
+  isAuthenticated,
+  restrictTo("TENANT"),
+  addTenantFavoriteProperty
+);
+// DELETE FROM FAVORITE
+router.delete(
+  ":id/favorites/:propertyId",
+  isAuthenticated,
+  restrictTo("TENANT"),
+  removeFromFavorite
+);
 
 export default router;

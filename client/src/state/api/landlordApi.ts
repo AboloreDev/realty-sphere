@@ -11,7 +11,7 @@ export const landlordApi = createApi({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
     credentials: "include",
   }),
-  reducerPath: "tenantApi",
+  reducerPath: "landlordApi",
   tagTypes: ["updateLandlord"],
   endpoints: (builder) => ({
     // updadte Landlord details
@@ -20,7 +20,7 @@ export const landlordApi = createApi({
       updatedLandlordRequest
     >({
       query: ({ id, data }) => ({
-        url: `/dashboard/landlord/${id}`,
+        url: `/landlord/${id}`,
         method: "PATCH",
         body: data,
       }),

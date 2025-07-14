@@ -5,7 +5,7 @@ import {
   getAllProperties,
   getSingleProperty,
 } from "../controllers/property.controller";
-import { isAuthenticated } from "../middleware/isAuthenticated";
+import { isAuthenticated, restrictTo } from "../middleware/isAuthenticated";
 
 // multer configurations for file uploads
 const upload = multer({ storage: multer.memoryStorage() });
@@ -20,6 +20,7 @@ router.get("/:id", getSingleProperty);
 router.post(
   "/",
   isAuthenticated,
+  restrictTo("LANDLORD"),
   upload.array("images", 5),
   createPropertyListing
 );

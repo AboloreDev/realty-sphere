@@ -6,6 +6,7 @@ import {
 } from "../schema/landlord.schema";
 import {
   createLandlordService,
+  getLandlordPropertiesService,
   getLandlordService,
   updateLandlordService,
 } from "../services/landlord.service";
@@ -54,5 +55,22 @@ export const updateLandlord = catchAsyncError(async (req, res) => {
     success,
     message,
     updatedLandlord,
+  });
+});
+
+// GET landlordpROPERTY
+export const getLandlordProperties = catchAsyncError(async (req, res) => {
+  // validate the request
+  const request: any = getLandlordSchema.parse(req.params);
+
+  // use the service
+  const { success, message, propertiesWithFormattedLocation } =
+    await getLandlordPropertiesService(request);
+
+  // return a response
+  return res.status(OK).json({
+    success,
+    message,
+    propertiesWithFormattedLocation,
   });
 });

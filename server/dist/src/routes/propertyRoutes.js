@@ -15,5 +15,5 @@ router.get("/", property_controller_1.getAllProperties);
 // get a singleProperty
 router.get("/:id", property_controller_1.getSingleProperty);
 // create a property listing (LANDLORD ONLY)
-router.post("/", isAuthenticated_1.isAuthenticated, upload.array("images", 5), property_controller_1.createPropertyListing);
+router.post("/", isAuthenticated_1.isAuthenticated, (0, isAuthenticated_1.restrictTo)("LANDLORD"), upload.array("images", 5), property_controller_1.createPropertyListing);
 exports.default = router;

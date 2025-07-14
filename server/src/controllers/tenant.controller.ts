@@ -1,12 +1,17 @@
+import { string } from "zod";
 import { OK } from "../constants/httpStatus";
 import {
+  addTenantFavorite,
   createTenantSchema,
   getTenantSchema,
   updateTenantSchema,
 } from "../schema/tenant.schema";
 import {
+  addTenantFavoriteService,
   createTenantService,
   getTenantById,
+  getTenantResidenciesService,
+  removeFromFavoriteService,
   updateTenantService,
 } from "../services/tenant.service";
 import { catchAsyncError } from "../utils/catchAsyncErrors";
@@ -55,5 +60,53 @@ export const updateTenantDetails = catchAsyncError(async (req, res) => {
     success: true,
     message,
     updatedTenant,
+  });
+});
+
+// get tenant residences
+export const getTenantResidences = catchAsyncError(async (req, res) => {
+  const request: any = getTenantSchema.parse(req.params);
+
+  // use the service
+  const { message, success, residencesWithFormattedLocation } =
+    await getTenantResidenciesService(request);
+
+  // return a response
+  return res.status(OK).json({
+    success,
+    message,
+    residencesWithFormattedLocation,
+  });
+});
+
+// add tenant favorite property
+export const addTenantFavoriteProperty = catchAsyncError(async (req, res) => {
+  const request: any = addTenantFavorite.parse(req.params);
+
+  // use the service
+  const { success, message, updateTenantFavorite } =
+    await addTenantFavoriteService(request);
+
+  // return a response
+  return res.status(OK).json({
+    success,
+    message,
+    updateTenantFavorite,
+  });
+});
+
+// remove tenant favorite property
+export const removeFromFavorite = catchAsyncError(async (req, res) => {
+  const request: any = addTenantFavorite.parse(req.params);
+
+  // use the service
+  const { success, message, updatedTenantFavorite } =
+    await removeFromFavoriteService(request);
+
+  // return a response
+  return res.status(OK).json({
+    success,
+    message,
+    updatedTenantFavorite,
   });
 });

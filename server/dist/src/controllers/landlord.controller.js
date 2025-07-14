@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateLandlord = exports.getLandlord = exports.createLandlord = void 0;
+exports.getLandlordProperties = exports.updateLandlord = exports.getLandlord = exports.createLandlord = void 0;
 const httpStatus_1 = require("../constants/httpStatus");
 const landlord_schema_1 = require("../schema/landlord.schema");
 const landlord_service_1 = require("../services/landlord.service");
@@ -55,5 +55,18 @@ exports.updateLandlord = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => _
         success,
         message,
         updatedLandlord,
+    });
+}));
+// GET landlordpROPERTY
+exports.getLandlordProperties = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // validate the request
+    const request = landlord_schema_1.getLandlordSchema.parse(req.params);
+    // use the service
+    const { success, message, propertiesWithFormattedLocation } = yield (0, landlord_service_1.getLandlordPropertiesService)(request);
+    // return a response
+    return res.status(httpStatus_1.OK).json({
+        success,
+        message,
+        propertiesWithFormattedLocation,
     });
 }));

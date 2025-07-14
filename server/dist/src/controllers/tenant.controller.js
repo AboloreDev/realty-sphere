@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateTenantDetails = exports.createTenant = exports.getTenant = void 0;
+exports.removeFromFavorite = exports.addTenantFavoriteProperty = exports.getTenantResidences = exports.updateTenantDetails = exports.createTenant = exports.getTenant = void 0;
 const httpStatus_1 = require("../constants/httpStatus");
 const tenant_schema_1 = require("../schema/tenant.schema");
 const tenant_service_1 = require("../services/tenant.service");
@@ -56,5 +56,41 @@ exports.updateTenantDetails = (0, catchAsyncErrors_1.catchAsyncError)((req, res)
         success: true,
         message,
         updatedTenant,
+    });
+}));
+// get tenant residences
+exports.getTenantResidences = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const request = tenant_schema_1.getTenantSchema.parse(req.params);
+    // use the service
+    const { message, success, residencesWithFormattedLocation } = yield (0, tenant_service_1.getTenantResidenciesService)(request);
+    // return a response
+    return res.status(httpStatus_1.OK).json({
+        success,
+        message,
+        residencesWithFormattedLocation,
+    });
+}));
+// add tenant favorite property
+exports.addTenantFavoriteProperty = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const request = tenant_schema_1.addTenantFavorite.parse(req.params);
+    // use the service
+    const { success, message, updateTenantFavorite } = yield (0, tenant_service_1.addTenantFavoriteService)(request);
+    // return a response
+    return res.status(httpStatus_1.OK).json({
+        success,
+        message,
+        updateTenantFavorite,
+    });
+}));
+// remove tenant favorite property
+exports.removeFromFavorite = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const request = tenant_schema_1.addTenantFavorite.parse(req.params);
+    // use the service
+    const { success, message, updatedTenantFavorite } = yield (0, tenant_service_1.removeFromFavoriteService)(request);
+    // return a response
+    return res.status(httpStatus_1.OK).json({
+        success,
+        message,
+        updatedTenantFavorite,
     });
 }));

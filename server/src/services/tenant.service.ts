@@ -1,6 +1,12 @@
-import { NOT_FOUND, OK } from "../constants/httpStatus";
+import { wktToGeoJSON } from "@terraformer/wkt";
+import { CONFLICT, NOT_FOUND, OK } from "../constants/httpStatus";
 import prisma from "../prismaClient";
-import { createTenant, getTenantId, updateTenant } from "../types/tenant.types";
+import {
+  AddTenantFavoritePropertyType,
+  createTenant,
+  getTenantId,
+  updateTenant,
+} from "../types/tenant.types";
 import appAssert from "../utils/appAssert";
 
 // get tenant by id
@@ -73,5 +79,130 @@ export const updateTenantService = async (data: updateTenant) => {
       name: updatedTenant.name,
       email: updatedTenant.email,
     },
+  };
+};
+
+// export const getTenantResidences =
+export const getTenantResidenciesService = async (data: getTenantId) => {
+  // check if the tenant exist
+  const user = await prisma.user.findUnique({
+    where: { id: data.id, role: "TENANT" },
+  });
+
+  // IF NO USER ASSERT AN ERROR
+  appAssert(user, NOT_FOUND, "Tenant not found");
+
+  // get the residences
+  const residencies = await prisma.property.findMany({
+    where: { tenants: { some: { id: data.id } } },
+    include: {
+      location: true,
+    },
+  });
+
+  // format the residencies location
+  // fetch multiple residencies that belongsto this landlord
+  const residencesWithFormattedLocation = await Promise.all(
+    residencies.map(async (property) => {
+      const coordinates: { coordinates: string }[] =
+        await prisma.$queryRaw`SELECT ST_asText(coordinates) as coordinates from "Location" where id = ${property.location.id}`;
+
+      const geoJSON: any = wktToGeoJSON(coordinates[0]?.coordinates || "");
+      const longitude = geoJSON.coordinates[0];
+      const latitude = geoJSON.coordinates[1];
+
+      return {
+        ...property,
+        location: {
+          ...property.location,
+          coordinates: {
+            longitude,
+            latitude,
+          },
+        },
+      };
+    })
+  );
+  return {
+    success: true,
+    message: "Property fetched successful",
+    residencesWithFormattedLocation,
+  };
+};
+
+// add tenant favorite service
+export const addTenantFavoriteService = async (
+  data: AddTenantFavoritePropertyType
+) => {
+  // chech 0f the user exist with tenant role
+  const user = await prisma.user.findUnique({
+    where: { id: data.id, role: "TENANT" },
+    include: {
+      favorites: true,
+    },
+  });
+  // Assert an error if not found
+  appAssert(user, NOT_FOUND, "Tenant not found");
+
+  // convert the property id from string to number
+  const propertyIdNumber = Number(data.propertyId);
+
+  // check for existing favorites
+  const existingFavorites = user?.favorites || "";
+
+  // assert an error if it existing
+  appAssert(existingFavorites, CONFLICT, "Property already added as favorite");
+
+  // add to favorite
+  let updateTenantFavorite = null;
+  if (!existingFavorites.some((favorite) => favorite.id === propertyIdNumber)) {
+    updateTenantFavorite = await prisma.user.update({
+      where: { id: data.id },
+      data: {
+        favorites: { connect: { id: propertyIdNumber } },
+      },
+      include: {
+        favorites: true,
+      },
+    });
+  }
+  return {
+    success: true,
+    message: "Added to favorite",
+    updateTenantFavorite,
+  };
+};
+
+// remove from favorite
+export const removeFromFavoriteService = async (
+  data: AddTenantFavoritePropertyType
+) => {
+  // chech 0f the user exist with tenant role
+  const user = await prisma.user.findUnique({
+    where: { id: data.id, role: "TENANT" },
+    include: {
+      favorites: true,
+    },
+  });
+  // Assert an error if not found
+  appAssert(user, NOT_FOUND, "Tenant not found");
+
+  // convert the property id from string to number
+  const propertyIdNumber = Number(data.propertyId);
+
+  const updatedTenantFavorite = await prisma.user.update({
+    where: { id: data.id },
+    data: {
+      favorites: { disconnect: { id: propertyIdNumber } },
+    },
+    include: {
+      favorites: true,
+    },
+  });
+
+  return {
+    success: true,
+    message: "Added to favorite",
+    updatedTenantFavorite,
   };
 };

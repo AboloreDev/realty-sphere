@@ -14,3 +14,8 @@ export const updateTenantSchema = z.object({
   email: z.string().email(),
   name: z.string(),
 });
+
+export const addTenantFavorite = z.object({
+  id: z.string(),
+  propertyId: z.string(),
+});

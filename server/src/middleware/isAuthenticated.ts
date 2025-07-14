@@ -1,24 +1,19 @@
+// middleware/auth.ts
 import { Request, Response, NextFunction } from "express";
 import appAssert from "../utils/appAssert";
-import { UNAUTHORIZED } from "../constants/httpStatus";
+import { UNAUTHORIZED, FORBIDDEN } from "../constants/httpStatus";
 import AppErrorCode from "../constants/appErrorCode";
 import jwt from "jsonwebtoken";
 import prisma from "../prismaClient";
 
-// Define the expected JWT payload
 interface JwtPayload {
   userId: string;
   email: string;
   role: "TENANT" | "LANDLORD";
 }
 
-// Extend Express Request to include user
 export interface AuthRequest extends Request {
-  user?: {
-    id: string;
-    email: string;
-    role: "TENANT" | "LANDLORD";
-  };
+  user?: { id: string; email: string; role: "TENANT" | "LANDLORD" };
 }
 
 export const isAuthenticated = async (
@@ -27,7 +22,6 @@ export const isAuthenticated = async (
   next: NextFunction
 ) => {
   try {
-    // Get the access token from cookies
     const accessToken = req.cookies.accessToken as string | undefined;
     appAssert(
       accessToken,
@@ -36,7 +30,6 @@ export const isAuthenticated = async (
       AppErrorCode.InvalidAccessToken
     );
 
-    // Verify and decode the JWT
     const decoded = jwt.verify(
       accessToken,
       process.env.JWT_SECRET!
@@ -48,7 +41,6 @@ export const isAuthenticated = async (
       AppErrorCode.InvalidAccessToken
     );
 
-    // Check for the user in the database
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },
       select: { id: true, email: true, role: true },
@@ -60,7 +52,6 @@ export const isAuthenticated = async (
       AppErrorCode.InvalidAccessToken
     );
 
-    // Attach user data to the request
     req.user = {
       id: user.id,
       email: user.email,
@@ -69,7 +60,6 @@ export const isAuthenticated = async (
 
     next();
   } catch (error) {
-    // Handle JWT-specific errors
     if (
       error instanceof jwt.JsonWebTokenError ||
       error instanceof jwt.TokenExpiredError
@@ -83,4 +73,18 @@ export const isAuthenticated = async (
     }
     next(error);
   }
+};
+
+export const restrictTo = (role: "TENANT" | "LANDLORD") => {
+  return (req: AuthRequest, res: Response, next: NextFunction) => {
+    if (!req.user || req.user.role !== role) {
+      return appAssert(
+        false,
+        FORBIDDEN,
+        `Access denied: ${role} role required`,
+        AppErrorCode.UnauthorizedRole
+      );
+    }
+    next();
+  };
 };

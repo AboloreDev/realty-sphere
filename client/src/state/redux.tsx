@@ -7,22 +7,30 @@ import { Provider } from "react-redux";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import userReducer from "./slice/userSlice";
 import tenantReducer from "./slice/tenantSlice";
+import landlordReducer from "./slice/landlordSlice";
 import { authApi } from "./api/authApi";
 import { tenantApi } from "./api/tenantApi";
+import { landlordApi } from "./api/landlordApi";
 
 /* REDUX STORE */
 const rootReducer = combineReducers({
   user: userReducer,
   tenant: tenantReducer,
+  landlord: landlordReducer,
   [authApi.reducerPath]: authApi.reducer,
   [tenantApi.reducerPath]: tenantApi.reducer,
+  [landlordApi.reducerPath]: landlordApi.reducer,
 });
 
 export const makeStore = () => {
   return configureStore({
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(authApi.middleware, tenantApi.middleware),
+      getDefaultMiddleware().concat(
+        authApi.middleware,
+        tenantApi.middleware,
+        landlordApi.middleware
+      ),
   });
 };
 

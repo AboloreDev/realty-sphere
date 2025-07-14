@@ -1,4 +1,4 @@
-import { Amenity, Prisma } from "@prisma/client";
+import { Amenity, Location, Prisma } from "@prisma/client";
 import { catchAsyncError } from "../utils/catchAsyncErrors";
 import { buildPropertyWhereConditions } from "../utils/propertyFilter";
 import prisma from "../prismaClient";
@@ -15,27 +15,6 @@ interface UploadStreamResult {
   [key: string]: any;
 }
 
-// // Define interfaces for request body and property data
-// interface LocationData {
-//   address: string;
-//   city: string;
-//   state: string;
-//   country: string;
-//   postalCode: string;
-// }
-
-// interface PropertyData {
-//   title: string;
-//   description?: string;
-//   pricePerMonth?: number;
-//   beds?: number;
-//   bath?: number;
-//   squareFeet?: number;
-//   propertyType?: string;
-//   amenities?: string[];
-//   [key: string]: any; // Allow additional fields
-// }
-
 export const getAllProperties = catchAsyncError(async (req, res) => {
   // get the property filters from utils folder
   const whereConditions = buildPropertyWhereConditions(req.query);
@@ -47,18 +26,18 @@ export const getAllProperties = catchAsyncError(async (req, res) => {
         p.*,
         json_build_object(
         'id', l.id,
-        "address", l.address,
+        'address', l.address,
         'state', l.state,
         'city', l.city,
         'country', l.country,
-        'postalCode', l.'postalCode',
+        'postalCode', l."postalCode",
         'coordinates', json_build_object(
-          'longitude', ST_X(l.'coordinates'::geometry),
-          'latitude', ST_Y(l.'coordinates'::geometry)
+          'longitude', ST_X(l."coordinates"::geometry),
+          'latitude', ST_Y(l."coordinates"::geometry)
           )
         ) as location
         FROM "Property" p
-        JOIN "Location" l ON p."locationId" * l.id
+        JOIN "Location" l ON p."locationId" = l.id
         ${
           whereConditions.length > 0
             ? Prisma.sql`WHERE ${Prisma.join(whereConditions, " AND ")}`
@@ -196,7 +175,7 @@ export const createPropertyListing = catchAsyncError(async (req, res) => {
       ...propertyData,
       photoUrls: imageUrls,
       locationId: location.id,
-      managerId: manager.id,
+      managerId,
       amenities:
         typeof propertyData.amenities == "string"
           ? propertyData.amenities.split(",")
@@ -214,5 +193,16 @@ export const createPropertyListing = catchAsyncError(async (req, res) => {
       baths: parseInt(propertyData.baths),
       squareFeet: parseInt(propertyData.squareFeet),
     },
+    include: {
+      location: true,
+      manager: true,
+    },
+  });
+
+  // return a response
+  res.status(OK).json({
+    success: true,
+    message: "Property Listed Successfully",
+    newProperty,
   });
 });

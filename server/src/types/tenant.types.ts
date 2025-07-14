@@ -16,3 +16,8 @@ export interface updateTenant {
   name: string;
   email: string;
 }
+
+export interface AddTenantFavoritePropertyType {
+  id: string;
+  propertyId: string;
+}

@@ -10,6 +10,7 @@ import userRoutes from "./routes/userRoutes";
 import tenantRoutes from "./routes/tenantRoutes";
 import landlordRoutes from "./routes/landlordRoutes";
 import propertyRoutes from "./routes/propertyRoutes";
+import leaseRoutes from "./routes/leaseRoutes";
 import rateLimit from "express-rate-limit";
 import cookieParser from "cookie-parser";
 import { errorHandler } from "./middleware/errorHandler";
@@ -40,9 +41,6 @@ app.use(cookieParser());
 // cloudinary config
 cloudinaryConfig();
 
-// multer configurations for file uploads
-const uploads = multer({ storage: multer.memoryStorage() });
-
 // routes definition
 app.get("/", (req, res) => {
   res.status(OK).json({
@@ -69,6 +67,8 @@ app.use("/api/tenant", tenantRoutes);
 app.use("/api/landlord", landlordRoutes);
 // property routes
 app.use("/api/properties", propertyRoutes);
+// lease router
+app.use("/api/lease", leaseRoutes);
 
 // error handler
 app.use(errorHandler);

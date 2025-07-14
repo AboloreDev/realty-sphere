@@ -16,3 +16,8 @@ export interface updateLandlord {
   name: string;
   email: string;
 }
+
+export interface getLandlordSingleProperty {
+  id: string;
+  role: "MANAGER";
+}

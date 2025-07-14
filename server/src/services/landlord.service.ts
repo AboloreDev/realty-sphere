@@ -4,9 +4,11 @@ import prisma from "../prismaClient";
 import {
   createLandlord,
   getLandlordId,
+  getLandlordSingleProperty,
   updateLandlord,
 } from "../types/landlord.types";
 import appAssert from "../utils/appAssert";
+import { wktToGeoJSON } from "@terraformer/wkt";
 
 export const createLandlordService = async (data: createLandlord) => {
   // create the landlord
@@ -34,7 +36,7 @@ export const createLandlordService = async (data: createLandlord) => {
 export const getLandlordService = async (data: getLandlordId) => {
   // check if landlord exist
   const landlord = await prisma.user.findUnique({
-    where: { id: data.id, role: data.role as Role },
+    where: { id: data.id, role: "MANAGER" },
   });
   //   assert an error
   appAssert(landlord, NOT_FOUND, "Landlord details not found");
@@ -75,5 +77,55 @@ export const updateLandlordService = async (data: updateLandlord) => {
       name: updatedLandlord.name,
       email: updatedLandlord.email,
     },
+  };
+};
+
+// landlord get propertIES service
+
+export const getLandlordPropertiesService = async (
+  data: getLandlordSingleProperty
+) => {
+  // GET THE USER FROM THE DATABASE
+  const user = await prisma.user.findUnique({
+    where: { id: data.id, role: "MANAGER" },
+  });
+  // assert an error message if property doesnt exist
+  appAssert(user, NOT_FOUND, "User not found");
+
+  // after confirming the user, get the property of user user where the manager
+  const properties = await prisma.property.findMany({
+    where: { managerId: user.id },
+    include: {
+      location: true,
+    },
+  });
+
+  // format the properties location
+  // fetch multiple properties that belongsto this landlord
+  const propertiesWithFormattedLocation = await Promise.all(
+    properties.map(async (property) => {
+      const coordinates: { coordinates: string }[] =
+        await prisma.$queryRaw`SELECT ST_asText(coordinates) as coordinates from "Location" where id = ${property.location.id}`;
+
+      const geoJSON: any = wktToGeoJSON(coordinates[0]?.coordinates || "");
+      const longitude = geoJSON.coordinates[0];
+      const latitude = geoJSON.coordinates[1];
+
+      return {
+        ...property,
+        location: {
+          ...property.location,
+          coordinates: {
+            longitude,
+            latitude,
+          },
+        },
+      };
+    })
+  );
+  return {
+    success: true,
+    message: "Property fetched successful",
+    propertiesWithFormattedLocation,
   };
 };
