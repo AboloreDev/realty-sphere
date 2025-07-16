@@ -20,7 +20,7 @@ router.get("/:id", getSingleProperty);
 router.post(
   "/",
   isAuthenticated,
-  restrictTo("LANDLORD"),
+  restrictTo("MANAGER"),
   upload.array("images", 5),
   createPropertyListing
 );

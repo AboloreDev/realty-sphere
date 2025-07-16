@@ -9,11 +9,11 @@ import prisma from "../prismaClient";
 interface JwtPayload {
   userId: string;
   email: string;
-  role: "TENANT" | "LANDLORD";
+  role: "TENANT" | "MANAGER";
 }
 
 export interface AuthRequest extends Request {
-  user?: { id: string; email: string; role: "TENANT" | "LANDLORD" };
+  user?: { id: string; email: string; role: "TENANT" | "MANAGER" };
 }
 
 export const isAuthenticated = async (
@@ -55,7 +55,7 @@ export const isAuthenticated = async (
     req.user = {
       id: user.id,
       email: user.email,
-      role: user.role as "TENANT" | "LANDLORD",
+      role: user.role as "TENANT" | "MANAGER",
     };
 
     next();
@@ -75,7 +75,7 @@ export const isAuthenticated = async (
   }
 };
 
-export const restrictTo = (role: "TENANT" | "LANDLORD") => {
+export const restrictTo = (role: "TENANT" | "MANAGER") => {
   return (req: AuthRequest, res: Response, next: NextFunction) => {
     if (!req.user || req.user.role !== role) {
       return appAssert(

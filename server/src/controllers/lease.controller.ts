@@ -1,30 +1,45 @@
 import AppErrorCode from "../constants/appErrorCode";
-import { FORBIDDEN, NOT_FOUND, OK } from "../constants/httpStatus";
+import {
+  BAD_REQUEST,
+  CREATED,
+  FORBIDDEN,
+  NOT_FOUND,
+  OK,
+} from "../constants/httpStatus";
 import { AuthRequest } from "../middleware/isAuthenticated";
 import prisma from "../prismaClient";
 import appAssert from "../utils/appAssert";
 import { catchAsyncError } from "../utils/catchAsyncErrors";
 
-// get all lease, landlord only
+// get all lease
 export const getAllLease = catchAsyncError(async (req: AuthRequest, res) => {
   const user = req.user!;
   let leases;
 
   // check for leases based on roles
+  // fetch all lease for tenant
   if (user.role === "TENANT") {
     leases = await prisma.lease.findMany({
       where: { tenantId: user.id },
       include: { tenant: true, property: true },
     });
   }
-  if (user.role === "LANDLORD") {
+  // fetch all lease for the property listed by the landlord
+  else if (user.role === "MANAGER") {
     leases = await prisma.lease.findMany({
       where: { property: { managerId: user?.id } },
-      include: { tenant: true, property: true },
+      include: { property: true },
     });
+  } // Assert an error if none is found
+  else {
+    appAssert(false, NOT_FOUND, "No lease found");
   }
 
-  res.status(OK).json(leases);
+  return res.status(OK).json({
+    success: true,
+    message: "Lease fetched Successfully",
+    leases,
+  });
 });
 
 export const getLeasePayment = catchAsyncError(
@@ -50,7 +65,7 @@ export const getLeasePayment = catchAsyncError(
         AppErrorCode.UnauthorizedRole
       );
     }
-    if (user.role === "LANDLORD" && lease.property.managerId !== user.id) {
+    if (user.role === "MANAGER" && lease.property.managerId !== user.id) {
       return appAssert(
         false,
         FORBIDDEN,
@@ -63,6 +78,172 @@ export const getLeasePayment = catchAsyncError(
       where: { leaseId: Number(id) },
     });
     // return a response
-    res.status(OK).json(payments);
+    return res.status(OK).json({
+      success: true,
+      message: "Lease fetched Successfully",
+      payments,
+    });
   }
 );
+
+export const createLease = catchAsyncError(async (req: AuthRequest, res) => {
+  // check for user id
+  const user = req.user!;
+  // get the request from the body
+  const {
+    propertyId,
+    tenantId,
+    startDate,
+    endDate,
+    rent,
+    deposit,
+    applicationId,
+  } = req.body;
+
+  // restrict the role to landlord
+  if (user.role !== "MANAGER") {
+    appAssert(
+      false,
+      FORBIDDEN,
+      "You are not a landlord",
+      AppErrorCode.UnauthorizedRole
+    );
+  }
+
+  // validate input fields
+  if (
+    !propertyId ||
+    !tenantId ||
+    !startDate ||
+    !endDate ||
+    !rent ||
+    !deposit ||
+    !applicationId
+  ) {
+    appAssert(
+      false,
+      BAD_REQUEST,
+      "All fields are required",
+      AppErrorCode.invalidInput
+    );
+  }
+
+  // check if the property belongs to the landlord
+  const property = await prisma.property.findUnique({
+    where: { id: Number(propertyId) },
+    include: { manager: true, leases: true },
+  });
+
+  // if there is no property assert an error
+  appAssert(
+    property,
+    NOT_FOUND,
+    "Property not found",
+    AppErrorCode.InvalidPropertyId
+  );
+
+  // if the item has been leased assert an error
+  appAssert(
+    property.leases.length === 0,
+    NOT_FOUND,
+    "This property has been leased",
+    AppErrorCode.PropertyUnavailable
+  );
+
+  // check if the application status has been approved before creating a lease
+  const application = await prisma.application.findFirst({
+    where: {
+      id: Number(applicationId),
+      propertyId: Number(propertyId),
+      tenantId,
+      status: "Approved",
+    },
+  });
+  // assert an error if there is no approved application status
+  appAssert(application, BAD_REQUEST, "Application status not found");
+
+  // create a lease and update the application then wait till the tenant approves it
+  const lease = await prisma.$transaction(async (prisma) => {
+    const newLease = await prisma.lease.create({
+      data: {
+        startDate: new Date(startDate),
+        endDate: new Date(endDate),
+        rent: Number(rent),
+        deposit: Number(deposit),
+        property: { connect: { id: Number(propertyId) } },
+        tenant: { connect: { id: tenantId } },
+        status: "Pending",
+      },
+      include: { property: { include: { location: true } }, tenant: true },
+    });
+
+    // Update application with leaseId
+    await prisma.application.update({
+      where: { id: Number(applicationId) },
+      data: { lease: { connect: { id: newLease.id } } },
+    });
+
+    return newLease;
+  });
+
+  res.status(CREATED).json({
+    success: true,
+    message: "Lease created successfully",
+    lease,
+  });
+});
+
+export const deleteLease = catchAsyncError(async (req: AuthRequest, res) => {
+  const user = req.user!;
+  const { id } = req.params;
+
+  // restrict to landlord
+  if (user.role !== "MANAGER") {
+    appAssert(false, FORBIDDEN, "Only Manager can delete a lease");
+  }
+
+  // fetch the lease
+  const lease = await prisma.lease.findUnique({
+    where: { id: Number(id) },
+  });
+
+  // ASSERT AN ERROR
+  appAssert(lease, NOT_FOUND, "Lease not found");
+
+  // update the application data and delete the lease
+  await prisma.$transaction(async (prisma) => {
+    // update the application
+    await prisma.application.updateMany({
+      where: { leaseId: Number(id) },
+      data: { leaseId: null },
+    });
+
+    // delete the lease
+    await prisma.lease.delete({
+      where: { id: Number(id) },
+    });
+  });
+});
+
+export const updateLease = catchAsyncError(async (req: AuthRequest, res) => {
+  const user = req.user!;
+  const { id } = req.params;
+
+  // restrict to tenant alone
+  if (user.role !== "TENANT") {
+    appAssert(false, FORBIDDEN, "You aren't a tenant");
+  }
+
+  // update the lease status
+  const updatedLease = await prisma.lease.update({
+    where: { id: Number(id) },
+    data: { status: "Approved" },
+    include: { property: { include: { location: true } }, tenant: true },
+  });
+
+  return res.status(OK).json({
+    success: true,
+    message: "Lease accepted successfully",
+    lease: updatedLease,
+  });
+});

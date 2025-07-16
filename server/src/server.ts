@@ -10,6 +10,7 @@ import userRoutes from "./routes/userRoutes";
 import tenantRoutes from "./routes/tenantRoutes";
 import landlordRoutes from "./routes/landlordRoutes";
 import propertyRoutes from "./routes/propertyRoutes";
+import applicationRoutes from "./routes/applicationRoutes";
 import leaseRoutes from "./routes/leaseRoutes";
 import rateLimit from "express-rate-limit";
 import cookieParser from "cookie-parser";
@@ -69,6 +70,8 @@ app.use("/api/landlord", landlordRoutes);
 app.use("/api/properties", propertyRoutes);
 // lease router
 app.use("/api/lease", leaseRoutes);
+// application routes
+app.use("/api/applications", applicationRoutes);
 
 // error handler
 app.use(errorHandler);

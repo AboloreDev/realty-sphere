@@ -20,7 +20,7 @@ router.patch("/:id", isAuthenticated, updateLandlord);
 router.get(
   "/:id/properties",
   isAuthenticated,
-  restrictTo("LANDLORD"),
+  restrictTo("MANAGER"),
   getLandlordProperties
 );
 

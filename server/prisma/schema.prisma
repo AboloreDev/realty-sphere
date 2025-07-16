@@ -176,7 +176,7 @@ model Lease {
   deposit         Float
   propertyId      Int
   tenantId        String
-
+  status          ApplicationStatus  @default(Pending) 
   property    Property     @relation(fields: [propertyId], references: [id])
   tenant      User         @relation("TenantLeases", fields: [tenantId], references: [id])
   application Application?

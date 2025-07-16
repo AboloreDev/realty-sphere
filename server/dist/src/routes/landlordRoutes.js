@@ -14,5 +14,5 @@ router.get("/:id", isAuthenticated_1.isAuthenticated, landlord_controller_1.getL
 // updating the landlord data
 router.patch("/:id", isAuthenticated_1.isAuthenticated, landlord_controller_1.updateLandlord);
 // GET LANDLORD SINGLE PROPERTY
-router.get("/:id/properties", isAuthenticated_1.isAuthenticated, (0, isAuthenticated_1.restrictTo)("LANDLORD"), landlord_controller_1.getLandlordProperties);
+router.get("/:id/properties", isAuthenticated_1.isAuthenticated, (0, isAuthenticated_1.restrictTo)("MANAGER"), landlord_controller_1.getLandlordProperties);
 exports.default = router;

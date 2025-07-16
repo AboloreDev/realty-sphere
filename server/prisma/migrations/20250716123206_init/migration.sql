@@ -26,6 +26,7 @@ CREATE TABLE "User" (
     "password" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "role" "Role" NOT NULL,
+    "emailVerified" BOOLEAN NOT NULL DEFAULT false,
     "resetPasswordToken" TEXT,
     "resetPasswordExpires" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -39,6 +40,8 @@ CREATE TABLE "Otp" (
     "code" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "expiresAt" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL,
+    "emailVerified" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "Otp_pkey" PRIMARY KEY ("id")
 );
@@ -118,6 +121,7 @@ CREATE TABLE "Lease" (
     "deposit" DOUBLE PRECISION NOT NULL,
     "propertyId" INTEGER NOT NULL,
     "tenantId" TEXT NOT NULL,
+    "status" "ApplicationStatus" NOT NULL DEFAULT 'Pending',
 
     CONSTRAINT "Lease_pkey" PRIMARY KEY ("id")
 );
