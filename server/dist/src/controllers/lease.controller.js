@@ -116,7 +116,7 @@ exports.createLease = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __aw
         const newLease = yield prisma.lease.create({
             data: {
                 startDate: new Date(startDate),
-                endDate: new Date(endDate),
+                endDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
                 rent: Number(rent),
                 deposit: Number(deposit),
                 property: { connect: { id: Number(propertyId) } },

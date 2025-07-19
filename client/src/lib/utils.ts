@@ -11,8 +11,7 @@ export function formatEnumString(str: string) {
 }
 
 export function formatPriceValue(value: number | null, isMin: boolean) {
-  if (value === null || value === 0)
-    return isMin ? "Any Min Price" : "Any Max Price";
+  if (value === null || value === 0) return isMin ? " Min Price" : " Max Price";
   if (value >= 1000) {
     const kValue = value / 1000;
     return isMin ? `$${kValue}k+` : `<$${kValue}k`;
@@ -54,31 +53,4 @@ export const withToast = async <T>(
     if (error) toast.error(error);
     throw err;
   }
-};
-
-export const createNewUserInDatabase = async (
-  user: any,
-  idToken: any,
-  userRole: string,
-  fetchWithBQ: any
-) => {
-  const createEndpoint =
-    userRole?.toLowerCase() === "manager" ? "/managers" : "/tenants";
-
-  const createUserResponse = await fetchWithBQ({
-    url: createEndpoint,
-    method: "POST",
-    body: {
-      cognitoId: user.userId,
-      name: user.username,
-      email: idToken?.payload?.email || "",
-      phoneNumber: "",
-    },
-  });
-
-  if (createUserResponse.error) {
-    throw new Error("Failed to create user record");
-  }
-
-  return createUserResponse;
 };

@@ -8,18 +8,22 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 import userReducer from "./slice/userSlice";
 import tenantReducer from "./slice/tenantSlice";
 import landlordReducer from "./slice/landlordSlice";
+import globalReducer from "./slice/globalSlice";
 import { authApi } from "./api/authApi";
 import { tenantApi } from "./api/tenantApi";
 import { landlordApi } from "./api/landlordApi";
+import { api } from "./api/api";
 
 /* REDUX STORE */
 const rootReducer = combineReducers({
-  user: userReducer,
-  tenant: tenantReducer,
-  landlord: landlordReducer,
+  user: userReducer, //user reducer
+  tenant: tenantReducer, //tenant reducer
+  landlord: landlordReducer, // landlord reducer
+  global: globalReducer, //global reducer
   [authApi.reducerPath]: authApi.reducer,
   [tenantApi.reducerPath]: tenantApi.reducer,
   [landlordApi.reducerPath]: landlordApi.reducer,
+  [api.reducerPath]: api.reducer, //global api
 });
 
 export const makeStore = () => {
@@ -29,7 +33,8 @@ export const makeStore = () => {
       getDefaultMiddleware().concat(
         authApi.middleware,
         tenantApi.middleware,
-        landlordApi.middleware
+        landlordApi.middleware,
+        api.middleware //global api
       ),
   });
 };

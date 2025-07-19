@@ -109,21 +109,20 @@ exports.updateApplications = (0, catchAsyncErrors_1.catchAsyncError)((req, res) 
     const { id } = req.params;
     const status = req.body;
     const user = req.user;
-    console.log("Status:", status);
     if (user.role !== "MANAGER") {
         (0, appAssert_1.default)(false, httpStatus_1.FORBIDDEN, "Only landlords can update application");
     }
     // validate the application and check if it exists
     const applications = yield prismaClient_1.default.application.findUnique({
         where: { id: Number(id) },
-        include: { property: true },
+        include: { property: true, tenant: true },
     });
     // asert an error if no applications
     (0, appAssert_1.default)(applications, httpStatus_1.NOT_FOUND, "Application not found");
     // update appliation
     const updateApplications = yield prismaClient_1.default.application.update({
         where: { id: Number(id) },
-        data: { status },
+        data: { status: "Approved" },
         include: {
             property: { include: { location: true, manager: true } },
             tenant: true,

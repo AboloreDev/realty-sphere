@@ -134,8 +134,6 @@ export const updateApplications = catchAsyncError(
     const status = req.body;
     const user = req.user!;
 
-    console.log("Status:", status);
-
     if (user.role !== "MANAGER") {
       appAssert(false, FORBIDDEN, "Only landlords can update application");
     }
@@ -143,7 +141,7 @@ export const updateApplications = catchAsyncError(
     // validate the application and check if it exists
     const applications = await prisma.application.findUnique({
       where: { id: Number(id) },
-      include: { property: true },
+      include: { property: true, tenant: true },
     });
 
     // asert an error if no applications
@@ -152,7 +150,7 @@ export const updateApplications = catchAsyncError(
     // update appliation
     const updateApplications = await prisma.application.update({
       where: { id: Number(id) },
-      data: { status },
+      data: { status: "Approved" },
       include: {
         property: { include: { location: true, manager: true } },
         tenant: true,

@@ -8843,6 +8843,7 @@ export namespace Prisma {
     deposit: number | null
     propertyId: number | null
     tenantId: string | null
+    status: $Enums.ApplicationStatus | null
   }
 
   export type LeaseMaxAggregateOutputType = {
@@ -8853,6 +8854,7 @@ export namespace Prisma {
     deposit: number | null
     propertyId: number | null
     tenantId: string | null
+    status: $Enums.ApplicationStatus | null
   }
 
   export type LeaseCountAggregateOutputType = {
@@ -8863,6 +8865,7 @@ export namespace Prisma {
     deposit: number
     propertyId: number
     tenantId: number
+    status: number
     _all: number
   }
 
@@ -8889,6 +8892,7 @@ export namespace Prisma {
     deposit?: true
     propertyId?: true
     tenantId?: true
+    status?: true
   }
 
   export type LeaseMaxAggregateInputType = {
@@ -8899,6 +8903,7 @@ export namespace Prisma {
     deposit?: true
     propertyId?: true
     tenantId?: true
+    status?: true
   }
 
   export type LeaseCountAggregateInputType = {
@@ -8909,6 +8914,7 @@ export namespace Prisma {
     deposit?: true
     propertyId?: true
     tenantId?: true
+    status?: true
     _all?: true
   }
 
@@ -9006,6 +9012,7 @@ export namespace Prisma {
     deposit: number
     propertyId: number
     tenantId: string
+    status: $Enums.ApplicationStatus
     _count: LeaseCountAggregateOutputType | null
     _avg: LeaseAvgAggregateOutputType | null
     _sum: LeaseSumAggregateOutputType | null
@@ -9035,6 +9042,7 @@ export namespace Prisma {
     deposit?: boolean
     propertyId?: boolean
     tenantId?: boolean
+    status?: boolean
     property?: boolean | PropertyDefaultArgs<ExtArgs>
     tenant?: boolean | UserDefaultArgs<ExtArgs>
     application?: boolean | Lease$applicationArgs<ExtArgs>
@@ -9050,6 +9058,7 @@ export namespace Prisma {
     deposit?: boolean
     propertyId?: boolean
     tenantId?: boolean
+    status?: boolean
     property?: boolean | PropertyDefaultArgs<ExtArgs>
     tenant?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["lease"]>
@@ -9062,6 +9071,7 @@ export namespace Prisma {
     deposit?: boolean
     propertyId?: boolean
     tenantId?: boolean
+    status?: boolean
     property?: boolean | PropertyDefaultArgs<ExtArgs>
     tenant?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["lease"]>
@@ -9074,9 +9084,10 @@ export namespace Prisma {
     deposit?: boolean
     propertyId?: boolean
     tenantId?: boolean
+    status?: boolean
   }
 
-  export type LeaseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "startDate" | "endDate" | "rent" | "deposit" | "propertyId" | "tenantId", ExtArgs["result"]["lease"]>
+  export type LeaseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "startDate" | "endDate" | "rent" | "deposit" | "propertyId" | "tenantId" | "status", ExtArgs["result"]["lease"]>
   export type LeaseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     property?: boolean | PropertyDefaultArgs<ExtArgs>
     tenant?: boolean | UserDefaultArgs<ExtArgs>
@@ -9109,6 +9120,7 @@ export namespace Prisma {
       deposit: number
       propertyId: number
       tenantId: string
+      status: $Enums.ApplicationStatus
     }, ExtArgs["result"]["lease"]>
     composites: {}
   }
@@ -9543,6 +9555,7 @@ export namespace Prisma {
     readonly deposit: FieldRef<"Lease", 'Float'>
     readonly propertyId: FieldRef<"Lease", 'Int'>
     readonly tenantId: FieldRef<"Lease", 'String'>
+    readonly status: FieldRef<"Lease", 'ApplicationStatus'>
   }
     
 
@@ -11243,7 +11256,8 @@ export namespace Prisma {
     rent: 'rent',
     deposit: 'deposit',
     propertyId: 'propertyId',
-    tenantId: 'tenantId'
+    tenantId: 'tenantId',
+    status: 'status'
   };
 
   export type LeaseScalarFieldEnum = (typeof LeaseScalarFieldEnum)[keyof typeof LeaseScalarFieldEnum]
@@ -11957,6 +11971,7 @@ export namespace Prisma {
     deposit?: FloatFilter<"Lease"> | number
     propertyId?: IntFilter<"Lease"> | number
     tenantId?: StringFilter<"Lease"> | string
+    status?: EnumApplicationStatusFilter<"Lease"> | $Enums.ApplicationStatus
     property?: XOR<PropertyScalarRelationFilter, PropertyWhereInput>
     tenant?: XOR<UserScalarRelationFilter, UserWhereInput>
     application?: XOR<ApplicationNullableScalarRelationFilter, ApplicationWhereInput> | null
@@ -11971,6 +11986,7 @@ export namespace Prisma {
     deposit?: SortOrder
     propertyId?: SortOrder
     tenantId?: SortOrder
+    status?: SortOrder
     property?: PropertyOrderByWithRelationInput
     tenant?: UserOrderByWithRelationInput
     application?: ApplicationOrderByWithRelationInput
@@ -11988,6 +12004,7 @@ export namespace Prisma {
     deposit?: FloatFilter<"Lease"> | number
     propertyId?: IntFilter<"Lease"> | number
     tenantId?: StringFilter<"Lease"> | string
+    status?: EnumApplicationStatusFilter<"Lease"> | $Enums.ApplicationStatus
     property?: XOR<PropertyScalarRelationFilter, PropertyWhereInput>
     tenant?: XOR<UserScalarRelationFilter, UserWhereInput>
     application?: XOR<ApplicationNullableScalarRelationFilter, ApplicationWhereInput> | null
@@ -12002,6 +12019,7 @@ export namespace Prisma {
     deposit?: SortOrder
     propertyId?: SortOrder
     tenantId?: SortOrder
+    status?: SortOrder
     _count?: LeaseCountOrderByAggregateInput
     _avg?: LeaseAvgOrderByAggregateInput
     _max?: LeaseMaxOrderByAggregateInput
@@ -12020,6 +12038,7 @@ export namespace Prisma {
     deposit?: FloatWithAggregatesFilter<"Lease"> | number
     propertyId?: IntWithAggregatesFilter<"Lease"> | number
     tenantId?: StringWithAggregatesFilter<"Lease"> | string
+    status?: EnumApplicationStatusWithAggregatesFilter<"Lease"> | $Enums.ApplicationStatus
   }
 
   export type PaymentWhereInput = {
@@ -12616,6 +12635,7 @@ export namespace Prisma {
     endDate: Date | string
     rent: number
     deposit: number
+    status?: $Enums.ApplicationStatus
     property: PropertyCreateNestedOneWithoutLeasesInput
     tenant: UserCreateNestedOneWithoutLeasesInput
     application?: ApplicationCreateNestedOneWithoutLeaseInput
@@ -12630,6 +12650,7 @@ export namespace Prisma {
     deposit: number
     propertyId: number
     tenantId: string
+    status?: $Enums.ApplicationStatus
     application?: ApplicationUncheckedCreateNestedOneWithoutLeaseInput
     payments?: PaymentUncheckedCreateNestedManyWithoutLeaseInput
   }
@@ -12639,6 +12660,7 @@ export namespace Prisma {
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     rent?: FloatFieldUpdateOperationsInput | number
     deposit?: FloatFieldUpdateOperationsInput | number
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     property?: PropertyUpdateOneRequiredWithoutLeasesNestedInput
     tenant?: UserUpdateOneRequiredWithoutLeasesNestedInput
     application?: ApplicationUpdateOneWithoutLeaseNestedInput
@@ -12653,6 +12675,7 @@ export namespace Prisma {
     deposit?: FloatFieldUpdateOperationsInput | number
     propertyId?: IntFieldUpdateOperationsInput | number
     tenantId?: StringFieldUpdateOperationsInput | string
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     application?: ApplicationUncheckedUpdateOneWithoutLeaseNestedInput
     payments?: PaymentUncheckedUpdateManyWithoutLeaseNestedInput
   }
@@ -12665,6 +12688,7 @@ export namespace Prisma {
     deposit: number
     propertyId: number
     tenantId: string
+    status?: $Enums.ApplicationStatus
   }
 
   export type LeaseUpdateManyMutationInput = {
@@ -12672,6 +12696,7 @@ export namespace Prisma {
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     rent?: FloatFieldUpdateOperationsInput | number
     deposit?: FloatFieldUpdateOperationsInput | number
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
   }
 
   export type LeaseUncheckedUpdateManyInput = {
@@ -12682,6 +12707,7 @@ export namespace Prisma {
     deposit?: FloatFieldUpdateOperationsInput | number
     propertyId?: IntFieldUpdateOperationsInput | number
     tenantId?: StringFieldUpdateOperationsInput | string
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
   }
 
   export type PaymentCreateInput = {
@@ -13432,6 +13458,7 @@ export namespace Prisma {
     deposit?: SortOrder
     propertyId?: SortOrder
     tenantId?: SortOrder
+    status?: SortOrder
   }
 
   export type LeaseAvgOrderByAggregateInput = {
@@ -13449,6 +13476,7 @@ export namespace Prisma {
     deposit?: SortOrder
     propertyId?: SortOrder
     tenantId?: SortOrder
+    status?: SortOrder
   }
 
   export type LeaseMinOrderByAggregateInput = {
@@ -13459,6 +13487,7 @@ export namespace Prisma {
     deposit?: SortOrder
     propertyId?: SortOrder
     tenantId?: SortOrder
+    status?: SortOrder
   }
 
   export type LeaseSumOrderByAggregateInput = {
@@ -14826,6 +14855,7 @@ export namespace Prisma {
     endDate: Date | string
     rent: number
     deposit: number
+    status?: $Enums.ApplicationStatus
     property: PropertyCreateNestedOneWithoutLeasesInput
     application?: ApplicationCreateNestedOneWithoutLeaseInput
     payments?: PaymentCreateNestedManyWithoutLeaseInput
@@ -14838,6 +14868,7 @@ export namespace Prisma {
     rent: number
     deposit: number
     propertyId: number
+    status?: $Enums.ApplicationStatus
     application?: ApplicationUncheckedCreateNestedOneWithoutLeaseInput
     payments?: PaymentUncheckedCreateNestedManyWithoutLeaseInput
   }
@@ -15035,6 +15066,7 @@ export namespace Prisma {
     deposit?: FloatFilter<"Lease"> | number
     propertyId?: IntFilter<"Lease"> | number
     tenantId?: StringFilter<"Lease"> | string
+    status?: EnumApplicationStatusFilter<"Lease"> | $Enums.ApplicationStatus
   }
 
   export type OtpUpsertWithWhereUniqueWithoutUserInput = {
@@ -15314,6 +15346,7 @@ export namespace Prisma {
     endDate: Date | string
     rent: number
     deposit: number
+    status?: $Enums.ApplicationStatus
     tenant: UserCreateNestedOneWithoutLeasesInput
     application?: ApplicationCreateNestedOneWithoutLeaseInput
     payments?: PaymentCreateNestedManyWithoutLeaseInput
@@ -15326,6 +15359,7 @@ export namespace Prisma {
     rent: number
     deposit: number
     tenantId: string
+    status?: $Enums.ApplicationStatus
     application?: ApplicationUncheckedCreateNestedOneWithoutLeaseInput
     payments?: PaymentUncheckedCreateNestedManyWithoutLeaseInput
   }
@@ -15782,6 +15816,7 @@ export namespace Prisma {
     endDate: Date | string
     rent: number
     deposit: number
+    status?: $Enums.ApplicationStatus
     property: PropertyCreateNestedOneWithoutLeasesInput
     tenant: UserCreateNestedOneWithoutLeasesInput
     payments?: PaymentCreateNestedManyWithoutLeaseInput
@@ -15795,6 +15830,7 @@ export namespace Prisma {
     deposit: number
     propertyId: number
     tenantId: string
+    status?: $Enums.ApplicationStatus
     payments?: PaymentUncheckedCreateNestedManyWithoutLeaseInput
   }
 
@@ -15928,6 +15964,7 @@ export namespace Prisma {
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     rent?: FloatFieldUpdateOperationsInput | number
     deposit?: FloatFieldUpdateOperationsInput | number
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     property?: PropertyUpdateOneRequiredWithoutLeasesNestedInput
     tenant?: UserUpdateOneRequiredWithoutLeasesNestedInput
     payments?: PaymentUpdateManyWithoutLeaseNestedInput
@@ -15941,6 +15978,7 @@ export namespace Prisma {
     deposit?: FloatFieldUpdateOperationsInput | number
     propertyId?: IntFieldUpdateOperationsInput | number
     tenantId?: StringFieldUpdateOperationsInput | string
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     payments?: PaymentUncheckedUpdateManyWithoutLeaseNestedInput
   }
 
@@ -16273,6 +16311,7 @@ export namespace Prisma {
     endDate: Date | string
     rent: number
     deposit: number
+    status?: $Enums.ApplicationStatus
     property: PropertyCreateNestedOneWithoutLeasesInput
     tenant: UserCreateNestedOneWithoutLeasesInput
     application?: ApplicationCreateNestedOneWithoutLeaseInput
@@ -16286,6 +16325,7 @@ export namespace Prisma {
     deposit: number
     propertyId: number
     tenantId: string
+    status?: $Enums.ApplicationStatus
     application?: ApplicationUncheckedCreateNestedOneWithoutLeaseInput
   }
 
@@ -16310,6 +16350,7 @@ export namespace Prisma {
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     rent?: FloatFieldUpdateOperationsInput | number
     deposit?: FloatFieldUpdateOperationsInput | number
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     property?: PropertyUpdateOneRequiredWithoutLeasesNestedInput
     tenant?: UserUpdateOneRequiredWithoutLeasesNestedInput
     application?: ApplicationUpdateOneWithoutLeaseNestedInput
@@ -16323,6 +16364,7 @@ export namespace Prisma {
     deposit?: FloatFieldUpdateOperationsInput | number
     propertyId?: IntFieldUpdateOperationsInput | number
     tenantId?: StringFieldUpdateOperationsInput | string
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     application?: ApplicationUncheckedUpdateOneWithoutLeaseNestedInput
   }
 
@@ -16367,6 +16409,7 @@ export namespace Prisma {
     rent: number
     deposit: number
     propertyId: number
+    status?: $Enums.ApplicationStatus
   }
 
   export type OtpCreateManyUserInput = {
@@ -16645,6 +16688,7 @@ export namespace Prisma {
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     rent?: FloatFieldUpdateOperationsInput | number
     deposit?: FloatFieldUpdateOperationsInput | number
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     property?: PropertyUpdateOneRequiredWithoutLeasesNestedInput
     application?: ApplicationUpdateOneWithoutLeaseNestedInput
     payments?: PaymentUpdateManyWithoutLeaseNestedInput
@@ -16657,6 +16701,7 @@ export namespace Prisma {
     rent?: FloatFieldUpdateOperationsInput | number
     deposit?: FloatFieldUpdateOperationsInput | number
     propertyId?: IntFieldUpdateOperationsInput | number
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     application?: ApplicationUncheckedUpdateOneWithoutLeaseNestedInput
     payments?: PaymentUncheckedUpdateManyWithoutLeaseNestedInput
   }
@@ -16668,6 +16713,7 @@ export namespace Prisma {
     rent?: FloatFieldUpdateOperationsInput | number
     deposit?: FloatFieldUpdateOperationsInput | number
     propertyId?: IntFieldUpdateOperationsInput | number
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
   }
 
   export type OtpUpdateWithoutUserInput = {
@@ -16722,6 +16768,7 @@ export namespace Prisma {
     rent: number
     deposit: number
     tenantId: string
+    status?: $Enums.ApplicationStatus
   }
 
   export type ApplicationCreateManyPropertyInput = {
@@ -16741,6 +16788,7 @@ export namespace Prisma {
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     rent?: FloatFieldUpdateOperationsInput | number
     deposit?: FloatFieldUpdateOperationsInput | number
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     tenant?: UserUpdateOneRequiredWithoutLeasesNestedInput
     application?: ApplicationUpdateOneWithoutLeaseNestedInput
     payments?: PaymentUpdateManyWithoutLeaseNestedInput
@@ -16753,6 +16801,7 @@ export namespace Prisma {
     rent?: FloatFieldUpdateOperationsInput | number
     deposit?: FloatFieldUpdateOperationsInput | number
     tenantId?: StringFieldUpdateOperationsInput | string
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     application?: ApplicationUncheckedUpdateOneWithoutLeaseNestedInput
     payments?: PaymentUncheckedUpdateManyWithoutLeaseNestedInput
   }
@@ -16764,6 +16813,7 @@ export namespace Prisma {
     rent?: FloatFieldUpdateOperationsInput | number
     deposit?: FloatFieldUpdateOperationsInput | number
     tenantId?: StringFieldUpdateOperationsInput | string
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
   }
 
   export type ApplicationUpdateWithoutPropertyInput = {

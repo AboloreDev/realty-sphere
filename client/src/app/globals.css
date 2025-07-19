@@ -225,3 +225,9 @@ html.dark .swiper-pagination-bullet {
 html.dark .swiper-pagination-bullet-active {
   background: #ffffff;
 }
+
+.map {
+  height: 100%;
+  width: 100%;
+  z-index: 0;
+}

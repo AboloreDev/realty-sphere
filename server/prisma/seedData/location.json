@@ -2,30 +2,31 @@
   {
     "id": 1,
     "country": "United States",
-    "city": "Pasadena",
-    "state": "CA",
-    "address": "123 Colorado Blvd",
-    "postalCode": "91105",
-    "coordinates": "POINT(-118.144516 34.147785)"
+    "city": "New York",
+    "state": "NY",
+    "address": "123 5th Ave",
+    "postalCode": "10010",
+    "coordinates": "POINT(-73.992378 40.738232)"
   },
   {
     "id": 2,
     "country": "United States",
-    "city": "Santa Monica",
-    "state": "CA",
-    "address": "456 Ocean Ave",
-    "postalCode": "90401",
-    "coordinates": "POINT(-118.496513 34.013654)"
+    "city": "New York",
+    "state": "NY",
+    "address": "456 Broadway",
+    "postalCode": "10013",
+    "coordinates": "POINT(-74.000664 40.720825)"
   },
   {
     "id": 3,
     "country": "United States",
-    "city": "Burbank",
-    "state": "CA",
-    "address": "789 Hollywood Way",
-    "postalCode": "91505",
-    "coordinates": "POINT(-118.328661 34.180839)"
+    "city": "New York",
+    "state": "NY",
+    "address": "789 Lexington Ave",
+    "postalCode": "10065",
+    "coordinates": "POINT(-73.966930 40.764356)"
   },
+
   {
     "id": 4,
     "country": "United States",

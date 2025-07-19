@@ -16,5 +16,5 @@ exports.updateTenantSchema = zod_1.z.object({
 });
 exports.addTenantFavorite = zod_1.z.object({
     id: zod_1.z.string(),
-    propertyId: zod_1.z.string(),
+    propertyId: zod_1.z.number(),
 });

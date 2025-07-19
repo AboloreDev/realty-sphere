@@ -17,5 +17,5 @@ export const updateTenantSchema = z.object({
 
 export const addTenantFavorite = z.object({
   id: z.string(),
-  propertyId: z.string(),
+  propertyId: z.number(),
 });
