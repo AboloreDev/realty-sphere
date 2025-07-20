@@ -23,6 +23,7 @@ import {
 import { PropertyTypeIcons } from "@/lib/constants";
 import { debounce } from "lodash";
 import { usePathname, useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const FiltersBar = () => {
   const dispatch = useAppDispatch();
@@ -47,7 +48,7 @@ const FiltersBar = () => {
       );
     });
 
-    router.push(`${pathName} ? ${updatedSearchParams.toString()}`);
+    router.push(`${pathName}?${updatedSearchParams.toString()}`);
   });
   // function to handle changes in the filter
   const handleFilterChange = (
@@ -91,18 +92,46 @@ const FiltersBar = () => {
   // filter toggle function
   const handleToggleOpen = () => {
     dispatch(toggleFiltersOpen());
-    console.log("Clicked");
   };
 
-  // handle Location search
-  const handleLocationSearch = () => {};
+  // Handle location search with Nominatim
+  const handleLocationSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!searchInput) {
+      toast.warning("Please enter a location");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:4000/api/geocode?query=${encodeURIComponent(
+          searchInput
+        )}&format=json&limit=1`
+      );
+      const { data } = await response.json();
+      console.log(data);
+
+      if (data) {
+        const { latitude, longitude } = data;
+        dispatch(
+          setFilters({
+            location: searchInput,
+            coordinates: [latitude, longitude],
+          })
+        );
+      }
+      toast.success(`Location found`);
+    } catch (err) {
+      toast.error("Error searching location");
+      console.error("Search Error:", err);
+    }
+  };
 
   //   price array
   const minPrices = [500, 1000, 2000, 3000, 5000, 10000];
   const maxPrices = [1000, 2000, 3000, 5000, 10000];
   // beds and bath array
-  const beds = ["1+ bed", "2+ beds", "3+ beds", "4+ beds", "5+ beds"];
-  const baths = ["1+ bath", "2+ bath", "3+ baths"];
   return (
     <div className=" flex justify-between items-center w-full py-5 overflow-x-auto">
       {/* Filters */}
@@ -178,18 +207,17 @@ const FiltersBar = () => {
           {/* Beds */}
           <Select
             value={filters.bed}
-            onValueChange={(value) => handleFilterChange("beds", value, null)}
+            onValueChange={(value) => handleFilterChange("bed", value, null)}
           >
             <SelectTrigger className="w-30 rounded-xl border-primary-400">
               <SelectValue placeholder="beds" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="any">Beds</SelectItem>
-              {beds.map((bed, index) => (
-                <SelectItem key={index} value={bed}>
-                  {bed}
-                </SelectItem>
-              ))}
+              <SelectItem value="1">1+ bed</SelectItem>
+              <SelectItem value="2">2+ beds</SelectItem>
+              <SelectItem value="3">3+ beds</SelectItem>
+              <SelectItem value="4">4+ beds</SelectItem>
             </SelectContent>
           </Select>
 
@@ -203,11 +231,9 @@ const FiltersBar = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="any">Baths</SelectItem>
-              {baths.map((bath, index) => (
-                <SelectItem key={index} value={bath}>
-                  {bath}
-                </SelectItem>
-              ))}
+              <SelectItem value="1">1+ bath</SelectItem>
+              <SelectItem value="2">2+ baths</SelectItem>
+              <SelectItem value="3">3+ baths</SelectItem>
             </SelectContent>
           </Select>
         </div>

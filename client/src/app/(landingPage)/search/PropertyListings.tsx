@@ -1,8 +1,11 @@
 "use client";
 
 import BouncingLoader from "@/components/code/BouncingLoader";
+import Card from "@/components/code/Card";
+import ListCard from "@/components/code/ListCard";
 import { useGetAllPropertiesQuery } from "@/state/api/api";
 import { useAppSelector } from "@/state/redux";
+
 import { MapPin } from "lucide-react";
 import React from "react";
 import { toast } from "sonner";
@@ -16,16 +19,11 @@ const PropertyListings = () => {
   const viewModes = useAppSelector((state) => state.global.viewMode);
   // fetch properties from api
   const { data: properties, isLoading } = useGetAllPropertiesQuery(filters);
-  console.log(properties.length);
 
   // function to handle favorites
-  const handleFavorites = () => {
+  const handleFavoriteToggle = () => {
     if (!user) {
-      toast.error("Please login to account to add favorites");
-    }
-
-    if (user?.role !== "TENANT") {
-      toast.error("Only tenant can favorite a property");
+      toast.info("Please login to favorite a property");
     }
   };
 
@@ -39,8 +37,9 @@ const PropertyListings = () => {
   if (!properties) {
     toast.error("Failed to Fetch Properties");
   }
+
   return (
-    <div className="w-full">
+    <div className="w-full h-screen overflow-y-auto">
       <div className="flex items-center justify-start gap-2">
         <h3 className="text-sm font-bold">{properties?.length}</h3>
         <MapPin />
@@ -52,7 +51,25 @@ const PropertyListings = () => {
       <div className="flex">
         <div className="p-2 w-full">
           {properties?.map((property) =>
-            viewModes === "grid" ? <>hELLO</> : <>Hi</>
+            viewModes === "grid" ? (
+              <Card
+                key={property.id}
+                property={property}
+                onFavoriteToggle={() => handleFavoriteToggle()}
+                showFavoriteButton={!user}
+                propertyLink={`/search/${property.id}`}
+                isFavorite={false}
+              />
+            ) : (
+              <ListCard
+                key={property.id}
+                property={property}
+                onFavoriteToggle={() => handleFavoriteToggle()}
+                showFavoriteButton={!user}
+                propertyLink={`/search/${property.id}`}
+                isFavorite={false}
+              />
+            )
           )}
         </div>
       </div>

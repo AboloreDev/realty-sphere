@@ -16,6 +16,7 @@ const landlordRoutes_1 = __importDefault(require("./routes/landlordRoutes"));
 const propertyRoutes_1 = __importDefault(require("./routes/propertyRoutes"));
 const applicationRoutes_1 = __importDefault(require("./routes/applicationRoutes"));
 const leaseRoutes_1 = __importDefault(require("./routes/leaseRoutes"));
+const mapsRoutes_1 = __importDefault(require("./routes/mapsRoutes"));
 const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const errorHandler_1 = require("./middleware/errorHandler");
@@ -65,6 +66,8 @@ app.use("/api/properties", propertyRoutes_1.default);
 app.use("/api/lease", leaseRoutes_1.default);
 // application routes
 app.use("/api/applications", applicationRoutes_1.default);
+// maps Routes
+app.use("/api", mapsRoutes_1.default);
 // error handler
 app.use(errorHandler_1.errorHandler);
 //LISTEN ON PORT NUMBER

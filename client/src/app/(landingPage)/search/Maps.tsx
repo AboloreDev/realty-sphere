@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import "leaflet/dist/leaflet.css";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import { Icon, LatLngTuple } from "leaflet";
 import { useGetAllPropertiesQuery } from "@/state/api/api";
 import { useAppSelector } from "@/state/redux";
@@ -13,6 +13,7 @@ import BouncingLoader from "@/components/code/BouncingLoader";
 
 const Maps = () => {
   const router = useRouter();
+
   // Define the Property type to match the backend response
   interface Property {
     id: number;
@@ -47,17 +48,21 @@ const Maps = () => {
     error,
   } = useGetAllPropertiesQuery(filters);
 
-  // Custom icon for markers
-  const customIcon = new Icon({
-    iconUrl: "/placeholder.png",
+  // Custom icons
+  const propertyIcon = new Icon({
+    iconUrl: "/placeholder.png", // Property marker icon
     iconSize: [38, 38],
   });
 
-  // Default center for the map (New York City)
-  const defaultCenter: LatLngTuple = [40.71427, -74.00597];
+  // Map center based on filters.coordinates or default to New York
+  const mapCenter: LatLngTuple = filters.coordinates
+    ? [filters.coordinates[0], filters.coordinates[1]] // [latitude, longitude]
+    : [40.71427, -74.00597]; // Default to New York
+
+  console.log(mapCenter);
 
   // Convert properties to markers
-  const markers =
+  const propertyMarkers =
     properties?.map((property: Property) => ({
       id: property.id,
       city: property.location.city,
@@ -70,10 +75,22 @@ const Maps = () => {
       ] as LatLngTuple,
     })) || [];
 
+  // Component to update map view when coordinates change
+  const MapUpdater = () => {
+    const map = useMap();
+    useEffect(() => {
+      if (filters.coordinates) {
+        map.setView([filters.coordinates[0], filters.coordinates[1]], 10);
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [filters.coordinates, map]);
+    return null;
+  };
+
   // Handle toast notifications for error and empty states
   useEffect(() => {
     if (isError) {
-      toast.error(`Error fetching properties: ${"Unknown error"}`);
+      toast.error(`Error fetching properties: ${error || "Unknown error"}`);
     } else if (!isLoading && properties?.length === 0) {
       toast.info("No properties found for the current filters");
     } else if (properties) {
@@ -87,7 +104,7 @@ const Maps = () => {
   };
 
   return (
-    <div className="relative h-screen w-full ">
+    <div className="relative h-screen w-full">
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-200 bg-opacity-50">
           <span className="text-lg font-semibold">
@@ -96,33 +113,40 @@ const Maps = () => {
         </div>
       )}
       <MapContainer
-        center={defaultCenter}
-        zoom={12}
-        className="h-full w-full rounded-xl"
+        center={mapCenter}
+        zoom={10}
+        className="h-full w-full rounded-xl z-0"
+        scrollWheelZoom={false}
       >
         <TileLayer
           attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {markers.map((marker) => (
-          <Marker key={marker.id} position={marker.position} icon={customIcon}>
+        <MapUpdater />
+        {/* Property markers */}
+        {propertyMarkers.map((marker) => (
+          <Marker
+            key={marker.id}
+            position={marker.position}
+            icon={propertyIcon}
+          >
             <Popup>
               <div
                 className="cursor-pointer flex gap-2 w-44 h-24"
                 onClick={() => handlePopupClick(marker.id)}
               >
                 <Image
-                  src={marker.imageUrl[0]}
+                  src={marker.imageUrl[0] || "/placeholder.png"}
                   alt={marker.city}
                   height={400}
                   width={400}
                   className="h-24 w-24 object-cover rounded-md"
                 />
-                <div className="">
+                <div>
                   <h3 className="font-semibold">{marker.address}</h3>
                   <p className="text-sm text-gray-600">{marker.city}</p>
                   <p className="text-sm text-gray-600">
-                    $ {marker.pricePerMonth}
+                    ${marker.pricePerMonth}
                   </p>
                 </div>
               </div>

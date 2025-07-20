@@ -50,7 +50,7 @@ const SearchPage = () => {
       {/* filter bar component */}
       <FiltersBar />
       {/* full filter page for desktop*/}
-      <div className="flex flex-col lg:flex-row justify-between flex-1 overflow-hidden gap-4 p-4">
+      <div className="flex flex-col lg:flex-row justify-between flex-1 overflow-hidden gap-8 md:gap-4 p-4">
         {/* Filter Panel */}
         <div
           className={`hidden lg:flex h-full overflow-auto transition-all duration-300 ease-in-out  ${
@@ -66,7 +66,7 @@ const SearchPage = () => {
         </div>
 
         {/* Map */}
-        <div className="w-full lg:basis-6/12 h-64 lg:h-screen overflow-hidden">
+        <div className="w-full mb-8 lg:mb-0 lg:basis-6/12 h-64 lg:h-screen overflow-hidden">
           <Maps />
         </div>
 

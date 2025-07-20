@@ -12,6 +12,7 @@ import landlordRoutes from "./routes/landlordRoutes";
 import propertyRoutes from "./routes/propertyRoutes";
 import applicationRoutes from "./routes/applicationRoutes";
 import leaseRoutes from "./routes/leaseRoutes";
+import mapsRoutes from "./routes/mapsRoutes";
 import rateLimit from "express-rate-limit";
 import cookieParser from "cookie-parser";
 import { errorHandler } from "./middleware/errorHandler";
@@ -72,6 +73,8 @@ app.use("/api/properties", propertyRoutes);
 app.use("/api/lease", leaseRoutes);
 // application routes
 app.use("/api/applications", applicationRoutes);
+// maps Routes
+app.use("/api", mapsRoutes);
 
 // error handler
 app.use(errorHandler);

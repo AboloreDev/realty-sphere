@@ -26,6 +26,14 @@ export const tenantApi = createApi({
       }
     ),
 
+    // get tenant
+    getTenant: builder.query<Tenant, string>({
+      query: (id) => ({
+        url: `/tenant/${id}`,
+      }),
+      providesTags: (result) => [{ type: "Tenants", id: result?.id }],
+    }),
+
     // add to favorites
     addToFavorites: builder.mutation<
       Tenant,
@@ -63,4 +71,5 @@ export const {
   useUpdateTenantMutation,
   useAddToFavoritesMutation,
   useRemoveFavoritesMutation,
+  useGetTenantQuery,
 } = tenantApi;

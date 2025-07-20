@@ -24,6 +24,7 @@ import { Label } from "../../../components/ui/label";
 import { usePathname, useRouter } from "next/navigation";
 import { debounce } from "lodash";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 
 const FiltersPage = () => {
   const dispatch = useAppDispatch();
@@ -66,9 +67,40 @@ const FiltersPage = () => {
     updateUrl(initialState.filters);
   };
 
-  //   function to handle location search
-  const handleLocationSearch = () => {
-    console.log("Location");
+  // Handle location search with Nominatim
+  const handleLocationSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!location) {
+      toast.warning("Please enter a location to search");
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:4000/api/geocode?query=${encodeURIComponent(
+          localFilterState.location
+        )}&format=json&limit=1`
+      );
+      const { data } = await response.json();
+
+      if (data.length === 0) {
+        toast.error("Location not found");
+        return;
+      }
+
+      if (data) {
+        const { latitude, longitude } = data;
+
+        setLocalFilterState((prev) => ({
+          ...prev,
+          coordinates: [latitude, longitude],
+        }));
+      }
+      toast.success(`Location found`);
+    } catch (err) {
+      toast.error("Error searching location");
+      console.error("Search Error:", err);
+    }
   };
 
   //   handle amenity change function
