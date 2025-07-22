@@ -64,6 +64,7 @@ export const getSingleProperty = catchAsyncError(async (req, res) => {
     where: { id: Number(id) },
     include: {
       location: true,
+      manager: true,
     },
   });
   // assert an error message if property doesnt exist

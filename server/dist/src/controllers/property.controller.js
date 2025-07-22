@@ -77,6 +77,7 @@ exports.getSingleProperty = (0, catchAsyncErrors_1.catchAsyncError)((req, res) =
         where: { id: Number(id) },
         include: {
             location: true,
+            manager: true,
         },
     });
     // assert an error message if property doesnt exist

@@ -20,6 +20,7 @@ interface InitialStateTypes {
   isFiltersOpen: boolean;
   viewMode: "grid" | "list";
   filters: FiltersState;
+  isModalOpen: boolean;
 }
 
 // initial state
@@ -37,6 +38,7 @@ export const initialState: InitialStateTypes = {
     coordinates: [40.71427, -74.00597],
   },
   viewMode: "grid",
+  isModalOpen: false,
 };
 
 // slobal slice declraation
@@ -53,10 +55,13 @@ export const globalSlice = createSlice({
     setViewMode: (state, action: PayloadAction<"grid" | "list">) => {
       state.viewMode = action.payload;
     },
+    toggleModalOpen: (state) => {
+      state.isModalOpen = !state.isModalOpen;
+    },
   },
 });
 
-export const { setFilters, toggleFiltersOpen, setViewMode } =
+export const { setFilters, toggleFiltersOpen, setViewMode, toggleModalOpen } =
   globalSlice.actions;
 
 export default globalSlice.reducer;

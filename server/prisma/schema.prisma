@@ -75,6 +75,7 @@ model User {
   email               String    @unique
   password            String
   name                String
+  phoneNumber         String
   role                Role
   emailVerified        Boolean   @default(false)
   resetPasswordToken  String?

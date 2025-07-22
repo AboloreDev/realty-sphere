@@ -5,14 +5,15 @@
     "password": "$2a$10$examplehashedpassword1234567890abcdef",
     "name": "John Smith",
     "role": "MANAGER",
-    "createdAt": "2023-05-01T00:00:00Z"
+    "createdAt": "2023-05-01T00:00:00Z",
+    "phoneNumber": "+1 (555) 000-2222"
   },
   {
     "id": "23456789-90ab-cdef-1234-567890abcdef",
     "email": "sarah.johnson@example.com",
     "password": "$2a$10$examplehashedpassword1234567890abcdef",
     "name": "Sarah Johnson",
-
+    "phoneNumber": "+1 (805) 000-2222",
     "role": "MANAGER",
     "createdAt": "2023-05-01T00:00:00Z"
   },
@@ -21,7 +22,7 @@
     "email": "alice.brown@example.com",
     "password": "$2a$10$examplehashedpassword1234567890abcdef",
     "name": "Alice Brown",
-
+    "phoneNumber": "+1 (312) 998-2222",
     "role": "TENANT",
     "createdAt": "2023-05-01T00:00:00Z"
   },
@@ -30,7 +31,7 @@
     "email": "bob.green@example.com",
     "password": "$2a$10$examplehashedpassword1234567890abcdef",
     "name": "Bob Green",
-
+    "phoneNumber": "+1 (201) 786-2222",
     "role": "TENANT",
     "createdAt": "2023-05-01T00:00:00Z"
   },
@@ -39,7 +40,7 @@
     "email": "carol.white@example.com",
     "password": "$2a$10$examplehashedpassword1234567890abcdef",
     "name": "Carol White",
-
+    "phoneNumber": "+1 (650) 300-2222",
     "role": "TENANT",
     "createdAt": "2023-05-01T00:00:00Z"
   }

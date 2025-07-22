@@ -1817,6 +1817,7 @@ export namespace Prisma {
     email: string | null
     password: string | null
     name: string | null
+    phoneNumber: string | null
     role: $Enums.Role | null
     emailVerified: boolean | null
     resetPasswordToken: string | null
@@ -1829,6 +1830,7 @@ export namespace Prisma {
     email: string | null
     password: string | null
     name: string | null
+    phoneNumber: string | null
     role: $Enums.Role | null
     emailVerified: boolean | null
     resetPasswordToken: string | null
@@ -1841,6 +1843,7 @@ export namespace Prisma {
     email: number
     password: number
     name: number
+    phoneNumber: number
     role: number
     emailVerified: number
     resetPasswordToken: number
@@ -1855,6 +1858,7 @@ export namespace Prisma {
     email?: true
     password?: true
     name?: true
+    phoneNumber?: true
     role?: true
     emailVerified?: true
     resetPasswordToken?: true
@@ -1867,6 +1871,7 @@ export namespace Prisma {
     email?: true
     password?: true
     name?: true
+    phoneNumber?: true
     role?: true
     emailVerified?: true
     resetPasswordToken?: true
@@ -1879,6 +1884,7 @@ export namespace Prisma {
     email?: true
     password?: true
     name?: true
+    phoneNumber?: true
     role?: true
     emailVerified?: true
     resetPasswordToken?: true
@@ -1964,6 +1970,7 @@ export namespace Prisma {
     email: string
     password: string
     name: string
+    phoneNumber: string
     role: $Enums.Role
     emailVerified: boolean
     resetPasswordToken: string | null
@@ -1993,6 +2000,7 @@ export namespace Prisma {
     email?: boolean
     password?: boolean
     name?: boolean
+    phoneNumber?: boolean
     role?: boolean
     emailVerified?: boolean
     resetPasswordToken?: boolean
@@ -2013,6 +2021,7 @@ export namespace Prisma {
     email?: boolean
     password?: boolean
     name?: boolean
+    phoneNumber?: boolean
     role?: boolean
     emailVerified?: boolean
     resetPasswordToken?: boolean
@@ -2025,6 +2034,7 @@ export namespace Prisma {
     email?: boolean
     password?: boolean
     name?: boolean
+    phoneNumber?: boolean
     role?: boolean
     emailVerified?: boolean
     resetPasswordToken?: boolean
@@ -2037,6 +2047,7 @@ export namespace Prisma {
     email?: boolean
     password?: boolean
     name?: boolean
+    phoneNumber?: boolean
     role?: boolean
     emailVerified?: boolean
     resetPasswordToken?: boolean
@@ -2044,7 +2055,7 @@ export namespace Prisma {
     createdAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "name" | "role" | "emailVerified" | "resetPasswordToken" | "resetPasswordExpires" | "createdAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "name" | "phoneNumber" | "role" | "emailVerified" | "resetPasswordToken" | "resetPasswordExpires" | "createdAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     managedProperties?: boolean | User$managedPropertiesArgs<ExtArgs>
     tenantProperties?: boolean | User$tenantPropertiesArgs<ExtArgs>
@@ -2074,6 +2085,7 @@ export namespace Prisma {
       email: string
       password: string
       name: string
+      phoneNumber: string
       role: $Enums.Role
       emailVerified: boolean
       resetPasswordToken: string | null
@@ -2513,6 +2525,7 @@ export namespace Prisma {
     readonly email: FieldRef<"User", 'String'>
     readonly password: FieldRef<"User", 'String'>
     readonly name: FieldRef<"User", 'String'>
+    readonly phoneNumber: FieldRef<"User", 'String'>
     readonly role: FieldRef<"User", 'Role'>
     readonly emailVerified: FieldRef<"User", 'Boolean'>
     readonly resetPasswordToken: FieldRef<"User", 'String'>
@@ -11175,6 +11188,7 @@ export namespace Prisma {
     email: 'email',
     password: 'password',
     name: 'name',
+    phoneNumber: 'phoneNumber',
     role: 'role',
     emailVerified: 'emailVerified',
     resetPasswordToken: 'resetPasswordToken',
@@ -11477,6 +11491,7 @@ export namespace Prisma {
     email?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
     name?: StringFilter<"User"> | string
+    phoneNumber?: StringFilter<"User"> | string
     role?: EnumRoleFilter<"User"> | $Enums.Role
     emailVerified?: BoolFilter<"User"> | boolean
     resetPasswordToken?: StringNullableFilter<"User"> | string | null
@@ -11496,6 +11511,7 @@ export namespace Prisma {
     email?: SortOrder
     password?: SortOrder
     name?: SortOrder
+    phoneNumber?: SortOrder
     role?: SortOrder
     emailVerified?: SortOrder
     resetPasswordToken?: SortOrderInput | SortOrder
@@ -11518,6 +11534,7 @@ export namespace Prisma {
     NOT?: UserWhereInput | UserWhereInput[]
     password?: StringFilter<"User"> | string
     name?: StringFilter<"User"> | string
+    phoneNumber?: StringFilter<"User"> | string
     role?: EnumRoleFilter<"User"> | $Enums.Role
     emailVerified?: BoolFilter<"User"> | boolean
     resetPasswordToken?: StringNullableFilter<"User"> | string | null
@@ -11537,6 +11554,7 @@ export namespace Prisma {
     email?: SortOrder
     password?: SortOrder
     name?: SortOrder
+    phoneNumber?: SortOrder
     role?: SortOrder
     emailVerified?: SortOrder
     resetPasswordToken?: SortOrderInput | SortOrder
@@ -11555,6 +11573,7 @@ export namespace Prisma {
     email?: StringWithAggregatesFilter<"User"> | string
     password?: StringWithAggregatesFilter<"User"> | string
     name?: StringWithAggregatesFilter<"User"> | string
+    phoneNumber?: StringWithAggregatesFilter<"User"> | string
     role?: EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
     emailVerified?: BoolWithAggregatesFilter<"User"> | boolean
     resetPasswordToken?: StringNullableWithAggregatesFilter<"User"> | string | null
@@ -12132,6 +12151,7 @@ export namespace Prisma {
     email: string
     password: string
     name: string
+    phoneNumber: string
     role: $Enums.Role
     emailVerified?: boolean
     resetPasswordToken?: string | null
@@ -12151,6 +12171,7 @@ export namespace Prisma {
     email: string
     password: string
     name: string
+    phoneNumber: string
     role: $Enums.Role
     emailVerified?: boolean
     resetPasswordToken?: string | null
@@ -12170,6 +12191,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -12189,6 +12211,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -12208,6 +12231,7 @@ export namespace Prisma {
     email: string
     password: string
     name: string
+    phoneNumber: string
     role: $Enums.Role
     emailVerified?: boolean
     resetPasswordToken?: string | null
@@ -12220,6 +12244,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -12232,6 +12257,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -12926,6 +12952,7 @@ export namespace Prisma {
     email?: SortOrder
     password?: SortOrder
     name?: SortOrder
+    phoneNumber?: SortOrder
     role?: SortOrder
     emailVerified?: SortOrder
     resetPasswordToken?: SortOrder
@@ -12938,6 +12965,7 @@ export namespace Prisma {
     email?: SortOrder
     password?: SortOrder
     name?: SortOrder
+    phoneNumber?: SortOrder
     role?: SortOrder
     emailVerified?: SortOrder
     resetPasswordToken?: SortOrder
@@ -12950,6 +12978,7 @@ export namespace Prisma {
     email?: SortOrder
     password?: SortOrder
     name?: SortOrder
+    phoneNumber?: SortOrder
     role?: SortOrder
     emailVerified?: SortOrder
     resetPasswordToken?: SortOrder
@@ -15165,6 +15194,7 @@ export namespace Prisma {
     email: string
     password: string
     name: string
+    phoneNumber: string
     role: $Enums.Role
     emailVerified?: boolean
     resetPasswordToken?: string | null
@@ -15183,6 +15213,7 @@ export namespace Prisma {
     email: string
     password: string
     name: string
+    phoneNumber: string
     role: $Enums.Role
     emailVerified?: boolean
     resetPasswordToken?: string | null
@@ -15217,6 +15248,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -15235,6 +15267,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -15253,6 +15286,7 @@ export namespace Prisma {
     email: string
     password: string
     name: string
+    phoneNumber: string
     role: $Enums.Role
     emailVerified?: boolean
     resetPasswordToken?: string | null
@@ -15271,6 +15305,7 @@ export namespace Prisma {
     email: string
     password: string
     name: string
+    phoneNumber: string
     role: $Enums.Role
     emailVerified?: boolean
     resetPasswordToken?: string | null
@@ -15305,6 +15340,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -15323,6 +15359,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -15341,6 +15378,7 @@ export namespace Prisma {
     email: string
     password: string
     name: string
+    phoneNumber: string
     role: $Enums.Role
     emailVerified?: boolean
     resetPasswordToken?: string | null
@@ -15359,6 +15397,7 @@ export namespace Prisma {
     email: string
     password: string
     name: string
+    phoneNumber: string
     role: $Enums.Role
     emailVerified?: boolean
     resetPasswordToken?: string | null
@@ -15448,6 +15487,7 @@ export namespace Prisma {
     email: string
     password: string
     name: string
+    phoneNumber: string
     role: $Enums.Role
     emailVerified?: boolean
     resetPasswordToken?: string | null
@@ -15466,6 +15506,7 @@ export namespace Prisma {
     email: string
     password: string
     name: string
+    phoneNumber: string
     role: $Enums.Role
     emailVerified?: boolean
     resetPasswordToken?: string | null
@@ -15489,6 +15530,7 @@ export namespace Prisma {
     email: string
     password: string
     name: string
+    phoneNumber: string
     role: $Enums.Role
     emailVerified?: boolean
     resetPasswordToken?: string | null
@@ -15507,6 +15549,7 @@ export namespace Prisma {
     email: string
     password: string
     name: string
+    phoneNumber: string
     role: $Enums.Role
     emailVerified?: boolean
     resetPasswordToken?: string | null
@@ -15563,6 +15606,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -15581,6 +15625,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -15650,6 +15695,7 @@ export namespace Prisma {
     email?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
     name?: StringFilter<"User"> | string
+    phoneNumber?: StringFilter<"User"> | string
     role?: EnumRoleFilter<"User"> | $Enums.Role
     emailVerified?: BoolFilter<"User"> | boolean
     resetPasswordToken?: StringNullableFilter<"User"> | string | null
@@ -15815,6 +15861,7 @@ export namespace Prisma {
     email: string
     password: string
     name: string
+    phoneNumber: string
     role: $Enums.Role
     emailVerified?: boolean
     resetPasswordToken?: string | null
@@ -15833,6 +15880,7 @@ export namespace Prisma {
     email: string
     password: string
     name: string
+    phoneNumber: string
     role: $Enums.Role
     emailVerified?: boolean
     resetPasswordToken?: string | null
@@ -15959,6 +16007,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -15977,6 +16026,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16087,6 +16137,7 @@ export namespace Prisma {
     email: string
     password: string
     name: string
+    phoneNumber: string
     role: $Enums.Role
     emailVerified?: boolean
     resetPasswordToken?: string | null
@@ -16105,6 +16156,7 @@ export namespace Prisma {
     email: string
     password: string
     name: string
+    phoneNumber: string
     role: $Enums.Role
     emailVerified?: boolean
     resetPasswordToken?: string | null
@@ -16258,6 +16310,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16276,6 +16329,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16912,6 +16966,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16930,6 +16985,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16948,6 +17004,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16960,6 +17017,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16978,6 +17036,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16996,6 +17055,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
