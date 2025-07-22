@@ -8,8 +8,8 @@ export const api = createApi({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
     credentials: "include",
   }),
-  reducerPath: "pi",
-  tagTypes: ["Properties"],
+  reducerPath: "api",
+  tagTypes: ["Properties", "PropertyDetails"],
   endpoints: (build) => ({
     // all properties fetch
     getAllProperties: build.query<
@@ -32,7 +32,6 @@ export const api = createApi({
           latitude: filters.coordinates?.[1],
           longitude: filters.coordinates?.[0],
         });
-        console.log("Query Params:", params);
         return { url: "/properties", params };
       },
       transformResponse: (response: {
@@ -40,7 +39,6 @@ export const api = createApi({
         message: string;
         properties: Property[];
       }) => {
-        console.log("API Response:", response);
         return response.properties || [];
       },
       providesTags: (result) => {
@@ -53,7 +51,22 @@ export const api = createApi({
         ];
       },
     }),
+
+    // get single property
+    getSingleProperty: build.query<Property, number>({
+      query: (id) => ({
+        url: `/properties/${id}`,
+      }),
+      transformResponse: (response: {
+        success: boolean;
+        message: string;
+        propertyWithCoordinate: Property[];
+      }) => {
+        return response.propertyWithCoordinate;
+      },
+      providesTags: (result, error, id) => [{ type: "PropertyDetails", id }],
+    }),
   }),
 });
 
-export const { useGetAllPropertiesQuery } = api;
+export const { useGetAllPropertiesQuery, useGetSinglePropertyQuery } = api;

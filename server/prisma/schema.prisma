@@ -113,6 +113,7 @@ model Property {
   id                Int          @id @default(autoincrement())
   name              String
   description       String
+  subDescription    String
   pricePerMonth     Float
   securityDeposit   Float
   applicationFee    Float

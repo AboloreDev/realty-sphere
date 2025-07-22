@@ -110,7 +110,6 @@ const FiltersBar = () => {
         )}&format=json&limit=1`
       );
       const { data } = await response.json();
-      console.log(data);
 
       if (data) {
         const { latitude, longitude } = data;

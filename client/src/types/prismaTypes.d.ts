@@ -5263,6 +5263,7 @@ export namespace Prisma {
     id: number | null
     name: string | null
     description: string | null
+    subDescription: string | null
     pricePerMonth: number | null
     securityDeposit: number | null
     applicationFee: number | null
@@ -5283,6 +5284,7 @@ export namespace Prisma {
     id: number | null
     name: string | null
     description: string | null
+    subDescription: string | null
     pricePerMonth: number | null
     securityDeposit: number | null
     applicationFee: number | null
@@ -5303,6 +5305,7 @@ export namespace Prisma {
     id: number
     name: number
     description: number
+    subDescription: number
     pricePerMonth: number
     securityDeposit: number
     applicationFee: number
@@ -5354,6 +5357,7 @@ export namespace Prisma {
     id?: true
     name?: true
     description?: true
+    subDescription?: true
     pricePerMonth?: true
     securityDeposit?: true
     applicationFee?: true
@@ -5374,6 +5378,7 @@ export namespace Prisma {
     id?: true
     name?: true
     description?: true
+    subDescription?: true
     pricePerMonth?: true
     securityDeposit?: true
     applicationFee?: true
@@ -5394,6 +5399,7 @@ export namespace Prisma {
     id?: true
     name?: true
     description?: true
+    subDescription?: true
     pricePerMonth?: true
     securityDeposit?: true
     applicationFee?: true
@@ -5504,6 +5510,7 @@ export namespace Prisma {
     id: number
     name: string
     description: string
+    subDescription: string
     pricePerMonth: number
     securityDeposit: number
     applicationFee: number
@@ -5546,6 +5553,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
+    subDescription?: boolean
     pricePerMonth?: boolean
     securityDeposit?: boolean
     applicationFee?: boolean
@@ -5576,6 +5584,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
+    subDescription?: boolean
     pricePerMonth?: boolean
     securityDeposit?: boolean
     applicationFee?: boolean
@@ -5601,6 +5610,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
+    subDescription?: boolean
     pricePerMonth?: boolean
     securityDeposit?: boolean
     applicationFee?: boolean
@@ -5626,6 +5636,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
+    subDescription?: boolean
     pricePerMonth?: boolean
     securityDeposit?: boolean
     applicationFee?: boolean
@@ -5645,7 +5656,7 @@ export namespace Prisma {
     managerId?: boolean
   }
 
-  export type PropertyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "pricePerMonth" | "securityDeposit" | "applicationFee" | "photoUrls" | "amenities" | "highlights" | "isPetsAllowed" | "isParkingIncluded" | "beds" | "baths" | "squareFeet" | "propertyType" | "postedDate" | "averageRating" | "numberOfReviews" | "locationId" | "managerId", ExtArgs["result"]["property"]>
+  export type PropertyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "subDescription" | "pricePerMonth" | "securityDeposit" | "applicationFee" | "photoUrls" | "amenities" | "highlights" | "isPetsAllowed" | "isParkingIncluded" | "beds" | "baths" | "squareFeet" | "propertyType" | "postedDate" | "averageRating" | "numberOfReviews" | "locationId" | "managerId", ExtArgs["result"]["property"]>
   export type PropertyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     location?: boolean | LocationDefaultArgs<ExtArgs>
     manager?: boolean | UserDefaultArgs<ExtArgs>
@@ -5678,6 +5689,7 @@ export namespace Prisma {
       id: number
       name: string
       description: string
+      subDescription: string
       pricePerMonth: number
       securityDeposit: number
       applicationFee: number
@@ -6127,6 +6139,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Property", 'Int'>
     readonly name: FieldRef<"Property", 'String'>
     readonly description: FieldRef<"Property", 'String'>
+    readonly subDescription: FieldRef<"Property", 'String'>
     readonly pricePerMonth: FieldRef<"Property", 'Float'>
     readonly securityDeposit: FieldRef<"Property", 'Float'>
     readonly applicationFee: FieldRef<"Property", 'Float'>
@@ -11199,6 +11212,7 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     description: 'description',
+    subDescription: 'subDescription',
     pricePerMonth: 'pricePerMonth',
     securityDeposit: 'securityDeposit',
     applicationFee: 'applicationFee',
@@ -11670,6 +11684,7 @@ export namespace Prisma {
     id?: IntFilter<"Property"> | number
     name?: StringFilter<"Property"> | string
     description?: StringFilter<"Property"> | string
+    subDescription?: StringFilter<"Property"> | string
     pricePerMonth?: FloatFilter<"Property"> | number
     securityDeposit?: FloatFilter<"Property"> | number
     applicationFee?: FloatFilter<"Property"> | number
@@ -11699,6 +11714,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
+    subDescription?: SortOrder
     pricePerMonth?: SortOrder
     securityDeposit?: SortOrder
     applicationFee?: SortOrder
@@ -11731,6 +11747,7 @@ export namespace Prisma {
     NOT?: PropertyWhereInput | PropertyWhereInput[]
     name?: StringFilter<"Property"> | string
     description?: StringFilter<"Property"> | string
+    subDescription?: StringFilter<"Property"> | string
     pricePerMonth?: FloatFilter<"Property"> | number
     securityDeposit?: FloatFilter<"Property"> | number
     applicationFee?: FloatFilter<"Property"> | number
@@ -11760,6 +11777,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
+    subDescription?: SortOrder
     pricePerMonth?: SortOrder
     securityDeposit?: SortOrder
     applicationFee?: SortOrder
@@ -11791,6 +11809,7 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"Property"> | number
     name?: StringWithAggregatesFilter<"Property"> | string
     description?: StringWithAggregatesFilter<"Property"> | string
+    subDescription?: StringWithAggregatesFilter<"Property"> | string
     pricePerMonth?: FloatWithAggregatesFilter<"Property"> | number
     securityDeposit?: FloatWithAggregatesFilter<"Property"> | number
     applicationFee?: FloatWithAggregatesFilter<"Property"> | number
@@ -12340,6 +12359,7 @@ export namespace Prisma {
   export type PropertyCreateInput = {
     name: string
     description: string
+    subDescription: string
     pricePerMonth: number
     securityDeposit: number
     applicationFee: number
@@ -12367,6 +12387,7 @@ export namespace Prisma {
     id?: number
     name: string
     description: string
+    subDescription: string
     pricePerMonth: number
     securityDeposit: number
     applicationFee: number
@@ -12393,6 +12414,7 @@ export namespace Prisma {
   export type PropertyUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    subDescription?: StringFieldUpdateOperationsInput | string
     pricePerMonth?: FloatFieldUpdateOperationsInput | number
     securityDeposit?: FloatFieldUpdateOperationsInput | number
     applicationFee?: FloatFieldUpdateOperationsInput | number
@@ -12420,6 +12442,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    subDescription?: StringFieldUpdateOperationsInput | string
     pricePerMonth?: FloatFieldUpdateOperationsInput | number
     securityDeposit?: FloatFieldUpdateOperationsInput | number
     applicationFee?: FloatFieldUpdateOperationsInput | number
@@ -12447,6 +12470,7 @@ export namespace Prisma {
     id?: number
     name: string
     description: string
+    subDescription: string
     pricePerMonth: number
     securityDeposit: number
     applicationFee: number
@@ -12469,6 +12493,7 @@ export namespace Prisma {
   export type PropertyUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    subDescription?: StringFieldUpdateOperationsInput | string
     pricePerMonth?: FloatFieldUpdateOperationsInput | number
     securityDeposit?: FloatFieldUpdateOperationsInput | number
     applicationFee?: FloatFieldUpdateOperationsInput | number
@@ -12490,6 +12515,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    subDescription?: StringFieldUpdateOperationsInput | string
     pricePerMonth?: FloatFieldUpdateOperationsInput | number
     securityDeposit?: FloatFieldUpdateOperationsInput | number
     applicationFee?: FloatFieldUpdateOperationsInput | number
@@ -13163,6 +13189,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
+    subDescription?: SortOrder
     pricePerMonth?: SortOrder
     securityDeposit?: SortOrder
     applicationFee?: SortOrder
@@ -13199,6 +13226,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
+    subDescription?: SortOrder
     pricePerMonth?: SortOrder
     securityDeposit?: SortOrder
     applicationFee?: SortOrder
@@ -13219,6 +13247,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
+    subDescription?: SortOrder
     pricePerMonth?: SortOrder
     securityDeposit?: SortOrder
     applicationFee?: SortOrder
@@ -14647,6 +14676,7 @@ export namespace Prisma {
   export type PropertyCreateWithoutManagerInput = {
     name: string
     description: string
+    subDescription: string
     pricePerMonth: number
     securityDeposit: number
     applicationFee: number
@@ -14673,6 +14703,7 @@ export namespace Prisma {
     id?: number
     name: string
     description: string
+    subDescription: string
     pricePerMonth: number
     securityDeposit: number
     applicationFee: number
@@ -14708,6 +14739,7 @@ export namespace Prisma {
   export type PropertyCreateWithoutTenantsInput = {
     name: string
     description: string
+    subDescription: string
     pricePerMonth: number
     securityDeposit: number
     applicationFee: number
@@ -14734,6 +14766,7 @@ export namespace Prisma {
     id?: number
     name: string
     description: string
+    subDescription: string
     pricePerMonth: number
     securityDeposit: number
     applicationFee: number
@@ -14764,6 +14797,7 @@ export namespace Prisma {
   export type PropertyCreateWithoutFavoritedByInput = {
     name: string
     description: string
+    subDescription: string
     pricePerMonth: number
     securityDeposit: number
     applicationFee: number
@@ -14790,6 +14824,7 @@ export namespace Prisma {
     id?: number
     name: string
     description: string
+    subDescription: string
     pricePerMonth: number
     securityDeposit: number
     applicationFee: number
@@ -14956,6 +14991,7 @@ export namespace Prisma {
     id?: IntFilter<"Property"> | number
     name?: StringFilter<"Property"> | string
     description?: StringFilter<"Property"> | string
+    subDescription?: StringFilter<"Property"> | string
     pricePerMonth?: FloatFilter<"Property"> | number
     securityDeposit?: FloatFilter<"Property"> | number
     applicationFee?: FloatFilter<"Property"> | number
@@ -15640,6 +15676,7 @@ export namespace Prisma {
   export type PropertyCreateWithoutLocationInput = {
     name: string
     description: string
+    subDescription: string
     pricePerMonth: number
     securityDeposit: number
     applicationFee: number
@@ -15666,6 +15703,7 @@ export namespace Prisma {
     id?: number
     name: string
     description: string
+    subDescription: string
     pricePerMonth: number
     securityDeposit: number
     applicationFee: number
@@ -15717,6 +15755,7 @@ export namespace Prisma {
   export type PropertyCreateWithoutApplicationsInput = {
     name: string
     description: string
+    subDescription: string
     pricePerMonth: number
     securityDeposit: number
     applicationFee: number
@@ -15743,6 +15782,7 @@ export namespace Prisma {
     id?: number
     name: string
     description: string
+    subDescription: string
     pricePerMonth: number
     securityDeposit: number
     applicationFee: number
@@ -15853,6 +15893,7 @@ export namespace Prisma {
   export type PropertyUpdateWithoutApplicationsInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    subDescription?: StringFieldUpdateOperationsInput | string
     pricePerMonth?: FloatFieldUpdateOperationsInput | number
     securityDeposit?: FloatFieldUpdateOperationsInput | number
     applicationFee?: FloatFieldUpdateOperationsInput | number
@@ -15879,6 +15920,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    subDescription?: StringFieldUpdateOperationsInput | string
     pricePerMonth?: FloatFieldUpdateOperationsInput | number
     securityDeposit?: FloatFieldUpdateOperationsInput | number
     applicationFee?: FloatFieldUpdateOperationsInput | number
@@ -15985,6 +16027,7 @@ export namespace Prisma {
   export type PropertyCreateWithoutLeasesInput = {
     name: string
     description: string
+    subDescription: string
     pricePerMonth: number
     securityDeposit: number
     applicationFee: number
@@ -16011,6 +16054,7 @@ export namespace Prisma {
     id?: number
     name: string
     description: string
+    subDescription: string
     pricePerMonth: number
     securityDeposit: number
     applicationFee: number
@@ -16148,6 +16192,7 @@ export namespace Prisma {
   export type PropertyUpdateWithoutLeasesInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    subDescription?: StringFieldUpdateOperationsInput | string
     pricePerMonth?: FloatFieldUpdateOperationsInput | number
     securityDeposit?: FloatFieldUpdateOperationsInput | number
     applicationFee?: FloatFieldUpdateOperationsInput | number
@@ -16174,6 +16219,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    subDescription?: StringFieldUpdateOperationsInput | string
     pricePerMonth?: FloatFieldUpdateOperationsInput | number
     securityDeposit?: FloatFieldUpdateOperationsInput | number
     applicationFee?: FloatFieldUpdateOperationsInput | number
@@ -16372,6 +16418,7 @@ export namespace Prisma {
     id?: number
     name: string
     description: string
+    subDescription: string
     pricePerMonth: number
     securityDeposit: number
     applicationFee: number
@@ -16430,6 +16477,7 @@ export namespace Prisma {
   export type PropertyUpdateWithoutManagerInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    subDescription?: StringFieldUpdateOperationsInput | string
     pricePerMonth?: FloatFieldUpdateOperationsInput | number
     securityDeposit?: FloatFieldUpdateOperationsInput | number
     applicationFee?: FloatFieldUpdateOperationsInput | number
@@ -16456,6 +16504,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    subDescription?: StringFieldUpdateOperationsInput | string
     pricePerMonth?: FloatFieldUpdateOperationsInput | number
     securityDeposit?: FloatFieldUpdateOperationsInput | number
     applicationFee?: FloatFieldUpdateOperationsInput | number
@@ -16482,6 +16531,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    subDescription?: StringFieldUpdateOperationsInput | string
     pricePerMonth?: FloatFieldUpdateOperationsInput | number
     securityDeposit?: FloatFieldUpdateOperationsInput | number
     applicationFee?: FloatFieldUpdateOperationsInput | number
@@ -16503,6 +16553,7 @@ export namespace Prisma {
   export type PropertyUpdateWithoutTenantsInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    subDescription?: StringFieldUpdateOperationsInput | string
     pricePerMonth?: FloatFieldUpdateOperationsInput | number
     securityDeposit?: FloatFieldUpdateOperationsInput | number
     applicationFee?: FloatFieldUpdateOperationsInput | number
@@ -16529,6 +16580,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    subDescription?: StringFieldUpdateOperationsInput | string
     pricePerMonth?: FloatFieldUpdateOperationsInput | number
     securityDeposit?: FloatFieldUpdateOperationsInput | number
     applicationFee?: FloatFieldUpdateOperationsInput | number
@@ -16555,6 +16607,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    subDescription?: StringFieldUpdateOperationsInput | string
     pricePerMonth?: FloatFieldUpdateOperationsInput | number
     securityDeposit?: FloatFieldUpdateOperationsInput | number
     applicationFee?: FloatFieldUpdateOperationsInput | number
@@ -16577,6 +16630,7 @@ export namespace Prisma {
   export type PropertyUpdateWithoutFavoritedByInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    subDescription?: StringFieldUpdateOperationsInput | string
     pricePerMonth?: FloatFieldUpdateOperationsInput | number
     securityDeposit?: FloatFieldUpdateOperationsInput | number
     applicationFee?: FloatFieldUpdateOperationsInput | number
@@ -16603,6 +16657,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    subDescription?: StringFieldUpdateOperationsInput | string
     pricePerMonth?: FloatFieldUpdateOperationsInput | number
     securityDeposit?: FloatFieldUpdateOperationsInput | number
     applicationFee?: FloatFieldUpdateOperationsInput | number
@@ -16629,6 +16684,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    subDescription?: StringFieldUpdateOperationsInput | string
     pricePerMonth?: FloatFieldUpdateOperationsInput | number
     securityDeposit?: FloatFieldUpdateOperationsInput | number
     applicationFee?: FloatFieldUpdateOperationsInput | number
@@ -16950,6 +17006,7 @@ export namespace Prisma {
   export type PropertyUpdateWithoutLocationInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    subDescription?: StringFieldUpdateOperationsInput | string
     pricePerMonth?: FloatFieldUpdateOperationsInput | number
     securityDeposit?: FloatFieldUpdateOperationsInput | number
     applicationFee?: FloatFieldUpdateOperationsInput | number
@@ -16976,6 +17033,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    subDescription?: StringFieldUpdateOperationsInput | string
     pricePerMonth?: FloatFieldUpdateOperationsInput | number
     securityDeposit?: FloatFieldUpdateOperationsInput | number
     applicationFee?: FloatFieldUpdateOperationsInput | number
@@ -17002,6 +17060,7 @@ export namespace Prisma {
     id?: number
     name: string
     description: string
+    subDescription: string
     pricePerMonth: number
     securityDeposit: number
     applicationFee: number
@@ -17024,6 +17083,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    subDescription?: StringFieldUpdateOperationsInput | string
     pricePerMonth?: FloatFieldUpdateOperationsInput | number
     securityDeposit?: FloatFieldUpdateOperationsInput | number
     applicationFee?: FloatFieldUpdateOperationsInput | number

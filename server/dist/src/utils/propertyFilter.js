@@ -28,7 +28,7 @@ const buildPropertyWhereConditions = (query) => {
         whereConditions.push(client_1.Prisma.sql `p."squareFeet" <= ${Number(squareFeetMax)}`);
     }
     if (propertyType && propertyType !== "any") {
-        whereConditions.push(client_1.Prisma.sql `p."PropertyType" = ${propertyType}::"PropertyType"`);
+        whereConditions.push(client_1.Prisma.sql `p."propertyType" = ${propertyType}::"PropertyType"`);
     }
     if (amenities && amenities !== "any") {
         const amenitiesArray = amenities.split(",");

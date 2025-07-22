@@ -55,7 +55,7 @@ export const buildPropertyWhereConditions = (query: any): Prisma.Sql[] => {
 
   if (propertyType && propertyType !== "any") {
     whereConditions.push(
-      Prisma.sql`p."PropertyType" = ${propertyType}::"PropertyType"`
+      Prisma.sql`p."propertyType" = ${propertyType}::"PropertyType"`
     );
   }
 

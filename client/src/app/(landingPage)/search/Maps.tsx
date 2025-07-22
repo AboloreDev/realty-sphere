@@ -59,8 +59,6 @@ const Maps = () => {
     ? [filters.coordinates[0], filters.coordinates[1]] // [latitude, longitude]
     : [40.71427, -74.00597]; // Default to New York
 
-  console.log(mapCenter);
-
   // Convert properties to markers
   const propertyMarkers =
     properties?.map((property: Property) => ({

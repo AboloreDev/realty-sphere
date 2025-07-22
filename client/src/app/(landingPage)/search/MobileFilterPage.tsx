@@ -55,7 +55,8 @@ const MobileFilterPage = () => {
     router.push(`${pathName} ? ${updatedSearchParams.toString()}`);
   });
   //   handle submit to apply the changes
-  const handleSubmit = () => {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     dispatch(setFilters(localFilterState));
     updateUrl(localFilterState);
   };
@@ -83,19 +84,21 @@ const MobileFilterPage = () => {
       );
       const { data } = await response.json();
 
-      if (data.length === 0) {
-        toast.error("Location not found");
-        return;
-      }
+      console.log(data);
 
-      if (data) {
-        const { latitude, longitude } = data;
+      // if (data.length === 0) {
+      //   toast.error("Location not found");
+      //   return;
+      // }
 
-        setLocalFilterState((prev) => ({
-          ...prev,
-          coordinates: [latitude, longitude],
-        }));
-      }
+      // if (data) {
+      //   const { latitude, longitude } = data;
+
+      //   setLocalFilterState((prev) => ({
+      //     ...prev,
+      //     coordinates: [latitude, longitude],
+      //   }));
+      // }
       toast.success(`Location found`);
     } catch (err) {
       toast.error("Error searching location");

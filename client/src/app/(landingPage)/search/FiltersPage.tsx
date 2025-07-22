@@ -31,7 +31,6 @@ const FiltersPage = () => {
   const router = useRouter();
   const pathName = usePathname();
   const isFilterOpen = useAppSelector((state) => state.global.isFiltersOpen);
-  const filters = useAppSelector((state) => state.global.filters);
   //   create a local filters state for handling state changes in the filter page to avoid conflicts
   const [localFilterState, setLocalFilterState] = useState(
     initialState.filters
@@ -51,7 +50,7 @@ const FiltersPage = () => {
       );
     });
 
-    router.push(`${pathName} ? ${updatedSearchParams.toString()}`);
+    router.push(`${pathName}?${updatedSearchParams.toString()}`);
   });
 
   //   handle submit to apply the changes
@@ -70,8 +69,7 @@ const FiltersPage = () => {
   // Handle location search with Nominatim
   const handleLocationSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!location) {
+    if (!localFilterState.location) {
       toast.warning("Please enter a location to search");
     }
 
@@ -130,7 +128,7 @@ const FiltersPage = () => {
           <div className="flex items-center">
             <Input
               placeholder="Enter location"
-              value={filters.location}
+              value={localFilterState.location}
               onChange={(e) =>
                 setLocalFilterState((prev) => ({
                   ...prev,
@@ -155,9 +153,9 @@ const FiltersPage = () => {
             {Object.entries(PropertyTypeIcons).map(([type, Icon]) => (
               <div
                 key={type}
-                className={`flex items-center justify-center flex-col shadow-md p-2 rounded-md ${
+                className={`flex bg-slate-50 dark:bg-slate-950 items-center justify-center flex-col shadow-md p-2 rounded-md ${
                   localFilterState.propertyType === type &&
-                  "bg-black text-white dark:bg-white dark:text-black"
+                  "bg-white text-black dark:bg-white dark:text-black"
                 }`}
                 onClick={() =>
                   setLocalFilterState((prev) => ({
@@ -205,7 +203,7 @@ const FiltersPage = () => {
             <Select
               value={localFilterState.bed || "any"}
               onValueChange={(value) =>
-                setLocalFilterState((prev) => ({ ...prev, beds: value }))
+                setLocalFilterState((prev) => ({ ...prev, bed: value }))
               }
             >
               <SelectTrigger className="w-full rounded-xl">
@@ -225,7 +223,7 @@ const FiltersPage = () => {
             <Select
               value={localFilterState.bath || "any"}
               onValueChange={(value) =>
-                setLocalFilterState((prev) => ({ ...prev, baths: value }))
+                setLocalFilterState((prev) => ({ ...prev, bath: value }))
               }
             >
               <SelectTrigger className="w-full rounded-xl">
@@ -273,9 +271,9 @@ const FiltersPage = () => {
             {Object.entries(AmenityIcons).map(([amenity, Icon]) => (
               <div
                 key={amenity}
-                className={`flex items-center justify-center flex-col p-2 shadow-md rounded-md ${
+                className={`flex items-center  bg-slate-50 dark:bg-slate-950 justify-center flex-col p-2 shadow-md rounded-md ${
                   localFilterState.amenities.includes(amenity as AmenityEnum) &&
-                  "bg-black text-white dark:bg-white dark:text-black"
+                  "bg-white text-black dark:bg-white dark:text-black"
                 }
                 `}
                 onClick={() => handleAmenityChange(amenity as AmenityEnum)}
