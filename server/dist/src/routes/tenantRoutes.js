@@ -9,15 +9,15 @@ const tenant_controller_1 = require("../controllers/tenant.controller");
 const router = express_1.default.Router();
 // Routes
 // get tenant by ID
-router.get("/:id", isAuthenticated_1.isAuthenticated, tenant_controller_1.getTenant);
+router.get("/:id", isAuthenticated_1.isAuthenticated, (0, isAuthenticated_1.restrictTo)("TENANT"), tenant_controller_1.getTenant);
 // CREATE A NEW TENANT : NOT NNEDED ALREADY HANDLED ON FRONTEND
 router.post("/", isAuthenticated_1.isAuthenticated, tenant_controller_1.createTenant);
 // UPDATE A TENANT DETAILS
-router.patch("/:id", isAuthenticated_1.isAuthenticated, tenant_controller_1.updateTenantDetails);
+router.patch("/:id", isAuthenticated_1.isAuthenticated, (0, isAuthenticated_1.restrictTo)("TENANT"), tenant_controller_1.updateTenantDetails);
 // GET TENANT SINGLE PROPERTY
 router.get("/:id/residencies", isAuthenticated_1.isAuthenticated, (0, isAuthenticated_1.restrictTo)("TENANT"), tenant_controller_1.getTenantResidences);
 // ADD TO FAVORITE
 router.post("/:id/favorites/:propertyId", isAuthenticated_1.isAuthenticated, (0, isAuthenticated_1.restrictTo)("TENANT"), tenant_controller_1.addTenantFavoriteProperty);
 // DELETE FROM FAVORITE
-router.delete(":id/favorites/:propertyId", isAuthenticated_1.isAuthenticated, (0, isAuthenticated_1.restrictTo)("TENANT"), tenant_controller_1.removeFromFavorite);
+router.delete("/:id/favorites/:propertyId", isAuthenticated_1.isAuthenticated, (0, isAuthenticated_1.restrictTo)("TENANT"), tenant_controller_1.removeFromFavorite);
 exports.default = router;

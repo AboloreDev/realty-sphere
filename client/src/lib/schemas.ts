@@ -48,6 +48,7 @@ export const registerSchema = z.object({
   password: z.string().min(8, "Password must be at least 8 characters"),
   confirmPassword: z.string().min(8, "Password must be at least 8 characters"),
   role: z.enum(["Tenant", "Landlord"], { message: "Please select a role" }),
+  phoneNumber: z.string().min(11, "Phone Number is required"),
 });
 
 export const loginSchema = z.object({

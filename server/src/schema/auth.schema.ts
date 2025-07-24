@@ -6,6 +6,7 @@ export const registerSchema = z
     email: z.string().email().min(1).max(255),
     password: z.string().min(8).max(255),
     confirmPassword: z.string().min(8).max(255),
+    phoneNumber: z.string().min(11).max(255),
     role: z.enum(["Tenant", "Landlord"]),
   })
   .refine((data) => data.password === data.confirmPassword, {

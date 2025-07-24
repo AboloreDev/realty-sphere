@@ -1,59 +1,143 @@
+// app/components/code/ProtectedRoute.tsx
 "use client";
 
-import { useGetUserProfileQuery } from "@/state/api/authApi";
+import { authApi, useGetUserProfileQuery } from "@/state/api/authApi";
 import { useAppDispatch, useAppSelector } from "@/state/redux";
-import { setUser } from "@/state/slice/userSlice";
-import { useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import { setUser, clearUser } from "@/state/slice/userSlice";
+import { useRouter, usePathname } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import BouncingLoader from "./BouncingLoader";
+
+// Define TypeScript types
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  role: "TENANT" | "MANAGER";
+}
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
 }
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  // route handler
   const router = useRouter();
-  // dispatch handler
+  const pathname = usePathname();
   const dispatch = useAppDispatch();
-  // get the user state using select hook
   const user = useAppSelector((state) => state.user.user);
-  // get the data from the query
-  const { data, isLoading, isError } = useGetUserProfileQuery();
+  const { data, isLoading, isError, error } = useGetUserProfileQuery(
+    undefined,
+    {
+      refetchOnMountOrArgChange: true,
+    }
+  );
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
-  console.log("user:", user);
-
-  // using use effect hook to render user data
   useEffect(() => {
-    // Check if user data exists in localStorage on initial load
+    // Handle initial load from localStorage
     const storedUser = localStorage.getItem("user");
     if (storedUser && !user) {
-      // If user data exists in localStorage, set it to Redux store
-      dispatch(setUser(JSON.parse(storedUser)));
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        if (parsedUser.role === "TENANT" || parsedUser.role === "MANAGER") {
+          dispatch(setUser(parsedUser));
+        } else {
+          localStorage.removeItem("user");
+          dispatch(clearUser());
+        }
+      } catch {
+        localStorage.removeItem("user");
+        dispatch(clearUser());
+      }
     }
 
-    if (isLoading) return; // waiting for user data
-    // check for error
-    if (!data?.success || isError) {
-      toast.error(data?.message || "Unauthorized Access");
-      router.push("/auth/login");
+    // Wait for RTK Query to complete
+    if (isLoading) {
       return;
     }
-    // if there is user data and user state is false, update the user state
-    if (data?.user && !user) {
-      dispatch(
-        setUser({
-          id: data.user.id,
-          email: data.user.email,
-          name: data.user.name,
-          role: data.user.role as "TENANT" | "MANAGER",
-        })
-      );
-    }
-  }, [isLoading, isError, user, dispatch, router, data]);
 
-  if (isLoading) {
+    setIsInitialLoad(false);
+
+    // Handle errors or unsuccessful response
+    if (isError || !data?.success) {
+      toast.error(data?.message || "Unauthorized Access");
+      localStorage.removeItem("user");
+      dispatch(clearUser());
+      dispatch(authApi.util.resetApiState());
+      router.replace("/auth/login");
+      return;
+    }
+
+    // Update Redux and localStorage with user data from API
+    if (data?.user) {
+      const userData: User = {
+        id: data.user.id,
+        email: data.user.email,
+        name: data.user.name,
+        role: data.user.role as "TENANT" | "MANAGER",
+      };
+      if (!user || user.id !== userData.id || user.role !== userData.role) {
+        dispatch(setUser(userData));
+        localStorage.setItem("user", JSON.stringify(userData));
+      }
+    }
+
+    // Get current role from API or Redux
+    const currentRole = data?.user?.role || user?.role;
+
+    if (!currentRole) {
+      toast.error("No role assigned");
+      localStorage.removeItem("user");
+      dispatch(clearUser());
+      dispatch(authApi.util.resetApiState());
+      router.replace("/auth/login");
+      return;
+    }
+
+    // Redirect for /dashboard based on role
+    if (pathname === "/dashboard") {
+      const redirectPath = `/dashboard/${currentRole.toLowerCase()}`;
+      router.replace(redirectPath);
+      return;
+    }
+
+    // Check role-based access for specific routes
+    const expectedRole = pathname.startsWith("/dashboard/tenant")
+      ? "TENANT"
+      : pathname.startsWith("/dashboard/manager")
+      ? "MANAGER"
+      : null;
+    if (expectedRole && currentRole !== expectedRole) {
+      // Double-check localStorage role
+      const storedUser = localStorage.getItem("user");
+      let storedRole: string | null = null;
+      if (storedUser) {
+        try {
+          const parsedUser = JSON.parse(storedUser);
+          storedRole = parsedUser.role;
+        } catch {
+          localStorage.removeItem("user");
+
+          dispatch(clearUser());
+          dispatch(authApi.util.resetApiState());
+        }
+      }
+
+      if (storedRole && storedRole !== expectedRole) {
+        const redirectPath = `/dashboard/${storedRole.toLowerCase()}`;
+        router.replace(redirectPath);
+        return;
+      } else if (currentRole !== expectedRole) {
+        const redirectPath = `/dashboard/${currentRole.toLowerCase()}`;
+        router.replace(redirectPath);
+        return;
+      }
+    }
+  }, [isLoading, isError, data, user, dispatch, router, pathname, error]);
+
+  // Prevent rendering until role is validated
+  if (isLoading || isInitialLoad || !data?.success) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <BouncingLoader />
@@ -61,9 +145,33 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     );
   }
 
-  if (!data?.success) {
+  // Only render children if the role matches the route
+  const currentRole = data?.user?.role || user?.role;
+  const expectedRole = pathname.startsWith("/dashboard/tenant")
+    ? "TENANT"
+    : pathname.startsWith("/dashboard/manager")
+    ? "MANAGER"
+    : null;
+  if (expectedRole && currentRole !== expectedRole) {
+    // Double-check localStorage role
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        if (parsedUser.role !== expectedRole) {
+          return null; // Prevent rendering wrong dashboard
+        }
+      } catch {
+        localStorage.removeItem("user");
+
+        dispatch(clearUser());
+        dispatch(authApi.util.resetApiState());
+        return null;
+      }
+    }
     return null;
   }
+
   return <div>{children}</div>;
 };
 

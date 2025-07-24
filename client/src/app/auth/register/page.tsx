@@ -61,12 +61,12 @@ const RegisterPage = () => {
     try {
       const response = await registerMutation(data).unwrap();
       dispatch(setUser(response.user));
-      console.log("user:", setUser);
+
       toast.success("Registration successful!");
       router.push(
         response.user.role === "TENANT"
           ? "/dashboard/tenant"
-          : "/dashboard/landlord"
+          : "/dashboard/manager"
       );
     } catch (error: any) {
       // "@ts-expect-error" type of any
@@ -96,6 +96,15 @@ const RegisterPage = () => {
               <Label>Email</Label>
               <Input type="email" id="email" {...register("email")} />
             </div>
+            {/* Pjone Number */}
+            <div className="flex flex-col space-y-2">
+              <Label>Phone Number</Label>
+              <Input
+                type="phone number"
+                id="phoneNumber"
+                {...register("phoneNumber")}
+              />
+            </div>
             {/* Password */}
             <div className="flex flex-col space-y-2">
               <Label>Password</Label>
@@ -120,7 +129,7 @@ const RegisterPage = () => {
                     checked={selectedRole === "Tenant"}
                     onCheckedChange={(checked) => {
                       //"@ts-expect-error " argument type
-                      setValue("role", checked ? "Tenant" : undefined, {
+                      setValue("role", checked ? "Tenant" : "Landlord", {
                         shouldValidate: true,
                       });
                     }}
@@ -133,7 +142,7 @@ const RegisterPage = () => {
                     checked={selectedRole === "Landlord"}
                     onCheckedChange={(checked) => {
                       //"@ts-expect-error " argument type
-                      setValue("role", checked ? "Landlord" : undefined, {
+                      setValue("role", checked ? "Landlord" : "Tenant", {
                         shouldValidate: true,
                       });
                     }}

@@ -1,8 +1,7 @@
 import React from "react";
-import DashboardPage from "../page";
 
 const TenantPage = () => {
-  return <DashboardPage>Tenant</DashboardPage>;
+  return <div>Tenant</div>;
 };
 
 export default TenantPage;

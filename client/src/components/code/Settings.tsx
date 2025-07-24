@@ -11,11 +11,11 @@ import { SettingsFormData, settingsSchema } from "@/lib/schemas";
 import { useAppSelector } from "@/state/redux";
 import { Form, FormControl, FormField, FormItem } from "../ui/form";
 
-const Settings = ({ initialData, onSubmit, userType }: SettingsFormProps) => {
+const Settings = ({ initialData, onSubmit }: SettingsFormProps) => {
   // get the user cos we will use the settings on different pages based on roles
   const user = useAppSelector((state) => state.user.user);
   // set the title
-  const title = user?.role === "TENANT" ? "Tenant" : "Landlord";
+  const title = user?.role === "TENANT" ? "Tenant" : "Manager";
   // state
   const [editMode, setEditMode] = useState(false);
   // using reach hook form and zod resolvers

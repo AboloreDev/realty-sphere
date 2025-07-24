@@ -40,6 +40,7 @@ const createAccount = (data) => __awaiter(void 0, void 0, void 0, function* () {
             name: data.name,
             email: data.email,
             password: hashedPassword,
+            phoneNumber: data.phoneNumber,
             role: roleMap[data.role],
         },
     });
@@ -77,6 +78,7 @@ const createAccount = (data) => __awaiter(void 0, void 0, void 0, function* () {
             name: user.name,
             email: user.email,
             role: user.role,
+            phoneNumber: user.phoneNumber,
         },
         accessToken,
         refreshToken,

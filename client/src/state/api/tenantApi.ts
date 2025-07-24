@@ -1,10 +1,10 @@
 import { fetchBaseQuery } from "@reduxjs/toolkit/query";
 import { createApi } from "@reduxjs/toolkit/query/react";
 import {
-  Tenant,
   UpdatedTenantRequest,
   UpdatedTenantResponse,
 } from "../types/tenantTypes";
+import { User } from "@/types/prismaTypes";
 
 export const tenantApi = createApi({
   baseQuery: fetchBaseQuery({
@@ -27,7 +27,7 @@ export const tenantApi = createApi({
     ),
 
     // get tenant
-    getTenant: builder.query<Tenant, string>({
+    getTenant: builder.query<User, string>({
       query: (id) => ({
         url: `/tenant/${id}`,
       }),
@@ -35,10 +35,7 @@ export const tenantApi = createApi({
     }),
 
     // add to favorites
-    addToFavorites: builder.mutation<
-      Tenant,
-      { id: string; propertyId: number }
-    >({
+    addToFavorites: builder.mutation<User, { id: string; propertyId: number }>({
       query: ({ id, propertyId }) => ({
         url: `/tenant/${id}/favorites/${propertyId}`,
         method: "POST",
@@ -50,19 +47,18 @@ export const tenantApi = createApi({
     }),
 
     // remove favorites
-    removeFavorites: builder.mutation<
-      Tenant,
-      { id: string; propertyId: number }
-    >({
-      query: ({ id, propertyId }) => ({
-        url: `/tenant/${id}/favorites/${propertyId}`,
-        method: "DELETE",
-      }),
-      invalidatesTags: (result) => [
-        { type: "Tenants", id: result?.id },
-        { type: "Properties", id: "LIST" },
-      ],
-    }),
+    removeFavorites: builder.mutation<User, { id: string; propertyId: number }>(
+      {
+        query: ({ id, propertyId }) => ({
+          url: `/tenant/${id}/favorites/${propertyId}`,
+          method: "DELETE",
+        }),
+        invalidatesTags: (result) => [
+          { type: "Tenants", id: result?.id },
+          { type: "Properties", id: "LIST" },
+        ],
+      }
+    ),
   }),
 });
 

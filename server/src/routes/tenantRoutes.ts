@@ -13,11 +13,16 @@ const router = express.Router();
 
 // Routes
 // get tenant by ID
-router.get("/:id", isAuthenticated, getTenant);
+router.get("/:id", isAuthenticated, restrictTo("TENANT"), getTenant);
 // CREATE A NEW TENANT : NOT NNEDED ALREADY HANDLED ON FRONTEND
 router.post("/", isAuthenticated, createTenant);
 // UPDATE A TENANT DETAILS
-router.patch("/:id", isAuthenticated, updateTenantDetails);
+router.patch(
+  "/:id",
+  isAuthenticated,
+  restrictTo("TENANT"),
+  updateTenantDetails
+);
 // GET TENANT SINGLE PROPERTY
 router.get(
   "/:id/residencies",
@@ -34,7 +39,7 @@ router.post(
 );
 // DELETE FROM FAVORITE
 router.delete(
-  ":id/favorites/:propertyId",
+  "/:id/favorites/:propertyId",
   isAuthenticated,
   restrictTo("TENANT"),
   removeFromFavorite

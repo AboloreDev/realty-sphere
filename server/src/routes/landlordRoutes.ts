@@ -10,11 +10,11 @@ const router = express.Router();
 
 // create a landlord
 // get landlord by id
-router.get("/:id", isAuthenticated, getLandlord);
+router.get("/:id", isAuthenticated, restrictTo("MANAGER"), getLandlord);
 // router.post("/", isAuthenticated, createLandlord);
 
 // updating the landlord data
-router.patch("/:id", isAuthenticated, updateLandlord);
+router.patch("/:id", isAuthenticated, restrictTo("MANAGER"), updateLandlord);
 
 // GET LANDLORD SINGLE PROPERTY
 router.get(

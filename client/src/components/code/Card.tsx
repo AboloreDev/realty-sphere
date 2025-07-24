@@ -7,7 +7,7 @@ import React, { useState } from "react";
 
 const Card = ({
   property,
-
+  isFavorite,
   onFavoriteToggle,
   showFavoriteButton = true,
   propertyLink,
@@ -44,7 +44,11 @@ const Card = ({
             className="absolute bottom-4 right-4 bg-white hover:bg-white/90 dark:bg-black dark:text-white rounded-full p-2 cursor-pointer"
             onClick={onFavoriteToggle}
           >
-            <Heart className={`w-5 h-5`} />
+            <Heart
+              className={`w-5 h-5 ${
+                isFavorite ? "text-red-500 fill-red-500" : "text-gray-600"
+              }`}
+            />
           </button>
         )}
       </div>

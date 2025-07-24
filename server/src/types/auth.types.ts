@@ -3,6 +3,7 @@ export interface CreateAccount {
   email: string;
   password: string;
   role: "Tenant" | "Landlord";
+  phoneNumber?: string;
 }
 
 export interface LoginUser {

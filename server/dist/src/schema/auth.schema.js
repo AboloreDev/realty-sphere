@@ -8,6 +8,7 @@ exports.registerSchema = zod_1.z
     email: zod_1.z.string().email().min(1).max(255),
     password: zod_1.z.string().min(8).max(255),
     confirmPassword: zod_1.z.string().min(8).max(255),
+    phoneNumber: zod_1.z.string().min(11).max(255),
     role: zod_1.z.enum(["Tenant", "Landlord"]),
 })
     .refine((data) => data.password === data.confirmPassword, {

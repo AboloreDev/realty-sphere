@@ -9,10 +9,10 @@ const isAuthenticated_1 = require("../middleware/isAuthenticated");
 const router = express_1.default.Router();
 // create a landlord
 // get landlord by id
-router.get("/:id", isAuthenticated_1.isAuthenticated, landlord_controller_1.getLandlord);
+router.get("/:id", isAuthenticated_1.isAuthenticated, (0, isAuthenticated_1.restrictTo)("MANAGER"), landlord_controller_1.getLandlord);
 // router.post("/", isAuthenticated, createLandlord);
 // updating the landlord data
-router.patch("/:id", isAuthenticated_1.isAuthenticated, landlord_controller_1.updateLandlord);
+router.patch("/:id", isAuthenticated_1.isAuthenticated, (0, isAuthenticated_1.restrictTo)("MANAGER"), landlord_controller_1.updateLandlord);
 // GET LANDLORD SINGLE PROPERTY
 router.get("/:id/properties", isAuthenticated_1.isAuthenticated, (0, isAuthenticated_1.restrictTo)("MANAGER"), landlord_controller_1.getLandlordProperties);
 exports.default = router;

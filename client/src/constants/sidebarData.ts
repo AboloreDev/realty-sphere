@@ -35,13 +35,13 @@ export const tenantNavMain = [
 ];
 
 export const managerNavMain = [
-  { name: "Dashboard", href: "/dashboard/landlord", icon: Home },
+  { name: "Dashboard", href: "/dashboard/manager", icon: Home },
   {
     name: "Properties",
-    href: "/dashboard/landlord/properties",
+    href: "/dashboard/manager/properties",
     icon: FileText,
   },
-  { name: "Tenants", href: "/dashboard/landlord/tenants", icon: Users },
+  { name: "Tenants", href: "/dashboard/manager/tenants", icon: Users },
 ];
 
 export const tenantNavSecondary = [
@@ -56,9 +56,9 @@ export const tenantNavSecondary = [
 export const landlordNavSecondary = [
   {
     name: "Settings",
-    href: "/dashboard/landlord/settings",
+    href: "/dashboard/manager/settings",
     icon: Settings2Icon,
   },
-  { name: "Get Help", href: "/dashboard/landlord/faq", icon: HelpCircle },
+  { name: "Get Help", href: "/dashboard/manager/faq", icon: HelpCircle },
   { name: " Logout", href: "/logout", icon: LogOut },
 ];

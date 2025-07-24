@@ -21,11 +21,7 @@ exports.getTenant = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awai
     // use the service
     const { tenant, message } = yield (0, tenant_service_1.getTenantById)(request);
     // return the response
-    return res.status(httpStatus_1.OK).json({
-        success: true,
-        message,
-        tenant,
-    });
+    return res.status(httpStatus_1.OK).json(tenant);
 }));
 // create a tenant
 exports.createTenant = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {

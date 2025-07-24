@@ -5,6 +5,7 @@ import {
   LoginUserTypes,
   RegisterUserTypes,
 } from "../types";
+import { User } from "@/types/prismaTypes";
 
 export const authApi = createApi({
   baseQuery: fetchBaseQuery({
@@ -12,7 +13,7 @@ export const authApi = createApi({
     credentials: "include",
   }),
   reducerPath: "authApi",
-  tagTypes: ["register", "login"],
+  tagTypes: ["register", "login", "logout"],
   endpoints: (builder) => ({
     registerUser: builder.mutation<AuthResponse, RegisterUserTypes>({
       query: (data) => ({
@@ -67,7 +68,7 @@ export const authApi = createApi({
       }),
     }),
     // Authenticate the user
-    getUserProfile: builder.query<AuthResponse, void>({
+    getUserProfile: builder.query<User, void>({
       query: () => "/user",
     }),
   }),

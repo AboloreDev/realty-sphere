@@ -57,11 +57,11 @@ const LoginPage = () => {
       router.push(
         response.user.role === "TENANT"
           ? "/dashboard/tenant"
-          : "/dashboard/landlord"
+          : "/dashboard/manager"
       );
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      toast.error(error.data?.message || "Registration failed");
+      toast.error(error.data?.message || "Login failed");
     }
   };
   return (

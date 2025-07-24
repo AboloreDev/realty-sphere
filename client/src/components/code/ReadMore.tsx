@@ -7,17 +7,17 @@ interface ReadMoreProps {
   maxParagraphs?: number;
 }
 
-const ReadMore: React.FC<ReadMoreProps> = ({ text, maxParagraphs = 2 }) => {
+const ReadMore: React.FC<ReadMoreProps> = ({ text, maxParagraphs = 1 }) => {
   // Split text into paragraphs (by double newline or sentence for this case)
-  const paragraphs = text.split(". ").map((sentence) => sentence.trim() + ".");
+  const paragraphs = text.split(". ");
   const [isExpanded, setIsExpanded] = useState(false);
 
   // Determine paragraphs to display
   const displayedParagraphs = isExpanded
     ? paragraphs
-    : paragraphs.slice(0, maxParagraphs);
+    : paragraphs.slice(maxParagraphs);
 
-  // Handle toggle
+  // Handle toggle.
   const toggleReadMore = () => {
     setIsExpanded(!isExpanded);
   };
@@ -25,14 +25,12 @@ const ReadMore: React.FC<ReadMoreProps> = ({ text, maxParagraphs = 2 }) => {
   return (
     <div className="text-gray-500 leading-7">
       {displayedParagraphs.map((paragraph, index) => (
-        <p key={index} className="mb-4">
-          {paragraph}
-        </p>
+        <p key={index}>{paragraph}</p>
       ))}
       {paragraphs.length > maxParagraphs && (
         <button
           onClick={toggleReadMore}
-          className="text-blue-500 hover:underline focus:outline-none"
+          className="text-blue-500 hover:underline cursor-pointer focus:outline-none"
         >
           {isExpanded ? "Read Less" : "Read More"}
         </button>

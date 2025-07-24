@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import DashboardPage from "../../page";
 import { useAppDispatch, useAppSelector } from "@/state/redux";
 import { useUpdateLandlordMutation } from "@/state/api/landlordApi";
 import { toast } from "sonner";
@@ -53,7 +52,7 @@ const SettingsPage = () => {
   };
 
   return (
-    <DashboardPage>
+    <div>
       {isLoading && (
         <div>
           <BouncingLoader />
@@ -64,7 +63,7 @@ const SettingsPage = () => {
         onSubmit={handleSubmit}
         userType="manager"
       />
-    </DashboardPage>
+    </div>
   );
 };
 

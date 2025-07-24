@@ -27,7 +27,7 @@ const PropertyLocation = ({ propertyId }: PropertyLocationProps) => {
         <h3 className="text-xl font-semibold prata-regular">
           Map and Location
         </h3>
-        <div className="flex justify-between items-center text-sm text-primary-500 mt-2">
+        <div className="flex flex-col md:flex-row justify-between items-start lg:items-center text-sm text-primary-500 mt-2 gap-2">
           <div className="flex items-center text-gray-500">
             <MapPin className="w-4 h-4 mr-1 text-gray-700" />
             Property Address:
@@ -44,7 +44,7 @@ const PropertyLocation = ({ propertyId }: PropertyLocationProps) => {
             rel="noopener noreferrer"
             className="flex justify-between items-center hover:underline gap-2 text-primary-600"
           >
-            <Compass className="w-5 h-5" />
+            <Compass className="w-4 h-4" />
             Get Directions
           </a>
         </div>

@@ -23,11 +23,7 @@ export const getTenant = catchAsyncError(async (req, res) => {
   // use the service
   const { tenant, message } = await getTenantById(request);
   // return the response
-  return res.status(OK).json({
-    success: true,
-    message,
-    tenant,
-  });
+  return res.status(OK).json(tenant);
 });
 
 // create a tenant

@@ -30,6 +30,7 @@ exports.registerUser = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __a
             name: user.name,
             email: user.email,
             role: user.role,
+            phoneNumber: user.phoneNumber,
         },
     });
 }));

@@ -49,7 +49,7 @@ const SingleListingPage = () => {
         )}
 
         {/* // property details overview */}
-        <div className="flex flex-col lg:flex-row justify-between gap-6 lg:gap-10 p-4 md:p-8 mx-16">
+        <div className="flex flex-col lg:flex-row justify-between gap-6 lg:gap-10 p-4 md:p-8 md:mx-6 lg:mx-10">
           <div className="p-4 flex-1">
             <PropertyOverview propertyId={propertyId} />
             <PropertyDetails propertyId={propertyId} />

@@ -21,10 +21,10 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { useLogoutMutation } from "@/state/api/authApi";
+import { authApi, useLogoutMutation } from "@/state/api/authApi";
 import { toast } from "sonner";
 import { usePathname, useRouter } from "next/navigation";
-import { setUser } from "@/state/slice/userSlice";
+import { clearUser, setUser } from "@/state/slice/userSlice";
 import { cn } from "@/lib/utils";
 import {
   landlordNavSecondary,
@@ -56,7 +56,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const handleLogout = async () => {
     try {
       await logout().unwrap();
-      dispatch(setUser(null));
+      dispatch(clearUser());
+      authApi.util.resetApiState();
       toast.success("Logged out successfully!");
       router.push("/auth/login");
     } catch (err: any) {
