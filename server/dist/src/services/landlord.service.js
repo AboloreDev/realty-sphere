@@ -114,8 +114,6 @@ const getLandlordPropertiesService = (data) => __awaiter(void 0, void 0, void 0,
                 } }) });
     })));
     return {
-        success: true,
-        message: "Property fetched successful",
         propertiesWithFormattedLocation,
     };
 });

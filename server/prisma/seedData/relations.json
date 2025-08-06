@@ -1,15 +1,16 @@
 [
   {
     "userId": "87654321-90ab-cdef-1234-567890abcdef",
-    "favorites": { "connect": [{ "id": 2 }] }
+    "favorites": { "connect": [{ "id": 2 }] },
+    "tenantProperties": { "connect": [{ "id": 4 }] }
   },
   {
     "userId": "98765432-90ab-cdef-1234-567890abcdef",
-    "tenantProperties": { "connect": [] },
+    "tenantProperties": { "connect": [{ "id": 1 }] },
     "favorites": { "connect": [] }
   },
   {
-    "userId": "817b3540-a061-707b-742a-a28391181149",
-    "tenantProperties": { "connect": [] }
+    "userId": "010be580-60a1-70ae-780e-18a6fd94ad32",
+    "managedProperties": { "connect": [{ "id": 1 }] }
   }
 ]

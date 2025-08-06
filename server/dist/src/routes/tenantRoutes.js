@@ -14,7 +14,7 @@ router.get("/:id", isAuthenticated_1.isAuthenticated, (0, isAuthenticated_1.rest
 router.post("/", isAuthenticated_1.isAuthenticated, tenant_controller_1.createTenant);
 // UPDATE A TENANT DETAILS
 router.patch("/:id", isAuthenticated_1.isAuthenticated, (0, isAuthenticated_1.restrictTo)("TENANT"), tenant_controller_1.updateTenantDetails);
-// GET TENANT SINGLE PROPERTY
+// GET TENANT Residencies
 router.get("/:id/residencies", isAuthenticated_1.isAuthenticated, (0, isAuthenticated_1.restrictTo)("TENANT"), tenant_controller_1.getTenantResidences);
 // ADD TO FAVORITE
 router.post("/:id/favorites/:propertyId", isAuthenticated_1.isAuthenticated, (0, isAuthenticated_1.restrictTo)("TENANT"), tenant_controller_1.addTenantFavoriteProperty);

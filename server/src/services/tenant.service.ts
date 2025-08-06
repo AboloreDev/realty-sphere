@@ -85,12 +85,12 @@ export const updateTenantService = async (data: updateTenant) => {
 // export const getTenantResidences =
 export const getTenantResidenciesService = async (data: getTenantId) => {
   // check if the tenant exist
-  const user = await prisma.user.findUnique({
+  const tenant = await prisma.user.findUnique({
     where: { id: data.id, role: "TENANT" },
   });
 
   // IF NO USER ASSERT AN ERROR
-  appAssert(user, NOT_FOUND, "Tenant not found");
+  appAssert(tenant, NOT_FOUND, "Tenant not found");
 
   // get the residences
   const residencies = await prisma.property.findMany({
@@ -124,8 +124,6 @@ export const getTenantResidenciesService = async (data: getTenantId) => {
     })
   );
   return {
-    success: true,
-    message: "Property fetched successful",
     residencesWithFormattedLocation,
   };
 };

@@ -23,7 +23,7 @@ router.patch(
   restrictTo("TENANT"),
   updateTenantDetails
 );
-// GET TENANT SINGLE PROPERTY
+// GET TENANT Residencies
 router.get(
   "/:id/residencies",
   isAuthenticated,

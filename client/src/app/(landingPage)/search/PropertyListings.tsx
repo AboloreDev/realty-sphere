@@ -40,8 +40,10 @@ const PropertyListings = () => {
 
     if (isFavorite) {
       await removeFavorite({ id: user.user.id, propertyId });
+      toast.error("Property removed from favorites");
     } else {
       await addFavorite({ id: user.user.id, propertyId });
+      toast.success("Property added to favorites");
     }
   };
 

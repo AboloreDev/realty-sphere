@@ -1,3 +1,5 @@
+import { Property } from "@/types/prismaTypes";
+
 // create the tenant interface
 export interface Tenant {
   name: string;
@@ -5,6 +7,7 @@ export interface Tenant {
   id: string;
   role?: string;
   leaseStatus?: string;
+  favorites?: Property[];
 }
 
 // create the updated tenant request payload

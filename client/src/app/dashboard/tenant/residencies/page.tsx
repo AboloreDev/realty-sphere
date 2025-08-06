@@ -5,29 +5,19 @@ import Card from "@/components/code/Card";
 import Header from "@/components/code/Header";
 import { useGetUserProfileQuery } from "@/state/api/authApi";
 import {
-  useGetLandlordPropertyQuery,
-  useGetLandlordQuery,
-} from "@/state/api/landlordApi";
+  useGetTenantQuery,
+  useGetTenantResidenciesQuery,
+} from "@/state/api/tenantApi";
 import React from "react";
 
-const PropertiesPage = () => {
-  // get the user
+const TenantResidencies = () => {
   const { data: user } = useGetUserProfileQuery();
-  // get the landlord
+  const { data: tenant } = useGetTenantQuery(user?.user?.id || "");
 
-  const { data: landlord } = useGetLandlordQuery(user?.user?.id || "", {
-    skip: !user?.user?.id,
-  });
-
-  // get the manager properties
-  const { data: properties, isLoading } = useGetLandlordPropertyQuery(
+  const { data: residencies, isLoading } = useGetTenantResidenciesQuery(
     user.user.id || "",
     { skip: !user?.user?.id }
   );
-
-  console.log("user:", user);
-  console.log("landlord:", landlord);
-  console.log("properties:", properties);
 
   if (isLoading) {
     return (
@@ -36,35 +26,34 @@ const PropertiesPage = () => {
       </div>
     );
   }
-
   return (
     <div className="p-2 md:p-4">
       <Header
-        title="Landlord Properties"
-        subtitle="View and mangange your properties here"
+        title="Current Residencies"
+        subtitle="View your past and current residencies"
       />
       <hr />
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 p-4">
-        {properties?.map((property) => (
+        {residencies?.map((property) => (
           <Card
             key={property.id}
             property={property}
             onFavoriteToggle={() => {}}
             showFavoriteButton={false}
-            propertyLink={`/dashboard/manager/properties/${property.id}`}
-            isFavorite={false}
+            propertyLink={`/dashboard/tenant/residencies/${property.id}`}
+            isFavorite={tenant?.favorites.includes(property.id) || false}
           />
         ))}
       </div>
 
-      {!properties ||
-        (properties.length === 0 && (
+      {!residencies ||
+        (residencies.length === 0 && (
           <div className="text-center text-2xl font-semibold prata-regular">
-            You have no properties
+            You have no current residence available
           </div>
         ))}
     </div>
   );
 };
 
-export default PropertiesPage;
+export default TenantResidencies;

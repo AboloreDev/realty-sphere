@@ -10,6 +10,9 @@ import {
   Settings2Icon,
   HelpCircle,
   LogOut,
+  House,
+  HouseIcon,
+  HomeIcon,
 } from "lucide-react";
 
 export const tenantNavMain = [
@@ -21,11 +24,16 @@ export const tenantNavMain = [
     icon: FileText,
   },
   {
+    name: "Residencies",
+    href: "/dashboard/tenant/residencies",
+    icon: House,
+  },
+  {
     name: "Payment History",
     href: "/dashboard/tenant/payments",
     icon: Currency,
   },
-  { name: "Invoices", href: "/dashboard/tenant/invoice", icon: FilePen },
+  { name: "Invoices", href: "/dashboard/tenant/invoices", icon: FilePen },
   { name: "Properties", href: "/dashboard/tenant/property", icon: Settings },
   {
     name: "Calculator",
@@ -39,9 +47,20 @@ export const managerNavMain = [
   {
     name: "Properties",
     href: "/dashboard/manager/properties",
+    icon: HomeIcon,
+  },
+  {
+    name: "Applications",
+    href: "/dashboard/manager/applications",
     icon: FileText,
   },
   { name: "Tenants", href: "/dashboard/manager/tenants", icon: Users },
+  {
+    name: "Create Listings",
+    href: "/dashboard/manager/listings",
+    icon: HouseIcon,
+  },
+  { name: "Invoices", href: "/dashboard/manager/invoices", icon: FilePen },
 ];
 
 export const tenantNavSecondary = [

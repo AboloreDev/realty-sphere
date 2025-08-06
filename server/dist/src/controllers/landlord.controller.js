@@ -62,11 +62,7 @@ exports.getLandlordProperties = (0, catchAsyncErrors_1.catchAsyncError)((req, re
     // validate the request
     const request = landlord_schema_1.getLandlordSchema.parse(req.params);
     // use the service
-    const { success, message, propertiesWithFormattedLocation } = yield (0, landlord_service_1.getLandlordPropertiesService)(request);
+    const { propertiesWithFormattedLocation } = yield (0, landlord_service_1.getLandlordPropertiesService)(request);
     // return a response
-    return res.status(httpStatus_1.OK).json({
-        success,
-        message,
-        propertiesWithFormattedLocation,
-    });
+    return res.status(httpStatus_1.OK).json(propertiesWithFormattedLocation);
 }));

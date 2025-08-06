@@ -64,13 +64,9 @@ export const getLandlordProperties = catchAsyncError(async (req, res) => {
   const request: any = getLandlordSchema.parse(req.params);
 
   // use the service
-  const { success, message, propertiesWithFormattedLocation } =
+  const { propertiesWithFormattedLocation } =
     await getLandlordPropertiesService(request);
 
   // return a response
-  return res.status(OK).json({
-    success,
-    message,
-    propertiesWithFormattedLocation,
-  });
+  return res.status(OK).json(propertiesWithFormattedLocation);
 });

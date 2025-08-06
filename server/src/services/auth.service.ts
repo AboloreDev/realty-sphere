@@ -50,7 +50,7 @@ export const createAccount = async (data: CreateAccount) => {
       name: data.name,
       email: data.email,
       password: hashedPassword,
-      phoneNumber: data.phoneNumber,
+      phoneNumber: data.phoneNumber ?? "",
       role: roleMap[data.role],
     },
   });

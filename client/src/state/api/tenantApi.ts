@@ -4,7 +4,7 @@ import {
   UpdatedTenantRequest,
   UpdatedTenantResponse,
 } from "../types/tenantTypes";
-import { User } from "@/types/prismaTypes";
+import { Property, User } from "@/types/prismaTypes";
 
 export const tenantApi = createApi({
   baseQuery: fetchBaseQuery({
@@ -59,6 +59,21 @@ export const tenantApi = createApi({
         ],
       }
     ),
+
+    // get the tenant current residencies and other previous ones
+    getTenantResidencies: builder.query<Property[], string>({
+      query: (id) => ({
+        url: `/tenant/${id}/residencies`,
+      }),
+
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: "Properties" as const, id })),
+              { type: "Properties", id: "LIST" },
+            ]
+          : [{ type: "Properties", id: "LIST" }],
+    }),
   }),
 });
 
@@ -68,4 +83,5 @@ export const {
   useAddToFavoritesMutation,
   useRemoveFavoritesMutation,
   useGetTenantQuery,
+  useGetTenantResidenciesQuery,
 } = tenantApi;

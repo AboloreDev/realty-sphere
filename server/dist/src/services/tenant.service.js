@@ -89,11 +89,11 @@ exports.updateTenantService = updateTenantService;
 // export const getTenantResidences =
 const getTenantResidenciesService = (data) => __awaiter(void 0, void 0, void 0, function* () {
     // check if the tenant exist
-    const user = yield prismaClient_1.default.user.findUnique({
+    const tenant = yield prismaClient_1.default.user.findUnique({
         where: { id: data.id, role: "TENANT" },
     });
     // IF NO USER ASSERT AN ERROR
-    (0, appAssert_1.default)(user, httpStatus_1.NOT_FOUND, "Tenant not found");
+    (0, appAssert_1.default)(tenant, httpStatus_1.NOT_FOUND, "Tenant not found");
     // get the residences
     const residencies = yield prismaClient_1.default.property.findMany({
         where: { tenants: { some: { id: data.id } } },
@@ -115,8 +115,6 @@ const getTenantResidenciesService = (data) => __awaiter(void 0, void 0, void 0, 
                 } }) });
     })));
     return {
-        success: true,
-        message: "Property fetched successful",
         residencesWithFormattedLocation,
     };
 });

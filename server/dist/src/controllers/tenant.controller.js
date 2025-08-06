@@ -58,13 +58,9 @@ exports.updateTenantDetails = (0, catchAsyncErrors_1.catchAsyncError)((req, res)
 exports.getTenantResidences = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const request = tenant_schema_1.getTenantSchema.parse(req.params);
     // use the service
-    const { message, success, residencesWithFormattedLocation } = yield (0, tenant_service_1.getTenantResidenciesService)(request);
+    const { residencesWithFormattedLocation } = yield (0, tenant_service_1.getTenantResidenciesService)(request);
     // return a response
-    return res.status(httpStatus_1.OK).json({
-        success,
-        message,
-        residencesWithFormattedLocation,
-    });
+    return res.status(httpStatus_1.OK).json(residencesWithFormattedLocation);
 }));
 // add tenant favorite property
 exports.addTenantFavoriteProperty = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {

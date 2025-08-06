@@ -28,28 +28,36 @@ export const api = createApi({
           squareFeetMax: filters.squareFeet?.[1],
           amenities: filters.amenities?.join(","),
           availableFrom: filters.availableFrom,
-          favoriteIds: filters.favoriteIds?.join(","),
+          favoriteIds: filters.favoriteIds?.length
+            ? filters.favoriteIds.join(",")
+            : [],
           latitude: filters.coordinates?.[1],
           longitude: filters.coordinates?.[0],
         });
         return { url: "/properties", params };
       },
-      transformResponse: (response: {
-        success: boolean;
-        message: string;
-        properties: Property[];
-      }) => {
+      transformResponse: (
+        response: {
+          success: boolean;
+          message: string;
+          properties: Property[];
+        },
+        meta,
+        arg
+      ) => {
+        if (arg.favoriteIds && !arg.favoriteIds.length) {
+          return [];
+        }
         return response.properties || [];
       },
-      providesTags: (result) => {
-        if (!result || !Array.isArray(result)) {
-          return [{ type: "Properties", id: "LIST" }];
-        }
-        return [
-          ...result.map(({ id }) => ({ type: "Properties" as const, id })),
-          { type: "Properties", id: "LIST" },
-        ];
-      },
+      providesTags: (result) =>
+        result && Array.isArray(result)
+          ? [
+              ...result.map(({ id }) => ({ type: "Properties" as const, id })),
+              { type: "Properties", id: "LIST" },
+              "Properties",
+            ]
+          : [{ type: "Properties", id: "LIST" }, "Properties"],
     }),
 
     // get single property

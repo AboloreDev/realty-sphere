@@ -124,8 +124,6 @@ export const getLandlordPropertiesService = async (
     })
   );
   return {
-    success: true,
-    message: "Property fetched successful",
     propertiesWithFormattedLocation,
   };
 };

@@ -23,6 +23,7 @@ const appAssert_1 = __importDefault(require("../utils/appAssert"));
 const httpStatus_1 = require("../constants/httpStatus");
 const MAX_SESSIONS = 5;
 const createAccount = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     // verify existing user
     const existingUser = yield prismaClient_1.default.user.findUnique({
         where: { email: data.email },
@@ -40,7 +41,7 @@ const createAccount = (data) => __awaiter(void 0, void 0, void 0, function* () {
             name: data.name,
             email: data.email,
             password: hashedPassword,
-            phoneNumber: data.phoneNumber,
+            phoneNumber: (_a = data.phoneNumber) !== null && _a !== void 0 ? _a : "",
             role: roleMap[data.role],
         },
     });

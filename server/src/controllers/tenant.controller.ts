@@ -64,15 +64,12 @@ export const getTenantResidences = catchAsyncError(async (req, res) => {
   const request: any = getTenantSchema.parse(req.params);
 
   // use the service
-  const { message, success, residencesWithFormattedLocation } =
-    await getTenantResidenciesService(request);
+  const { residencesWithFormattedLocation } = await getTenantResidenciesService(
+    request
+  );
 
   // return a response
-  return res.status(OK).json({
-    success,
-    message,
-    residencesWithFormattedLocation,
-  });
+  return res.status(OK).json(residencesWithFormattedLocation);
 });
 
 // add tenant favorite property
