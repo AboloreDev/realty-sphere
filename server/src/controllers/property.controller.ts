@@ -135,7 +135,7 @@ export const createPropertyListing = catchAsyncError(async (req, res) => {
   }
 
   // construct the url via new urlSearchParams
-  const geoCodingUrl = `https://nomatim.openstreetmap.org/search?${new URLSearchParams(
+  const geoCodingUrl = `https://nominatim.openstreetmap.org/search?${new URLSearchParams(
     {
       street: address,
       city,
@@ -148,7 +148,7 @@ export const createPropertyListing = catchAsyncError(async (req, res) => {
 
   const geoCodingResponse = await axios.get(geoCodingUrl, {
     headers: {
-      "User-Agent": "NestoraRealEstate (taikoxyz@gmail.com",
+      "User-Agent": "NestoraRealEstate (taikoxyz@gmail.com)",
     },
   });
   const [longitude, latitude] =
@@ -165,9 +165,9 @@ export const createPropertyListing = catchAsyncError(async (req, res) => {
   // return the values as coordinates
   const [location] = await prisma.$queryRaw<Location[]>`
 
-      INSERT INTO "Location" (address, city, statr,country,"postalCode", coordinates)
+      INSERT INTO "Location" (address, city, state,country,"postalCode", coordinates)
       VALUES (${address}, ${city}, ${state}, ${country}, ${postalCode}, ST_SetSRID(ST_Makepoint(${longitude}, ${latitude}), 4326))
-      RETURNING id, address, city, state, country," postalCode", ST_AsText(coordinates) as coordinates
+      RETURNING id, address, city, state, country,"postalCode", ST_AsText(coordinates) as coordinates
       `;
 
   // create the property
@@ -180,14 +180,14 @@ export const createPropertyListing = catchAsyncError(async (req, res) => {
       amenities:
         typeof propertyData.amenities == "string"
           ? propertyData.amenities.split(",")
-          : "",
+          : [],
       highlights:
         typeof propertyData.highlights == "string"
           ? propertyData.highlights.split(",")
-          : "",
+          : [],
       isPetsAllowed: propertyData.isPetsAllowed === "true",
       isParkingIncluded: propertyData.isParkingIncluded === "true",
-      priceperMonth: parseFloat(propertyData.pricePerMonth),
+      pricePerMonth: parseFloat(propertyData.pricePerMonth),
       securityDeposit: parseFloat(propertyData.securityDeposit),
       applicationFee: parseFloat(propertyData.applicationFee),
       beds: parseInt(propertyData.beds),
@@ -201,9 +201,5 @@ export const createPropertyListing = catchAsyncError(async (req, res) => {
   });
 
   // return a response
-  res.status(OK).json({
-    success: true,
-    message: "Property Listed Successfully",
-    newProperty,
-  });
+  res.status(OK).json(newProperty);
 });

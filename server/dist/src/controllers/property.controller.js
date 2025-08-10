@@ -121,7 +121,7 @@ exports.createPropertyListing = (0, catchAsyncErrors_1.catchAsyncError)((req, re
         }
     }
     // construct the url via new urlSearchParams
-    const geoCodingUrl = `https://nomatim.openstreetmap.org/search?${new URLSearchParams({
+    const geoCodingUrl = `https://nominatim.openstreetmap.org/search?${new URLSearchParams({
         street: address,
         city,
         country,
@@ -131,7 +131,7 @@ exports.createPropertyListing = (0, catchAsyncErrors_1.catchAsyncError)((req, re
     }).toString()}`;
     const geoCodingResponse = yield axios_1.default.get(geoCodingUrl, {
         headers: {
-            "User-Agent": "NestoraRealEstate (taikoxyz@gmail.com",
+            "User-Agent": "NestoraRealEstate (taikoxyz@gmail.com)",
         },
     });
     const [longitude, latitude] = ((_a = geoCodingResponse.data[0]) === null || _a === void 0 ? void 0 : _a.lon) && ((_b = geoCodingResponse.data[0]) === null || _b === void 0 ? void 0 : _b.lat)
@@ -146,26 +146,22 @@ exports.createPropertyListing = (0, catchAsyncErrors_1.catchAsyncError)((req, re
     // return the values as coordinates
     const [location] = yield prismaClient_1.default.$queryRaw `
 
-      INSERT INTO "Location" (address, city, statr,country,"postalCode", coordinates)
+      INSERT INTO "Location" (address, city, state,country,"postalCode", coordinates)
       VALUES (${address}, ${city}, ${state}, ${country}, ${postalCode}, ST_SetSRID(ST_Makepoint(${longitude}, ${latitude}), 4326))
-      RETURNING id, address, city, state, country," postalCode", ST_AsText(coordinates) as coordinates
+      RETURNING id, address, city, state, country,"postalCode", ST_AsText(coordinates) as coordinates
       `;
     // create the property
     const newProperty = yield prismaClient_1.default.property.create({
         data: Object.assign(Object.assign({}, propertyData), { photoUrls: imageUrls, locationId: location.id, managerId, amenities: typeof propertyData.amenities == "string"
                 ? propertyData.amenities.split(",")
-                : "", highlights: typeof propertyData.highlights == "string"
+                : [], highlights: typeof propertyData.highlights == "string"
                 ? propertyData.highlights.split(",")
-                : "", isPetsAllowed: propertyData.isPetsAllowed === "true", isParkingIncluded: propertyData.isParkingIncluded === "true", priceperMonth: parseFloat(propertyData.pricePerMonth), securityDeposit: parseFloat(propertyData.securityDeposit), applicationFee: parseFloat(propertyData.applicationFee), beds: parseInt(propertyData.beds), baths: parseInt(propertyData.baths), squareFeet: parseInt(propertyData.squareFeet) }),
+                : [], isPetsAllowed: propertyData.isPetsAllowed === "true", isParkingIncluded: propertyData.isParkingIncluded === "true", pricePerMonth: parseFloat(propertyData.pricePerMonth), securityDeposit: parseFloat(propertyData.securityDeposit), applicationFee: parseFloat(propertyData.applicationFee), beds: parseInt(propertyData.beds), baths: parseInt(propertyData.baths), squareFeet: parseInt(propertyData.squareFeet) }),
         include: {
             location: true,
             manager: true,
         },
     });
     // return a response
-    res.status(httpStatus_1.OK).json({
-        success: true,
-        message: "Property Listed Successfully",
-        newProperty,
-    });
+    res.status(httpStatus_1.OK).json(newProperty);
 }));

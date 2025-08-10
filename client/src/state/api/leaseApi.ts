@@ -17,6 +17,15 @@ export const leaseApi = createApi({
       transformResponse: (response: { leases: Lease[] }) => response.leases,
       providesTags: ["Leases"],
     }),
+
+    // get leases for a specific property
+    getPropertyLeases: builder.query<Lease[], number>({
+      query: (propertyId) => ({
+        url: `properties/${propertyId}/leases`,
+      }),
+      transformResponse: (response: { leases: Lease[] }) => response.leases,
+      providesTags: ["Leases"],
+    }),
   }),
 });
-export const { useGetAllLeasesQuery } = leaseApi;
+export const { useGetAllLeasesQuery, useGetPropertyLeasesQuery } = leaseApi;

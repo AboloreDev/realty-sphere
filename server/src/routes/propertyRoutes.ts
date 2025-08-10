@@ -6,9 +6,7 @@ import {
   getSingleProperty,
 } from "../controllers/property.controller";
 import { isAuthenticated, restrictTo } from "../middleware/isAuthenticated";
-
-// multer configurations for file uploads
-const upload = multer({ storage: multer.memoryStorage() });
+import upload from "../middleware/multerConfig";
 
 const router = express.Router();
 

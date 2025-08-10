@@ -15,6 +15,21 @@ export const landlordApi = createApi({
   reducerPath: "landlordApi",
   tagTypes: ["updateLandlord", "Properties", "Landlords"],
   endpoints: (builder) => ({
+    // create a new listing
+    createNewProperty: builder.mutation<Property, FormData>({
+      query: (newProperty) => ({
+        url: `/properties`,
+        method: "POST",
+        body: newProperty,
+      }),
+      invalidatesTags: (result) => [
+        {
+          type: "Properties",
+          id: "LIST",
+        },
+        { type: "Landlords", id: result?.manager?.id },
+      ],
+    }),
     // updadte Landlord details
     updateLandlord: builder.mutation<
       updatedLandlordResponse,
@@ -58,4 +73,5 @@ export const {
   useUpdateLandlordMutation,
   useGetLandlordPropertyQuery,
   useGetLandlordQuery,
+  useCreateNewPropertyMutation,
 } = landlordApi;

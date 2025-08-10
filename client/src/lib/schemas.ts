@@ -1,9 +1,10 @@
 import * as z from "zod";
-import { PropertyTypeEnum } from "@/lib/constants";
+import { PropertyTypeEnum, AmenityEnum, HighlightEnum } from "@/lib/constants";
 
 export const propertySchema = z.object({
   name: z.string().min(1, "Name is required"),
   description: z.string().min(1, "Description is required"),
+  subDescription: z.string().min(1, "SubDescription is required"),
   pricePerMonth: z.coerce.number().positive().min(0).int(),
   securityDeposit: z.coerce.number().positive().min(0).int(),
   applicationFee: z.coerce.number().positive().min(0).int(),
@@ -12,8 +13,12 @@ export const propertySchema = z.object({
   photoUrls: z
     .array(z.instanceof(File))
     .min(1, "At least one photo is required"),
-  amenities: z.string().min(1, "Amenities are required"),
-  highlights: z.string().min(1, "Highlights are required"),
+  amenities: z
+    .array(z.nativeEnum(AmenityEnum))
+    .min(1, "Select at least one amenity"),
+  highlights: z
+    .array(z.nativeEnum(HighlightEnum))
+    .min(1, "Select at least one highlight"),
   beds: z.coerce.number().positive().min(0).max(10).int(),
   baths: z.coerce.number().positive().min(0).max(10).int(),
   squareFeet: z.coerce.number().int().positive(),
