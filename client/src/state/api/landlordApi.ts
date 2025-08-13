@@ -13,7 +13,13 @@ export const landlordApi = createApi({
     credentials: "include",
   }),
   reducerPath: "landlordApi",
-  tagTypes: ["updateLandlord", "Properties", "Landlords"],
+  tagTypes: [
+    "updateLandlord",
+    "Properties",
+    "Landlords",
+    "Applications",
+    "Leases",
+  ],
   endpoints: (builder) => ({
     // create a new listing
     createNewProperty: builder.mutation<Property, FormData>({

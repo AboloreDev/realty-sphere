@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteApplications = exports.updateApplications = exports.listApplications = exports.createApplication = void 0;
+exports.getApplicationDetails = exports.updateApplications = exports.listApplications = exports.createApplication = void 0;
 const httpStatus_1 = require("../constants/httpStatus");
 const prismaClient_1 = __importDefault(require("../prismaClient"));
 const appAssert_1 = __importDefault(require("../utils/appAssert"));
@@ -20,10 +20,10 @@ const catchAsyncErrors_1 = require("../utils/catchAsyncErrors");
 const nextPaymentDateCalcutions_1 = __importDefault(require("../utils/nextPaymentDateCalcutions"));
 exports.createApplication = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const user = req.user;
+    const { applicationDate, propertyId, name, email, message, phoneNumber } = req.body;
     if (user.role !== "TENANT") {
         (0, appAssert_1.default)(false, httpStatus_1.FORBIDDEN, "Not a Tenant");
     }
-    const { applicationDate, propertyId, name, email, message, phoneNumber } = req.body;
     // Validate required fields
     if (!propertyId || !name || !email || !phoneNumber) {
         return (0, appAssert_1.default)(false, httpStatus_1.BAD_REQUEST, "Missing required fields");
@@ -95,7 +95,33 @@ exports.listApplications = (0, catchAsyncErrors_1.catchAsyncError)((req, res) =>
         const nextPaymentDate = lease
             ? (0, nextPaymentDateCalcutions_1.default)(lease.startDate, lease.endDate)
             : null;
-        return Object.assign(Object.assign(Object.assign(Object.assign({}, application), { property: Object.assign(Object.assign({}, application.property), { address: application.property.location.address }), landlord: application.property.manager }), lease), { nextPaymentDate });
+        return {
+            id: application.id,
+            applicationDate: application.applicationDate,
+            status: application.status,
+            propertyId: application.propertyId,
+            tenantId: application.tenantId,
+            name: application.name,
+            email: application.email,
+            phoneNumber: application.phoneNumber,
+            message: application.message,
+            leaseId: application.leaseId,
+            property: Object.assign(Object.assign({}, application.property), { address: application.property.location.address }),
+            landlord: application.property.manager,
+            lease: lease
+                ? {
+                    id: lease.id,
+                    startDate: lease.startDate,
+                    endDate: lease.endDate,
+                    rent: lease.rent,
+                    deposit: lease.deposit,
+                    propertyId: lease.propertyId,
+                    tenantId: lease.tenantId,
+                    leaseStatus: lease.status,
+                }
+                : undefined,
+            nextPaymentDate,
+        };
     })));
     // RETURN A RESPONSE
     return res.status(httpStatus_1.OK).json({
@@ -107,7 +133,7 @@ exports.listApplications = (0, catchAsyncErrors_1.catchAsyncError)((req, res) =>
 exports.updateApplications = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //GET THE ID FROM THE PARAMS
     const { id } = req.params;
-    const status = req.body;
+    const { status } = req.body;
     const user = req.user;
     if (user.role !== "MANAGER") {
         (0, appAssert_1.default)(false, httpStatus_1.FORBIDDEN, "Only landlords can update application");
@@ -122,7 +148,7 @@ exports.updateApplications = (0, catchAsyncErrors_1.catchAsyncError)((req, res) 
     // update appliation
     const updateApplications = yield prismaClient_1.default.application.update({
         where: { id: Number(id) },
-        data: { status: "Approved" },
+        data: { status },
         include: {
             property: { include: { location: true, manager: true } },
             tenant: true,
@@ -131,18 +157,27 @@ exports.updateApplications = (0, catchAsyncErrors_1.catchAsyncError)((req, res) 
     // return a response
     return res.status(httpStatus_1.OK).json({
         success: true,
-        message: "Apllication updated successfully",
+        message: "Application updated successfully",
         updateApplications,
     });
 }));
-exports.deleteApplications = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+// GET A APPLICATION DETAILS
+exports.getApplicationDetails = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // fetch the user
+    const user = req.user;
+    // get the leaseid
     const { id } = req.params;
-    // delete the application
-    yield prismaClient_1.default.application.delete({
+    const application = yield prismaClient_1.default.lease.findUnique({
         where: { id: Number(id) },
+        include: { property: true, tenant: true },
     });
-    return res.status(httpStatus_1.OK).json({
-        success: true,
-        message: "Application deleted successfully",
-    });
+    // assert an eror if no lease
+    (0, appAssert_1.default)(application, httpStatus_1.NOT_FOUND, "No Application found");
+    if (user.role === "TENANT" && application.tenantId !== user.id) {
+        return (0, appAssert_1.default)(false, httpStatus_1.FORBIDDEN, "Access denied: Not your application", "Unauthorized Role" /* AppErrorCode.UnauthorizedRole */);
+    }
+    if (user.role === "MANAGER" && application.property.managerId !== user.id) {
+        return (0, appAssert_1.default)(false, httpStatus_1.FORBIDDEN, "Access denied: Not your property", "Unauthorized Role" /* AppErrorCode.UnauthorizedRole */);
+    }
+    res.status(200).json(application);
 }));

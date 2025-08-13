@@ -21,10 +21,14 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { authApi, useLogoutMutation } from "@/state/api/authApi";
+import {
+  authApi,
+  useGetUserProfileQuery,
+  useLogoutMutation,
+} from "@/state/api/authApi";
 import { toast } from "sonner";
 import { usePathname, useRouter } from "next/navigation";
-import { clearUser, setUser } from "@/state/slice/userSlice";
+import { clearUser } from "@/state/slice/userSlice";
 import { cn } from "@/lib/utils";
 import {
   landlordNavSecondary,
@@ -34,7 +38,7 @@ import {
 } from "@/constants/sidebarData";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const user = useAppSelector((state) => state.user.user);
+  const { data: user } = useGetUserProfileQuery();
   const dispatch = useAppDispatch();
   const [logout, { isLoading }] = useLogoutMutation();
   const router = useRouter();
@@ -156,19 +160,19 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <div className="flex items-center gap-3">
                 <Avatar className="h-8 w-8">
                   <AvatarFallback>
-                    {getInitials(user.name ?? "U N")}
+                    {getInitials(user?.user?.name)}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col text-xs">
-                  <span className="font-medium">{user.name}</span>
+                  <span className="font-medium">{user?.user?.name}</span>
                   <span className="text-muted-foreground truncate w-[140px]">
-                    {user.email}
+                    {user?.user?.email}
                   </span>
                 </div>
               </div>
             </TooltipTrigger>
             <TooltipContent side="top">
-              <p>{user.email}</p>
+              <p>{user?.user?.email}</p>
             </TooltipContent>
           </Tooltip>
         )}

@@ -11,7 +11,7 @@ const landlordSlice = createSlice({
   reducers: {},
 });
 
-// export the ruducer
-export default landlordSlice.reducer;
 // export the actions
 export const {} = landlordSlice.actions;
+// export the ruducer
+export default landlordSlice.reducer;

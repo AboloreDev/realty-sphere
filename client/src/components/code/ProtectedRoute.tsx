@@ -1,177 +1,253 @@
-// app/components/code/ProtectedRoute.tsx
 "use client";
 
-import { authApi, useGetUserProfileQuery } from "@/state/api/authApi";
-import { useAppDispatch, useAppSelector } from "@/state/redux";
-import { setUser, clearUser } from "@/state/slice/userSlice";
-import { useRouter, usePathname } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { useGetUserProfileQuery } from "@/state/api/authApi";
+import React, { useEffect } from "react";
 import { toast } from "sonner";
+import { useRouter, usePathname } from "next/navigation";
 import BouncingLoader from "./BouncingLoader";
 
-// Define TypeScript types
-interface User {
-  id: string;
-  email: string;
-  name: string;
-  role: "TENANT" | "MANAGER";
-}
+// Define user roles as constants for type safety
+export const USER_ROLES = {
+  MANAGER: "MANAGER",
+  TENANT: "TENANT",
+  ADMIN: "ADMIN", // Optional: if you have admin users
+} as const;
 
+export type UserRole = (typeof USER_ROLES)[keyof typeof USER_ROLES];
+
+// Define route patterns that require specific roles
+const ROLE_BASED_ROUTES = {
+  "/dashboard/manager": [USER_ROLES.MANAGER],
+  "/dashboard/tenant": [USER_ROLES.TENANT],
+  "/dashboard/admin": [USER_ROLES.ADMIN],
+  // Add more protected routes as needed
+  "/manager": [USER_ROLES.MANAGER],
+  "/tenant": [USER_ROLES.TENANT],
+} as const;
+
+// Define TypeScript types
 interface ProtectedRouteProps {
   children: React.ReactNode;
+  requiredRole?: UserRole | UserRole[]; // Optional: override route-based role checking
+  fallbackPath?: string; // Optional: custom redirect path
 }
 
-const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
+interface User {
+  id: string;
+  role: UserRole;
+  email?: string;
+  name?: string;
+  // Add other user properties as needed
+}
+
+interface UserResponse {
+  user: User;
+  token?: string;
+}
+
+const ProtectedRoute = ({
+  children,
+  requiredRole,
+  fallbackPath,
+}: ProtectedRouteProps) => {
   const router = useRouter();
   const pathname = usePathname();
-  const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.user.user);
-  const { data, isLoading, isError, error } = useGetUserProfileQuery(
-    undefined,
-    {
-      refetchOnMountOrArgChange: true,
-    }
-  );
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const {
+    data: userResponse,
+    isLoading,
+    isError,
+    error,
+  } = useGetUserProfileQuery();
 
+  // Security check: Validate user data structure
+  const isValidUserData = (data: any): data is UserResponse => {
+    return (
+      data &&
+      typeof data === "object" &&
+      data.user &&
+      typeof data.user === "object" &&
+      typeof data.user.id === "string" &&
+      typeof data.user.role === "string" &&
+      Object.values(USER_ROLES).includes(data.user.role)
+    );
+  };
+
+  // Determine required roles for current route
+  const getRequiredRolesForRoute = (path: string): UserRole[] => {
+    // If requiredRole prop is provided, use it
+    if (requiredRole) {
+      return Array.isArray(requiredRole) ? requiredRole : [requiredRole];
+    }
+
+    // Check exact path matches first
+    for (const [route, roles] of Object.entries(ROLE_BASED_ROUTES)) {
+      if (path === route) {
+        return Array.from(roles) as UserRole[];
+      }
+    }
+
+    // Check if path starts with any protected route pattern
+    for (const [route, roles] of Object.entries(ROLE_BASED_ROUTES)) {
+      if (path.startsWith(route)) {
+        return Array.from(roles) as UserRole[];
+      }
+    }
+
+    return []; // No specific role required
+  };
+
+  // Get default redirect path based on user role
+  const getDefaultRedirectPath = (userRole: UserRole): string => {
+    switch (userRole) {
+      case USER_ROLES.MANAGER:
+        return "/dashboard/manager";
+      case USER_ROLES.TENANT:
+        return "/dashboard/tenant";
+      case USER_ROLES.ADMIN:
+        return "/dashboard/admin";
+      default:
+        return "/auth/login";
+    }
+  };
+
+  // Main access control logic
   useEffect(() => {
-    // Handle initial load from localStorage
-    const storedUser = localStorage.getItem("user");
-    if (storedUser && !user) {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        if (parsedUser.role === "TENANT" || parsedUser.role === "MANAGER") {
-          dispatch(setUser(parsedUser));
-        } else {
-          localStorage.removeItem("user");
-          dispatch(clearUser());
-        }
-      } catch {
-        localStorage.removeItem("user");
-        dispatch(clearUser());
-      }
-    }
+    // Skip checks while loading
+    if (isLoading) return;
 
-    // Wait for RTK Query to complete
-    if (isLoading) {
+    // Handle authentication errors
+    if (isError || !userResponse) {
+      toast.error("Authentication failed. Please login again.");
+      router.push("/auth/login");
       return;
     }
 
-    setIsInitialLoad(false);
-
-    // Handle errors or unsuccessful response
-    if (isError || !data?.success) {
-      toast.error(data?.message || "Unauthorized Access");
-      localStorage.removeItem("user");
-      dispatch(clearUser());
-      dispatch(authApi.util.resetApiState());
-      router.replace("/auth/login");
+    // Validate user data structure for security
+    if (!isValidUserData(userResponse)) {
+      toast.error("Invalid user session. Please login again.");
+      router.push("/auth/login");
       return;
     }
 
-    // Update Redux and localStorage with user data from API
-    if (data?.user) {
-      const userData: User = {
-        id: data.user.id,
-        email: data.user.email,
-        name: data.user.name,
-        role: data.user.role as "TENANT" | "MANAGER",
-      };
-      if (!user || user.id !== userData.id || user.role !== userData.role) {
-        dispatch(setUser(userData));
-        localStorage.setItem("user", JSON.stringify(userData));
-      }
-    }
+    const { user } = userResponse;
+    const requiredRoles = getRequiredRolesForRoute(pathname);
 
-    // Get current role from API or Redux
-    const currentRole = data?.user?.role || user?.role;
-
-    if (!currentRole) {
-      toast.error("No role assigned");
-      localStorage.removeItem("user");
-      dispatch(clearUser());
-      dispatch(authApi.util.resetApiState());
-      router.replace("/auth/login");
+    // If no specific role is required for this route, allow access
+    if (requiredRoles.length === 0) {
       return;
     }
 
-    // Redirect for /dashboard based on role
-    if (pathname === "/dashboard") {
-      const redirectPath = `/dashboard/${currentRole.toLowerCase()}`;
+    // Check if user has required role
+    const hasRequiredRole = requiredRoles.includes(user.role);
+
+    if (!hasRequiredRole) {
+      // Security logging (in production, log this to your security monitoring system)
+      console.warn(
+        `Access denied: User ${user.id} with role ${user.role} attempted to access ${pathname}`
+      );
+
+      // Show security warning
+      toast.error(
+        `Access denied. This area is restricted to ${requiredRoles.join(
+          " or "
+        )} users only.`
+      );
+
+      // Redirect to appropriate dashboard based on user's actual role
+      const redirectPath = fallbackPath || getDefaultRedirectPath(user.role);
+
+      // Force navigation with replace to prevent back button exploitation
       router.replace(redirectPath);
       return;
     }
 
-    // Check role-based access for specific routes
-    const expectedRole = pathname.startsWith("/dashboard/tenant")
-      ? "TENANT"
-      : pathname.startsWith("/dashboard/manager")
-      ? "MANAGER"
-      : null;
-    if (expectedRole && currentRole !== expectedRole) {
-      // Double-check localStorage role
-      const storedUser = localStorage.getItem("user");
-      let storedRole: string | null = null;
-      if (storedUser) {
-        try {
-          const parsedUser = JSON.parse(storedUser);
-          storedRole = parsedUser.role;
-        } catch {
-          localStorage.removeItem("user");
-
-          dispatch(clearUser());
-          dispatch(authApi.util.resetApiState());
-        }
-      }
-
-      if (storedRole && storedRole !== expectedRole) {
-        const redirectPath = `/dashboard/${storedRole.toLowerCase()}`;
-        router.replace(redirectPath);
-        return;
-      } else if (currentRole !== expectedRole) {
-        const redirectPath = `/dashboard/${currentRole.toLowerCase()}`;
-        router.replace(redirectPath);
-        return;
-      }
+    // Additional security: Check for role tampering
+    if (!Object.values(USER_ROLES).includes(user.role)) {
+      toast.error("Invalid user role. Please contact support.");
+      router.push("/auth/login");
+      return;
     }
-  }, [isLoading, isError, data, user, dispatch, router, pathname, error]);
+  }, [
+    userResponse,
+    isLoading,
+    isError,
+    error,
+    pathname,
+    router,
+    requiredRole,
+    fallbackPath,
+  ]);
 
-  // Prevent rendering until role is validated
-  if (isLoading || isInitialLoad || !data?.success) {
+  // Show loading state
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <BouncingLoader />
+        <div className="text-center">
+          <BouncingLoader />
+          <p className="mt-4 text-gray-600">Verifying access permissions...</p>
+        </div>
       </div>
     );
   }
 
-  // Only render children if the role matches the route
-  const currentRole = data?.user?.role || user?.role;
-  const expectedRole = pathname.startsWith("/dashboard/tenant")
-    ? "TENANT"
-    : pathname.startsWith("/dashboard/manager")
-    ? "MANAGER"
-    : null;
-  if (expectedRole && currentRole !== expectedRole) {
-    // Double-check localStorage role
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        if (parsedUser.role !== expectedRole) {
-          return null; // Prevent rendering wrong dashboard
-        }
-      } catch {
-        localStorage.removeItem("user");
-
-        dispatch(clearUser());
-        dispatch(authApi.util.resetApiState());
-        return null;
-      }
-    }
-    return null;
+  // Show error state
+  if (isError || !userResponse) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <p className="text-red-600">Authentication required</p>
+          <button
+            onClick={() => router.push("/login")}
+            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            Go to Login
+          </button>
+        </div>
+      </div>
+    );
   }
 
+  // Validate user data one more time before rendering
+  if (!isValidUserData(userResponse)) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <p className="text-red-600">Invalid session data</p>
+          <button
+            onClick={() => router.push("/login")}
+            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            Login Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const { user } = userResponse;
+  const requiredRoles = getRequiredRolesForRoute(pathname);
+
+  // Final access check before rendering children
+  if (requiredRoles.length > 0 && !requiredRoles.includes(user.role)) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <p className="text-red-600 text-lg font-semibold">Access Denied</p>
+          <p className="text-gray-600 mt-2">
+            You don&apos;t have permission to view this page
+          </p>
+          <button
+            onClick={() => router.replace(getDefaultRedirectPath(user.role))}
+            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            Go to Dashboard
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // If all security checks pass, render the protected content
   return <div>{children}</div>;
 };
 

@@ -160,7 +160,7 @@ export const createLease = catchAsyncError(async (req: AuthRequest, res) => {
     },
   });
   // assert an error if there is no approved application status
-  appAssert(application, BAD_REQUEST, "Application status not found");
+  appAssert(application, BAD_REQUEST, "Application status not approved");
 
   // create a lease and update the application then wait till the tenant approves it
   const lease = await prisma.$transaction(async (prisma) => {
@@ -173,6 +173,7 @@ export const createLease = catchAsyncError(async (req: AuthRequest, res) => {
         property: { connect: { id: Number(propertyId) } },
         tenant: { connect: { id: tenantId } },
         status: "Pending",
+        application: { connect: { id: Number(applicationId) } },
       },
       include: { property: { include: { location: true } }, tenant: true },
     });
@@ -181,6 +182,7 @@ export const createLease = catchAsyncError(async (req: AuthRequest, res) => {
     await prisma.application.update({
       where: { id: Number(applicationId) },
       data: { lease: { connect: { id: newLease.id } } },
+      include: { property: true, tenant: true, lease: true },
     });
 
     return newLease;
@@ -193,41 +195,10 @@ export const createLease = catchAsyncError(async (req: AuthRequest, res) => {
   });
 });
 
-export const deleteLease = catchAsyncError(async (req: AuthRequest, res) => {
-  const user = req.user!;
-  const { id } = req.params;
-
-  // restrict to landlord
-  if (user.role !== "MANAGER") {
-    appAssert(false, FORBIDDEN, "Only Manager can delete a lease");
-  }
-
-  // fetch the lease
-  const lease = await prisma.lease.findUnique({
-    where: { id: Number(id) },
-  });
-
-  // ASSERT AN ERROR
-  appAssert(lease, NOT_FOUND, "Lease not found");
-
-  // update the application data and delete the lease
-  await prisma.$transaction(async (prisma) => {
-    // update the application
-    await prisma.application.updateMany({
-      where: { leaseId: Number(id) },
-      data: { leaseId: null },
-    });
-
-    // delete the lease
-    await prisma.lease.delete({
-      where: { id: Number(id) },
-    });
-  });
-});
-
 export const updateLease = catchAsyncError(async (req: AuthRequest, res) => {
   const user = req.user!;
   const { id } = req.params;
+  const { status } = req.body;
 
   // restrict to tenant alone
   if (user.role !== "TENANT") {
@@ -237,8 +208,12 @@ export const updateLease = catchAsyncError(async (req: AuthRequest, res) => {
   // update the lease status
   const updatedLease = await prisma.lease.update({
     where: { id: Number(id) },
-    data: { status: "Approved" },
-    include: { property: { include: { location: true } }, tenant: true },
+    data: { status },
+    include: {
+      property: { include: { location: true } },
+      tenant: true,
+      application: true,
+    },
   });
 
   return res.status(OK).json({
@@ -247,3 +222,40 @@ export const updateLease = catchAsyncError(async (req: AuthRequest, res) => {
     lease: updatedLease,
   });
 });
+
+// GET A LEASE DETAILS
+export const getLeaseDetails = catchAsyncError(
+  async (req: AuthRequest, res) => {
+    // fetch the user
+    const user = req.user!;
+    // get the leaseid
+    const { id } = req.params;
+
+    const lease = await prisma.lease.findUnique({
+      where: { id: Number(id) },
+      include: { property: true, tenant: true, application: true },
+    });
+
+    // assert an eror if no lease
+    appAssert(lease, NOT_FOUND, "No Lease found");
+
+    if (user.role === "TENANT" && lease.tenantId !== user.id) {
+      return appAssert(
+        false,
+        FORBIDDEN,
+        "Access denied: Not your lease",
+        AppErrorCode.UnauthorizedRole
+      );
+    }
+    if (user.role === "MANAGER" && lease.property.managerId !== user.id) {
+      return appAssert(
+        false,
+        FORBIDDEN,
+        "Access denied: Not your property",
+        AppErrorCode.UnauthorizedRole
+      );
+    }
+
+    res.status(200).json(lease);
+  }
+);

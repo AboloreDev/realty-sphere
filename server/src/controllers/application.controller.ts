@@ -1,4 +1,4 @@
-import { application } from "express";
+import AppErrorCode from "../constants/appErrorCode";
 import {
   BAD_REQUEST,
   CREATED,
@@ -6,7 +6,7 @@ import {
   NOT_FOUND,
   OK,
 } from "../constants/httpStatus";
-import { AuthRequest, restrictTo } from "../middleware/isAuthenticated";
+import { AuthRequest } from "../middleware/isAuthenticated";
 import prisma from "../prismaClient";
 import appAssert from "../utils/appAssert";
 import { catchAsyncError } from "../utils/catchAsyncErrors";
@@ -15,13 +15,12 @@ import calculateNextPaymentDate from "../utils/nextPaymentDateCalcutions";
 export const createApplication = catchAsyncError(
   async (req: AuthRequest, res) => {
     const user = req.user!;
+    const { applicationDate, propertyId, name, email, message, phoneNumber } =
+      req.body;
 
     if (user.role !== "TENANT") {
       appAssert(false, FORBIDDEN, "Not a Tenant");
     }
-    const { applicationDate, propertyId, name, email, message, phoneNumber } =
-      req.body;
-
     // Validate required fields
     if (!propertyId || !name || !email || !phoneNumber) {
       return appAssert(false, BAD_REQUEST, "Missing required fields");
@@ -106,13 +105,33 @@ export const listApplications = catchAsyncError(
           : null;
 
         return {
-          ...application,
+          id: application.id,
+          applicationDate: application.applicationDate,
+          status: application.status,
+          propertyId: application.propertyId,
+          tenantId: application.tenantId,
+          name: application.name,
+          email: application.email,
+          phoneNumber: application.phoneNumber,
+          message: application.message,
+          leaseId: application.leaseId,
           property: {
             ...application.property,
             address: application.property.location.address,
           },
           landlord: application.property.manager,
-          ...lease,
+          lease: lease
+            ? {
+                id: lease.id,
+                startDate: lease.startDate,
+                endDate: lease.endDate,
+                rent: lease.rent,
+                deposit: lease.deposit,
+                propertyId: lease.propertyId,
+                tenantId: lease.tenantId,
+                leaseStatus: lease.status,
+              }
+            : undefined,
           nextPaymentDate,
         };
       })
@@ -131,7 +150,7 @@ export const updateApplications = catchAsyncError(
   async (req: AuthRequest, res) => {
     //GET THE ID FROM THE PARAMS
     const { id } = req.params;
-    const status = req.body;
+    const { status } = req.body;
     const user = req.user!;
 
     if (user.role !== "MANAGER") {
@@ -150,7 +169,7 @@ export const updateApplications = catchAsyncError(
     // update appliation
     const updateApplications = await prisma.application.update({
       where: { id: Number(id) },
-      data: { status: "Approved" },
+      data: { status },
       include: {
         property: { include: { location: true, manager: true } },
         tenant: true,
@@ -160,24 +179,45 @@ export const updateApplications = catchAsyncError(
     // return a response
     return res.status(OK).json({
       success: true,
-      message: "Apllication updated successfully",
+      message: "Application updated successfully",
       updateApplications,
     });
   }
 );
 
-export const deleteApplications = catchAsyncError(
+// GET A APPLICATION DETAILS
+export const getApplicationDetails = catchAsyncError(
   async (req: AuthRequest, res) => {
+    // fetch the user
+    const user = req.user!;
+    // get the leaseid
     const { id } = req.params;
 
-    // delete the application
-    await prisma.application.delete({
+    const application = await prisma.lease.findUnique({
       where: { id: Number(id) },
+      include: { property: true, tenant: true },
     });
 
-    return res.status(OK).json({
-      success: true,
-      message: "Application deleted successfully",
-    });
+    // assert an eror if no lease
+    appAssert(application, NOT_FOUND, "No Application found");
+
+    if (user.role === "TENANT" && application.tenantId !== user.id) {
+      return appAssert(
+        false,
+        FORBIDDEN,
+        "Access denied: Not your application",
+        AppErrorCode.UnauthorizedRole
+      );
+    }
+    if (user.role === "MANAGER" && application.property.managerId !== user.id) {
+      return appAssert(
+        false,
+        FORBIDDEN,
+        "Access denied: Not your property",
+        AppErrorCode.UnauthorizedRole
+      );
+    }
+
+    res.status(200).json(application);
   }
 );

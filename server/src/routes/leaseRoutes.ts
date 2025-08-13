@@ -1,8 +1,8 @@
 import express from "express";
 import {
   createLease,
-  deleteLease,
   getAllLease,
+  getLeaseDetails,
   getLeasePayment,
   updateLease,
 } from "../controllers/lease.controller";
@@ -13,6 +13,6 @@ const router = express.Router();
 router.get("/", isAuthenticated, getAllLease);
 router.get("/:id/payment", isAuthenticated, getLeasePayment);
 router.post("/", isAuthenticated, restrictTo("MANAGER"), createLease);
-router.delete("/:id", isAuthenticated, restrictTo("MANAGER"), deleteLease);
 router.patch("/:id/accept", isAuthenticated, restrictTo("TENANT"), updateLease);
+router.get("/:id", isAuthenticated, getLeaseDetails);
 export default router;

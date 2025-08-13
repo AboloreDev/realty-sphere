@@ -14,11 +14,10 @@ export const getUserProfile = catchAsyncError(async (req, res) => {
 
   // return the response
   res.status(200).json({
-    success: true,
-    message: "User Authenticated",
     user: {
       id: user.id,
       email: user.email,
+      name: user.name,
       role: user.role,
     },
   });

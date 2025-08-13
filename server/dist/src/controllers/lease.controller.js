@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateLease = exports.deleteLease = exports.createLease = exports.getLeasePayment = exports.getAllLease = void 0;
+exports.getLeaseDetails = exports.updateLease = exports.createLease = exports.getLeasePayment = exports.getAllLease = void 0;
 const httpStatus_1 = require("../constants/httpStatus");
 const prismaClient_1 = __importDefault(require("../prismaClient"));
 const appAssert_1 = __importDefault(require("../utils/appAssert"));
@@ -110,7 +110,7 @@ exports.createLease = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __aw
         },
     });
     // assert an error if there is no approved application status
-    (0, appAssert_1.default)(application, httpStatus_1.BAD_REQUEST, "Application status not found");
+    (0, appAssert_1.default)(application, httpStatus_1.BAD_REQUEST, "Application status not approved");
     // create a lease and update the application then wait till the tenant approves it
     const lease = yield prismaClient_1.default.$transaction((prisma) => __awaiter(void 0, void 0, void 0, function* () {
         const newLease = yield prisma.lease.create({
@@ -122,6 +122,7 @@ exports.createLease = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __aw
                 property: { connect: { id: Number(propertyId) } },
                 tenant: { connect: { id: tenantId } },
                 status: "Pending",
+                application: { connect: { id: Number(applicationId) } },
             },
             include: { property: { include: { location: true } }, tenant: true },
         });
@@ -129,6 +130,7 @@ exports.createLease = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __aw
         yield prisma.application.update({
             where: { id: Number(applicationId) },
             data: { lease: { connect: { id: newLease.id } } },
+            include: { property: true, tenant: true, lease: true },
         });
         return newLease;
     }));
@@ -138,35 +140,10 @@ exports.createLease = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __aw
         lease,
     });
 }));
-exports.deleteLease = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = req.user;
-    const { id } = req.params;
-    // restrict to landlord
-    if (user.role !== "MANAGER") {
-        (0, appAssert_1.default)(false, httpStatus_1.FORBIDDEN, "Only Manager can delete a lease");
-    }
-    // fetch the lease
-    const lease = yield prismaClient_1.default.lease.findUnique({
-        where: { id: Number(id) },
-    });
-    // ASSERT AN ERROR
-    (0, appAssert_1.default)(lease, httpStatus_1.NOT_FOUND, "Lease not found");
-    // update the application data and delete the lease
-    yield prismaClient_1.default.$transaction((prisma) => __awaiter(void 0, void 0, void 0, function* () {
-        // update the application
-        yield prisma.application.updateMany({
-            where: { leaseId: Number(id) },
-            data: { leaseId: null },
-        });
-        // delete the lease
-        yield prisma.lease.delete({
-            where: { id: Number(id) },
-        });
-    }));
-}));
 exports.updateLease = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const user = req.user;
     const { id } = req.params;
+    const { status } = req.body;
     // restrict to tenant alone
     if (user.role !== "TENANT") {
         (0, appAssert_1.default)(false, httpStatus_1.FORBIDDEN, "You aren't a tenant");
@@ -174,12 +151,36 @@ exports.updateLease = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __aw
     // update the lease status
     const updatedLease = yield prismaClient_1.default.lease.update({
         where: { id: Number(id) },
-        data: { status: "Approved" },
-        include: { property: { include: { location: true } }, tenant: true },
+        data: { status },
+        include: {
+            property: { include: { location: true } },
+            tenant: true,
+            application: true,
+        },
     });
     return res.status(httpStatus_1.OK).json({
         success: true,
         message: "Lease accepted successfully",
         lease: updatedLease,
     });
+}));
+// GET A LEASE DETAILS
+exports.getLeaseDetails = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // fetch the user
+    const user = req.user;
+    // get the leaseid
+    const { id } = req.params;
+    const lease = yield prismaClient_1.default.lease.findUnique({
+        where: { id: Number(id) },
+        include: { property: true, tenant: true, application: true },
+    });
+    // assert an eror if no lease
+    (0, appAssert_1.default)(lease, httpStatus_1.NOT_FOUND, "No Lease found");
+    if (user.role === "TENANT" && lease.tenantId !== user.id) {
+        return (0, appAssert_1.default)(false, httpStatus_1.FORBIDDEN, "Access denied: Not your lease", "Unauthorized Role" /* AppErrorCode.UnauthorizedRole */);
+    }
+    if (user.role === "MANAGER" && lease.property.managerId !== user.id) {
+        return (0, appAssert_1.default)(false, httpStatus_1.FORBIDDEN, "Access denied: Not your property", "Unauthorized Role" /* AppErrorCode.UnauthorizedRole */);
+    }
+    res.status(200).json(lease);
 }));

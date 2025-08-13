@@ -11,6 +11,7 @@ const router = express_1.default.Router();
 router.get("/", isAuthenticated_1.isAuthenticated, application_controller_1.listApplications);
 // CREATE APPLICATION restrict to tenant alone
 router.post("/", isAuthenticated_1.isAuthenticated, (0, isAuthenticated_1.restrictTo)("TENANT"), application_controller_1.createApplication);
-// update the appointment
-router.patch("/:id", isAuthenticated_1.isAuthenticated, (0, isAuthenticated_1.restrictTo)("MANAGER"), application_controller_1.updateApplications);
+// update the application
+router.patch("/:id/status", isAuthenticated_1.isAuthenticated, (0, isAuthenticated_1.restrictTo)("MANAGER"), application_controller_1.updateApplications);
+router.get("/:id", isAuthenticated_1.isAuthenticated, application_controller_1.getApplicationDetails);
 exports.default = router;
