@@ -13,21 +13,18 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { registerSchema } from "@/lib/schemas";
 import { useRegisterUserMutation } from "@/state/api/authApi";
-import { useAppDispatch } from "@/state/redux";
 import Link from "next/link";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { setUser } from "@/state/slice/userSlice";
+
 import { toast } from "sonner";
 
 const RegisterPage = () => {
   // getting the mutation from the redux toolkit
   const [registerMutation, { isLoading }] = useRegisterUserMutation();
-  // dispatch function from useAppDispatch
-  const dispatch = useAppDispatch();
   // router
   const router = useRouter();
   // zod schema
@@ -60,7 +57,6 @@ const RegisterPage = () => {
 
     try {
       const response = await registerMutation(data).unwrap();
-      dispatch(setUser(response.user));
 
       toast.success("Registration successful!");
       router.push(

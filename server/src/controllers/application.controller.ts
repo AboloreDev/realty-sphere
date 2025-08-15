@@ -14,50 +14,69 @@ import calculateNextPaymentDate from "../utils/nextPaymentDateCalcutions";
 
 export const createApplication = catchAsyncError(
   async (req: AuthRequest, res) => {
-    const user = req.user!;
-    const { applicationDate, propertyId, name, email, message, phoneNumber } =
-      req.body;
+    try {
+      const user = req.user!;
+      console.log("Request body:", req.body); // Debug: Log the incoming body
 
-    if (user.role !== "TENANT") {
-      appAssert(false, FORBIDDEN, "Not a Tenant");
+      // Check if req.body is defined
+      if (!req.body) {
+        return appAssert(false, BAD_REQUEST, "Request body is missing");
+      }
+
+      const { applicationDate, propertyId, name, email, message, phoneNumber } =
+        req.body;
+
+      if (user.role !== "TENANT") {
+        return appAssert(false, FORBIDDEN, "Not a Tenant");
+      }
+
+      // Validate required fields
+      if (!propertyId || !name || !email || !phoneNumber) {
+        return appAssert(false, BAD_REQUEST, "Missing required fields");
+      }
+
+      // Validate propertyId exists
+      const property = await prisma.property.findUnique({
+        where: { id: propertyId },
+        select: {
+          pricePerMonth: true,
+          securityDeposit: true,
+        },
+      });
+
+      appAssert(property, NOT_FOUND, "Property not found");
+
+      // Create the application
+      const newApplication = await prisma.application.create({
+        data: {
+          applicationDate: new Date(applicationDate || Date.now()),
+          status: "Pending",
+          name,
+          email,
+          phoneNumber,
+          message,
+          property: { connect: { id: propertyId } },
+          tenant: { connect: { id: user.id } },
+        },
+        include: {
+          property: { include: { location: true, manager: true } },
+          tenant: true,
+        },
+      });
+
+      return res.status(CREATED).json({
+        success: true,
+        message: "Application was successful",
+        newApplication,
+      });
+    } catch (error: any) {
+      console.error("Error in createApplication:", error); // Log the error
+      return res.status(500).json({
+        success: false,
+        message: "Internal Server Error",
+        error: error.message, // Include error details for debugging
+      });
     }
-    // Validate required fields
-    if (!propertyId || !name || !email || !phoneNumber) {
-      return appAssert(false, BAD_REQUEST, "Missing required fields");
-    }
-
-    const property = await prisma.property.findUnique({
-      where: { id: propertyId },
-      select: {
-        pricePerMonth: true,
-        securityDeposit: true,
-      },
-    });
-
-    appAssert(property, NOT_FOUND, "Property not found");
-
-    const newApplication = await prisma.application.create({
-      data: {
-        applicationDate: new Date(applicationDate || Date.now()),
-        status: "Pending",
-        name,
-        email,
-        phoneNumber,
-        message,
-        property: { connect: { id: propertyId } },
-        tenant: { connect: { id: user.id } },
-      },
-      include: {
-        property: { include: { location: true, manager: true } },
-        tenant: true,
-      },
-    });
-
-    return res.status(CREATED).json({
-      success: true,
-      message: "Application was successful",
-      newApplication,
-    });
   }
 );
 

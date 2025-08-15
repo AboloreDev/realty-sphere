@@ -13,7 +13,7 @@ export const authApi = createApi({
     credentials: "include",
   }),
   reducerPath: "authApi",
-  tagTypes: ["register", "login", "logout"],
+  tagTypes: ["User", "Auth", "register", "login", "logout"],
   endpoints: (builder) => ({
     registerUser: builder.mutation<AuthResponse, RegisterUserTypes>({
       query: (data) => ({
@@ -21,6 +21,7 @@ export const authApi = createApi({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["User", "Auth"],
     }),
     loginUser: builder.mutation<AuthResponse, LoginUserTypes>({
       query: (credentials) => ({
@@ -28,6 +29,7 @@ export const authApi = createApi({
         method: "POST",
         body: credentials,
       }),
+      invalidatesTags: ["User", "Auth"],
     }),
     forgotPassword: builder.mutation<ApiResponse<object>, { email: string }>({
       query: (data) => ({
@@ -66,10 +68,12 @@ export const authApi = createApi({
         url: "/auth/logout",
         method: "POST",
       }),
+      invalidatesTags: ["User", "Auth"],
     }),
-    // Authenticate the user
+    // Authenticate the user - FIXED with cache busting
     getUserProfile: builder.query<User, void>({
       query: () => "/user",
+      providesTags: ["User"],
     }),
   }),
 });

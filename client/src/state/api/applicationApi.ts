@@ -7,7 +7,7 @@ export const applicationApi = createApi({
     credentials: "include",
   }),
   reducerPath: "applicationApi",
-  tagTypes: ["Applications", "Leases"],
+  tagTypes: ["Applications", "Leases", "Tenants"],
   endpoints: (builder) => ({
     // UPDATE APPLICATION STATUS
     updateApplicationStatus: builder.mutation<
@@ -15,7 +15,7 @@ export const applicationApi = createApi({
       { id: number; status: string }
     >({
       query: ({ id, status }) => ({
-        url: `/application/${id}/status`,
+        url: `/applications/${id}/status`,
         method: "PATCH",
         body: { status },
       }),
@@ -32,10 +32,28 @@ export const applicationApi = createApi({
         response.formattedApplications,
       providesTags: ["Applications"],
     }),
+
+    // Create Application
+    createApplication: builder.mutation<Application, Partial<Application>>({
+      query: (data) => ({
+        url: "/applications",
+        method: "POST",
+        body: data,
+      }),
+      transformResponse: (response: {
+        success: boolean;
+        message: string;
+        newApplication: Application[];
+      }) => {
+        return response.newApplication;
+      },
+      invalidatesTags: ["Applications"],
+    }),
   }),
 });
 
 export const {
   useUpdateApplicationStatusMutation,
   useFetchAllApplicationsQuery,
+  useCreateApplicationMutation,
 } = applicationApi;

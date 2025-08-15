@@ -32,5 +32,27 @@
     "email": "carol.white@example.com",
     "phoneNumber": "+1 (555) 555-6666",
     "message": "Excited about the possibility of renting this house."
+  },
+  {
+    "id": 4,
+    "applicationDate": "2023-05-20T00:00:00Z",
+    "status": "Pending",
+    "propertyId": 1,
+    "tenantId": "817b3540-a061-707b-742a-a28391181149",
+    "name": "Carol White",
+    "email": "carol.white@example.com",
+    "phoneNumber": "+1 (650) 300-2222",
+    "message": "Excited about the possibility of renting this house."
+  },
+  {
+    "id": 5,
+    "applicationDate": "2024-05-20T00:00:00Z",
+    "status": "Denied",
+    "propertyId": 1,
+    "tenantId": "87654321-90ab-cdef-1234-567890abcdef",
+    "name": "Bob Green",
+    "email": "bob.green@example.com",
+    "phoneNumber": "+1 (201) 786-2222",
+    "message": "Looking forward to viewing this apartment."
   }
 ]

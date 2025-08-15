@@ -8,12 +8,13 @@ import ThemeToggle from "./code/ThemeToggle";
 import { Button } from "./ui/button";
 import { Bell, MessageSquare, Search } from "lucide-react";
 import { Input } from "./ui/input";
+import { useGetUserProfileQuery } from "@/state/api/authApi";
 
 export function SiteHeader() {
   // functions
-  const user = useAppSelector((state) => state.user.user);
+  const { data: user } = useGetUserProfileQuery();
   const title =
-    user?.role === "TENANT" ? "Tenant Dashboard" : "Landlord Dashboard";
+    user.user?.role === "TENANT" ? "Tenant Dashboard" : "Landlord Dashboard";
 
   return (
     <header className="flex h-(--header-height) shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
@@ -28,7 +29,7 @@ export function SiteHeader() {
             <h1 className="text-base font-medium"> {title}</h1>
           </div>
           <div className="flex space-x-4 items-center">
-            {user?.role === "TENANT" && (
+            {user.user?.role === "TENANT" && (
               <div className="flex items-center gap-2">
                 <Input className="" placeholder="Search properties" />
                 <Search />

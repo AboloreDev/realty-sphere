@@ -44,10 +44,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const router = useRouter();
   const pathname = usePathname();
 
-  const navMain = user?.role === "TENANT" ? tenantNavMain : managerNavMain;
+  const userRole = user.user.role;
+
+  const navMain = userRole === "TENANT" ? tenantNavMain : managerNavMain;
 
   const navSecondary =
-    user?.role === "TENANT" ? tenantNavSecondary : landlordNavSecondary;
+    userRole === "TENANT" ? tenantNavSecondary : landlordNavSecondary;
 
   const getInitials = (name: string) => {
     return name

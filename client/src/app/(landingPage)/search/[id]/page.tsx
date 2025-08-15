@@ -57,7 +57,10 @@ const SingleListingPage = () => {
           </div>
 
           <div className="">
-            <Widget property={propertyWithCoordinate.manager} />
+            <Widget
+              property={propertyWithCoordinate.manager}
+              propertyId={propertyId}
+            />
           </div>
         </div>
       </div>

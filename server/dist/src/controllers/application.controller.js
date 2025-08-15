@@ -19,44 +19,61 @@ const appAssert_1 = __importDefault(require("../utils/appAssert"));
 const catchAsyncErrors_1 = require("../utils/catchAsyncErrors");
 const nextPaymentDateCalcutions_1 = __importDefault(require("../utils/nextPaymentDateCalcutions"));
 exports.createApplication = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = req.user;
-    const { applicationDate, propertyId, name, email, message, phoneNumber } = req.body;
-    if (user.role !== "TENANT") {
-        (0, appAssert_1.default)(false, httpStatus_1.FORBIDDEN, "Not a Tenant");
+    try {
+        const user = req.user;
+        console.log("Request body:", req.body); // Debug: Log the incoming body
+        // Check if req.body is defined
+        if (!req.body) {
+            return (0, appAssert_1.default)(false, httpStatus_1.BAD_REQUEST, "Request body is missing");
+        }
+        const { applicationDate, propertyId, name, email, message, phoneNumber } = req.body;
+        if (user.role !== "TENANT") {
+            return (0, appAssert_1.default)(false, httpStatus_1.FORBIDDEN, "Not a Tenant");
+        }
+        // Validate required fields
+        if (!propertyId || !name || !email || !phoneNumber) {
+            return (0, appAssert_1.default)(false, httpStatus_1.BAD_REQUEST, "Missing required fields");
+        }
+        // Validate propertyId exists
+        const property = yield prismaClient_1.default.property.findUnique({
+            where: { id: propertyId },
+            select: {
+                pricePerMonth: true,
+                securityDeposit: true,
+            },
+        });
+        (0, appAssert_1.default)(property, httpStatus_1.NOT_FOUND, "Property not found");
+        // Create the application
+        const newApplication = yield prismaClient_1.default.application.create({
+            data: {
+                applicationDate: new Date(applicationDate || Date.now()),
+                status: "Pending",
+                name,
+                email,
+                phoneNumber,
+                message,
+                property: { connect: { id: propertyId } },
+                tenant: { connect: { id: user.id } },
+            },
+            include: {
+                property: { include: { location: true, manager: true } },
+                tenant: true,
+            },
+        });
+        return res.status(httpStatus_1.CREATED).json({
+            success: true,
+            message: "Application was successful",
+            newApplication,
+        });
     }
-    // Validate required fields
-    if (!propertyId || !name || !email || !phoneNumber) {
-        return (0, appAssert_1.default)(false, httpStatus_1.BAD_REQUEST, "Missing required fields");
+    catch (error) {
+        console.error("Error in createApplication:", error); // Log the error
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error",
+            error: error.message, // Include error details for debugging
+        });
     }
-    const property = yield prismaClient_1.default.property.findUnique({
-        where: { id: propertyId },
-        select: {
-            pricePerMonth: true,
-            securityDeposit: true,
-        },
-    });
-    (0, appAssert_1.default)(property, httpStatus_1.NOT_FOUND, "Property not found");
-    const newApplication = yield prismaClient_1.default.application.create({
-        data: {
-            applicationDate: new Date(applicationDate || Date.now()),
-            status: "Pending",
-            name,
-            email,
-            phoneNumber,
-            message,
-            property: { connect: { id: propertyId } },
-            tenant: { connect: { id: user.id } },
-        },
-        include: {
-            property: { include: { location: true, manager: true } },
-            tenant: true,
-        },
-    });
-    return res.status(httpStatus_1.CREATED).json({
-        success: true,
-        message: "Application was successful",
-        newApplication,
-    });
 }));
 exports.listApplications = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const user = req.user;

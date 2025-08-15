@@ -12,7 +12,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { loginSchema } from "@/lib/schemas";
 import { useLoginUserMutation } from "@/state/api/authApi";
-import { useAppDispatch } from "@/state/redux";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -20,13 +19,11 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { setUser } from "@/state/slice/userSlice";
 
 const LoginPage = () => {
   // get the mutation from redux
   const [loginMutation, { isLoading }] = useLoginUserMutation();
-  // dispatch the function using dispatch
-  const dispatch = useAppDispatch();
+
   // route handler
   const router = useRouter();
   // form types
@@ -52,7 +49,6 @@ const LoginPage = () => {
     }
     try {
       const response = await loginMutation(data).unwrap();
-      dispatch(setUser(response.user));
       toast.success("Login Successful");
       router.push(
         response.user.role === "TENANT"

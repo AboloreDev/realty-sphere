@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface InitialStateTypes {
-  activeTab: "all" | "pending" | "approved" | "declined";
+  activeTab: "all" | "pending" | "approved" | "denied";
 }
 
 // define the initial state
@@ -17,7 +17,7 @@ const applicationSlice = createSlice({
   reducers: {
     setActiveTab: (
       state,
-      action: PayloadAction<"all" | "pending" | "approved" | "declined">
+      action: PayloadAction<"all" | "pending" | "approved" | "denied">
     ) => {
       state.activeTab = action.payload;
     },

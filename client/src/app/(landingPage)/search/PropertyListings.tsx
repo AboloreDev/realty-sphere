@@ -27,7 +27,7 @@ const PropertyListings = () => {
   const { data: properties, isLoading } = useGetAllPropertiesQuery(filters);
   const [addFavorite] = useAddToFavoritesMutation();
   const [removeFavorite] = useRemoveFavoritesMutation();
-  const { data: tenant } = useGetTenantQuery(user.user.id || "");
+  const { data: tenant } = useGetTenantQuery(user?.user?.id || "");
 
   // function to handle favorites
   const handleFavoriteToggle = async (propertyId: number) => {
