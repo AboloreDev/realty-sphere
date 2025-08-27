@@ -7,7 +7,7 @@ import ResidenceCard from "@/components/code/ResidenceCard";
 import { useGetSinglePropertyQuery } from "@/state/api/api";
 import { useGetUserProfileQuery } from "@/state/api/authApi";
 import { useGetAllLeasesQuery } from "@/state/api/leaseApi";
-import { useGetPaymentQuery } from "@/state/api/paymemtApi";
+import { useGetPaymentForLeaseQuery } from "@/state/api/paymemtApi";
 import { useParams } from "next/navigation";
 import React from "react";
 import { toast } from "sonner";
@@ -29,10 +29,8 @@ const ResidentDetails = () => {
   );
 
   // GET ALL PAYMENTS USING THE LEASE ID AND SKIP IF THERE IS NO USER ID
-  const { data: payments, isLoading: PaymentLoading } = useGetPaymentQuery(
-    leases?.[0]?.id,
-    { skip: !user.user.id }
-  );
+  const { data: payments, isLoading: PaymentLoading } =
+    useGetPaymentForLeaseQuery(leases?.[0]?.id, { skip: leases?.[0]?.id });
 
   if (propertyLoading || leasesLoading || PaymentLoading)
     return (
@@ -50,17 +48,17 @@ const ResidentDetails = () => {
     (lease) => lease.propertyId === property.id
   );
 
-  console.log("Property:", property);
-  console.log("leases:", leases);
-  console.log("payments:", payments);
-  console.log("Current Lease:", currentLease);
   return (
     <div>
-      {currentLease && (
-        <ResidenceCard property={property} currentLease={currentLease} />
+      {currentLease ? (
+        <>
+          <ResidenceCard property={property} currentLease={currentLease} />
+          <PaymentHistory payments={payments || []} />
+          <PaymentMethod />
+        </>
+      ) : (
+        <div>You haven&apos;t made any Payment </div>
       )}
-      <PaymentHistory payments={payments || []} />
-      <PaymentMethod />
     </div>
   );
 };

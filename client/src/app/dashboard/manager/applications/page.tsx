@@ -3,6 +3,7 @@
 import ApplicationCard from "@/components/code/ApplicationCard";
 import BouncingLoader from "@/components/code/BouncingLoader";
 import Header from "@/components/code/Header";
+import LeaseApplicationModal from "@/components/code/LeaseApplicationModal";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -12,9 +13,17 @@ import {
 import { useGetUserProfileQuery } from "@/state/api/authApi";
 import { useAppDispatch, useAppSelector } from "@/state/redux";
 import { setActiveTab } from "@/state/slice/applicationSlice";
-import { CircleCheckBig, Download, File, Hospital } from "lucide-react";
+
+import {
+  CheckCircle,
+  CircleCheckBig,
+  Download,
+  File,
+  Hospital,
+} from "lucide-react";
 import Link from "next/link";
-import React from "react";
+
+import React, { useState } from "react";
 
 const Applications = () => {
   // get the user
@@ -22,9 +31,14 @@ const Applications = () => {
   // get the active tab states from landlord slice
   const activeTab = useAppSelector((state) => state.application.activeTab);
   const dispatch = useAppDispatch();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedApplication, setSelectedApplication] = useState(null);
 
   // fetch the applications()
-  const { data: applications, isLoading } = useFetchAllApplicationsQuery();
+  const { data: applications, isLoading } = useFetchAllApplicationsQuery(
+    user.user.id || "",
+    { skip: !user?.user?.id }
+  );
 
   // fetch the updateApplicationStatus Api
   const [updateApplicationStatus] = useUpdateApplicationStatusMutation();
@@ -34,14 +48,24 @@ const Applications = () => {
     await updateApplicationStatus({ id, status });
   };
 
-  console.log("Status Change:", handleStatusChange);
-
   const filteredApplications = applications?.filter((application) => {
     if (activeTab === "all") return true;
     return application?.status.toLowerCase() === activeTab;
   });
-  console.log("Applications:", applications);
 
+  // OPEN MODAL WHEN THE STATUS IS APPROVED
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
+  const handleModalOpen = (application: any) => {
+    if (user) {
+      setSelectedApplication(application);
+      setIsModalOpen(true);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedApplication(null);
+  };
   const getEmptyMessage = (tab: string) => {
     switch (tab) {
       case "all":
@@ -157,12 +181,22 @@ const Applications = () => {
                             Property Details
                           </Button>
                         </Link>
-                        {application.status === "Approved" && (
-                          <Button>
-                            <Download className="w-5 h-5 mr-2" />
-                            Create Lease
-                          </Button>
-                        )}
+                        {application.status === "Approved" &&
+                          (application.leaseId ? (
+                            // Lease already created - show disabled button
+                            <Button disabled variant="outline">
+                              <CheckCircle className="w-5 h-5 mr-2" />
+                              Lease Created
+                            </Button>
+                          ) : (
+                            // No lease yet - show create button
+                            <Button
+                              onClick={() => handleModalOpen(application)}
+                            >
+                              <Download className="w-5 h-5 mr-2" />
+                              Create Lease
+                            </Button>
+                          ))}
                         {application.status === "Pending" && (
                           <>
                             <Button
@@ -203,6 +237,12 @@ const Applications = () => {
           </TabsContent>
         ))}
       </Tabs>
+
+      <LeaseApplicationModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        application={selectedApplication}
+      />
     </div>
   );
 };

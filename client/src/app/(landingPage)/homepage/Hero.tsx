@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "../../../components/ui/button";
 import heroImage from "../../../../public/singlelisting-2.jpg";
@@ -10,6 +10,10 @@ import avatar2 from "../../../../public/avatar2.jpg";
 import avatar3 from "../../../../public/avatar3.jpg";
 import { ArrowUpRight } from "lucide-react";
 import { Input } from "../../../components/ui/input";
+import { useAppDispatch } from "@/state/redux";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { setFilters } from "@/state/slice/globalSlice";
 
 const fadeIn = {
   hidden: { opacity: 0 },
@@ -17,6 +21,48 @@ const fadeIn = {
 };
 
 const Hero = () => {
+  const dispatch = useAppDispatch();
+  const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
+
+  const handleLocationSearch = async () => {
+    try {
+      const trimmedQuery = searchQuery.trim();
+      if (!trimmedQuery) return;
+
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+          trimmedQuery
+        )}`
+      );
+
+      const data = await response.json();
+
+      if (data.length === 0) {
+        toast.error("No places found.");
+        return;
+      }
+      const { lat, lon } = data[0];
+
+      dispatch(
+        setFilters({
+          location: trimmedQuery,
+          coordinates: [parseFloat(lat), parseFloat(lon)],
+        })
+      );
+
+      const params = new URLSearchParams({
+        location: trimmedQuery,
+        latitude: lat.toString(),
+        longitude: lon.toString(),
+      });
+
+      router.push(`/search?${params.toString()}`);
+      toast.success("Location found");
+    } catch (error: any) {
+      toast.error("No Places found:", error);
+    }
+  };
   return (
     <motion.section
       className="relative w-full h-screen overflow-hidden prata-regular"
@@ -65,12 +111,15 @@ const Hero = () => {
         >
           <Input
             type="text"
-            value="search query"
-            onChange={() => {}}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by city, town, address"
             className="w-full max-w-xl bg-white h-12"
           />
-          <Button className="bg-black text-white hover:text-black h-12">
+          <Button
+            className="bg-black text-white hover:text-black h-12"
+            onClick={handleLocationSearch}
+          >
             Search
           </Button>
         </motion.div>

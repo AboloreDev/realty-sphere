@@ -5,6 +5,7 @@ import {
   UpdatedTenantResponse,
 } from "../types/tenantTypes";
 import { Property, User } from "@/types/prismaTypes";
+import { PaymentWithDetails } from "../types/paymentTypes";
 
 export const tenantApi = createApi({
   baseQuery: fetchBaseQuery({
@@ -12,7 +13,7 @@ export const tenantApi = createApi({
     credentials: "include",
   }),
   reducerPath: "tenantApi",
-  tagTypes: ["updateTenant", "Tenants", "Properties"],
+  tagTypes: ["updateTenant", "Tenants", "Properties", "Payments"],
   endpoints: (builder) => ({
     // updateing tenant
     updateTenant: builder.mutation<UpdatedTenantResponse, UpdatedTenantRequest>(
@@ -73,6 +74,17 @@ export const tenantApi = createApi({
               { type: "Properties", id: "LIST" },
             ]
           : [{ type: "Properties", id: "LIST" }],
+    }),
+
+    // Add to your payment API slice
+    getTenantPayments: builder.query<
+      { success: boolean; message: string; payments: PaymentWithDetails[] },
+      string
+    >({
+      query: (tenantId) => ({
+        url: `/tenant/${tenantId}/payments`,
+      }),
+      providesTags: ["Payments"],
     }),
   }),
 });

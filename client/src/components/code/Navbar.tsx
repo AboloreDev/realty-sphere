@@ -7,6 +7,8 @@ import { Menu } from "lucide-react";
 import MobileMenu from "./MobileMenu";
 import ThemeToggle from "./ThemeToggle";
 import { usePathname } from "next/navigation";
+import { useGetUserProfileQuery } from "@/state/api/authApi";
+import BackButton from "./BackButton";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -16,6 +18,7 @@ const navLinks = [
 ];
 
 const Navbar = () => {
+  const { data: user } = useGetUserProfileQuery();
   // mobile menu state
   const [isMobileMenu, setIsMobileMenu] = useState(false);
   const pathname = usePathname();
@@ -31,7 +34,11 @@ const Navbar = () => {
     };
   }, [isMobileMenu]);
 
-  return (
+  return user ? (
+    <div className="p-2 w-full">
+      <BackButton />
+    </div>
+  ) : (
     <header className="sticky top-0 z-50 backdrop-blur-md shadow-sm prata-regular">
       <nav className="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
         <Link href="/" className="text-2xl font-bold ">

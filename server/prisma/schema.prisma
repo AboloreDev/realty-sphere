@@ -70,6 +70,14 @@ enum PaymentStatus {
   Overdue
 }
 
+
+enum EscrowStatus {
+  NONE        // No payment made yet
+  IN_ESCROW   // Money held in escrow
+  RELEASED    // Money released to landlord
+  DISPUTED    // If there are issues (future use)
+}
+
 model User {
   id                  String    @id @default(uuid())
   email               String    @unique
@@ -111,7 +119,7 @@ model Session {
 }
 
 model Property {
-  id                Int          @id @default(autoincrement())
+  id                Int     @id @default(autoincrement())
   name              String
   description       String
   subDescription    String
@@ -142,7 +150,7 @@ model Property {
 }
 
 model Location {
-  id          Int                                   @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
   address     String
   city        String
   state       String
@@ -154,7 +162,7 @@ model Location {
 }
 
 model Application {
-  id              Int               @id @default(autoincrement())
+  id              Int   @id @default(autoincrement())
   applicationDate DateTime
   status          ApplicationStatus
   propertyId      Int
@@ -171,28 +179,36 @@ model Application {
 }
 
 model Lease {
-  id              Int      @id @default(autoincrement())
+  id              Int       @id @default(autoincrement())
   startDate       DateTime
   endDate         DateTime
   rent            Float
   deposit         Float
   propertyId      Int
   tenantId        String
-  status          ApplicationStatus  @default(Pending) 
+  status          ApplicationStatus 
   property    Property     @relation(fields: [propertyId], references: [id])
   tenant      User         @relation("TenantLeases", fields: [tenantId], references: [id])
   application Application?
-  payments    Payment[]
+  payments    Payment?
+  
 }
 
 model Payment {
-  id            Int            @id @default(autoincrement())
-  amountDue     Float
-  amountPaid    Float
-  dueDate       DateTime
-  paymentDate   DateTime
-  paymentStatus PaymentStatus
-  leaseId       Int
+  id                Int           @id @default(autoincrement())
+  amountDue         Float
+  amountPaid        Float         @default(0)
+  dueDate           DateTime
+  paymentDate       DateTime?     // When payment was made
+  escrowReleaseDate DateTime?     // When money will be/was released
+  paymentStatus     PaymentStatus @default(Pending)
+  escrowStatus      EscrowStatus  @default(NONE)
+  stripePaymentId   String?       // Stripe payment intent ID
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
 
-  lease Lease @relation(fields: [leaseId], references: [id])
+  // One-to-one relationship with Lease
+  leaseId            Int          @unique
+  lease       Lease          @relation(fields: [leaseId], references: [id])
+
 }

@@ -27,12 +27,12 @@ exports.createPropertyListing = exports.getSingleProperty = exports.getAllProper
 const client_1 = require("@prisma/client");
 const catchAsyncErrors_1 = require("../utils/catchAsyncErrors");
 const propertyFilter_1 = require("../utils/propertyFilter");
-const prismaClient_1 = __importDefault(require("../prismaClient"));
 const httpStatus_1 = require("../constants/httpStatus");
 const appAssert_1 = __importDefault(require("../utils/appAssert"));
 const wkt_1 = require("@terraformer/wkt");
 const cloudinary_1 = require("cloudinary");
 const axios_1 = __importDefault(require("axios"));
+const prismaClient_1 = __importDefault(require("../prismaClient"));
 exports.getAllProperties = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // get the property filters from utils folder
     const whereConditions = (0, propertyFilter_1.buildPropertyWhereConditions)(req.query);

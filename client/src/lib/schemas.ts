@@ -41,6 +41,16 @@ export const applicationSchema = z.object({
 
 export type ApplicationFormData = z.infer<typeof applicationSchema>;
 
+export const leaseApplicationSchema = z.object({
+  startDate: z.string().min(1, "Start date is required"),
+  endDate: z.string().min(1, "End date is required"),
+  rent: z.string().min(1, "rent is required"),
+  deposit: z.string().min(1, "deposit is required"),
+  terms: z.string().optional(),
+});
+
+export type LeaseApplicationFormData = z.infer<typeof leaseApplicationSchema>;
+
 export const settingsSchema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email address"),

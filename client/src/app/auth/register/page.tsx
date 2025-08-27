@@ -154,7 +154,7 @@ const RegisterPage = () => {
           </form>
         </CardContent>
         {/* Card footer */}
-        <CardFooter>
+        <CardFooter className="flex-col">
           <p className="text-sm text-center w-full">
             Already have an account?{" "}
             <Link
@@ -164,6 +164,12 @@ const RegisterPage = () => {
               Log In
             </Link>
           </p>
+
+          <div className="">
+            <Link href={"/homepage"} className="text-blue-500 hover:underline">
+              Back to home
+            </Link>
+          </div>
         </CardFooter>
       </Card>
     </div>

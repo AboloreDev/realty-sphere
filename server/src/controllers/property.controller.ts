@@ -1,12 +1,12 @@
-import { Amenity, Location, Prisma } from "@prisma/client";
+import {  Prisma, Location } from "@prisma/client";
 import { catchAsyncError } from "../utils/catchAsyncErrors";
 import { buildPropertyWhereConditions } from "../utils/propertyFilter";
-import prisma from "../prismaClient";
 import { NOT_FOUND, OK } from "../constants/httpStatus";
 import appAssert from "../utils/appAssert";
 import { wktToGeoJSON } from "@terraformer/wkt";
 import { v2 as cloudinary } from "cloudinary";
 import axios from "axios";
+import prisma from "../prismaClient";
 
 // Enhanced UploadStreamResult type (simplified)
 interface UploadStreamResult {

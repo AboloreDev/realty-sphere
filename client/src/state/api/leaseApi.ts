@@ -11,10 +11,8 @@ export const leaseApi = createApi({
   endpoints: (builder) => ({
     // GET ALL LEASE
     getAllLeases: builder.query<Lease[], number>({
-      query: () => ({
-        url: "/lease",
-      }),
-      transformResponse: (response: { leases: Lease[] }) => response.leases,
+      query: () => "/lease",
+      transformResponse: (response: { leases: Lease }) => response.leases,
       providesTags: ["Leases"],
     }),
 
@@ -26,6 +24,50 @@ export const leaseApi = createApi({
       transformResponse: (response: { leases: Lease[] }) => response.leases,
       providesTags: ["Leases"],
     }),
+
+    // Create Lease
+    createLease: builder.mutation<Lease, Partial<Lease>>({
+      query: (data) => ({
+        url: "/lease",
+        method: "POST",
+        body: data,
+      }),
+      transformResponse: (response: {
+        success: boolean;
+        message: string;
+        newLease: Lease[];
+      }) => {
+        return response.newLease;
+      },
+      invalidatesTags: ["Leases"],
+    }),
+
+    // UPDATE lease STATUS
+    updateLeaseStatus: builder.mutation<Lease, { id: number; status: string }>({
+      query: ({ id, status }) => ({
+        url: `/lease/${id}/accept`,
+        method: "PATCH",
+        body: { status },
+      }),
+      transformResponse: (response: { updatedLease: Lease }) =>
+        response.updatedLease,
+
+      invalidatesTags: ["Leases"],
+    }),
+
+    // get the lease details
+    getLeaseDetails: builder.query<Lease[], number>({
+      query: (id) => ({
+        url: `/lease/${id}`,
+      }),
+      providesTags: ["Leases"],
+    }),
   }),
 });
-export const { useGetAllLeasesQuery, useGetPropertyLeasesQuery } = leaseApi;
+export const {
+  useGetAllLeasesQuery,
+  useGetPropertyLeasesQuery,
+  useCreateLeaseMutation,
+  useUpdateLeaseStatusMutation,
+  useGetLeaseDetailsQuery,
+} = leaseApi;

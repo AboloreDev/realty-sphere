@@ -33,7 +33,7 @@ export const tenantNavMain = [
     href: "/dashboard/tenant/payments",
     icon: Currency,
   },
-  { name: "Invoices", href: "/dashboard/tenant/invoices", icon: FilePen },
+  { name: "Leases", href: "/dashboard/tenant/invoices", icon: FilePen },
   { name: "Properties", href: "/dashboard/tenant/property", icon: Settings },
   {
     name: "Calculator",
@@ -60,7 +60,7 @@ export const managerNavMain = [
     href: "/dashboard/manager/listings",
     icon: HouseIcon,
   },
-  { name: "Invoices", href: "/dashboard/manager/invoices", icon: FilePen },
+  { name: "Leases", href: "/dashboard/manager/invoices", icon: FilePen },
 ];
 
 export const tenantNavSecondary = [

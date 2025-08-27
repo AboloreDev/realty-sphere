@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.removeFromFavorite = exports.addTenantFavoriteProperty = exports.getTenantResidences = exports.updateTenantDetails = exports.createTenant = exports.getTenant = void 0;
+exports.getTenantPaymentStatus = exports.removeFromFavorite = exports.addTenantFavoriteProperty = exports.getTenantResidences = exports.updateTenantDetails = exports.createTenant = exports.getTenant = void 0;
 const httpStatus_1 = require("../constants/httpStatus");
 const tenant_schema_1 = require("../schema/tenant.schema");
 const tenant_service_1 = require("../services/tenant.service");
@@ -84,5 +84,18 @@ exports.removeFromFavorite = (0, catchAsyncErrors_1.catchAsyncError)((req, res) 
         success,
         message,
         updatedTenantFavorite,
+    });
+}));
+// get tenant payment status
+exports.getTenantPaymentStatus = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = req.user;
+    const tenantId = user === null || user === void 0 ? void 0 : user.id;
+    // use the service
+    const payments = yield (0, tenant_service_1.getTenantPaymentServices)(tenantId);
+    // return a response
+    return res.status(httpStatus_1.OK).json({
+        success: true,
+        message: " Payment fetched successfully",
+        payments,
     });
 }));

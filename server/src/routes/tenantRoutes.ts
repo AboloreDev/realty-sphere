@@ -4,6 +4,7 @@ import {
   addTenantFavoriteProperty,
   createTenant,
   getTenant,
+  getTenantPaymentStatus,
   getTenantResidences,
   removeFromFavorite,
   updateTenantDetails,
@@ -43,6 +44,15 @@ router.delete(
   isAuthenticated,
   restrictTo("TENANT"),
   removeFromFavorite
+);
+
+// GET TENANT PAYMENT STATUS
+// get tenant payment status
+router.get(
+  "/:tenantId/payments",
+  isAuthenticated,
+  restrictTo("TENANT"),
+  getTenantPaymentStatus
 );
 
 export default router;

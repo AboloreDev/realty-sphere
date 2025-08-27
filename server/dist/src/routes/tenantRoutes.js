@@ -20,4 +20,7 @@ router.get("/:id/residencies", isAuthenticated_1.isAuthenticated, (0, isAuthenti
 router.post("/:id/favorites/:propertyId", isAuthenticated_1.isAuthenticated, (0, isAuthenticated_1.restrictTo)("TENANT"), tenant_controller_1.addTenantFavoriteProperty);
 // DELETE FROM FAVORITE
 router.delete("/:id/favorites/:propertyId", isAuthenticated_1.isAuthenticated, (0, isAuthenticated_1.restrictTo)("TENANT"), tenant_controller_1.removeFromFavorite);
+// GET TENANT PAYMENT STATUS
+// get tenant payment status
+router.get("/:tenantId/payments", isAuthenticated_1.isAuthenticated, (0, isAuthenticated_1.restrictTo)("TENANT"), tenant_controller_1.getTenantPaymentStatus);
 exports.default = router;

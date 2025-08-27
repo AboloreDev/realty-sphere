@@ -6,10 +6,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const lease_controller_1 = require("../controllers/lease.controller");
 const isAuthenticated_1 = require("../middleware/isAuthenticated");
+const payment_controller_1 = require("../controllers/payment.controller");
 const router = express_1.default.Router();
 router.get("/", isAuthenticated_1.isAuthenticated, lease_controller_1.getAllLease);
 router.get("/:id/payment", isAuthenticated_1.isAuthenticated, lease_controller_1.getLeasePayment);
 router.post("/", isAuthenticated_1.isAuthenticated, (0, isAuthenticated_1.restrictTo)("MANAGER"), lease_controller_1.createLease);
 router.patch("/:id/accept", isAuthenticated_1.isAuthenticated, (0, isAuthenticated_1.restrictTo)("TENANT"), lease_controller_1.updateLease);
 router.get("/:id", isAuthenticated_1.isAuthenticated, lease_controller_1.getLeaseDetails);
+// Create payment when lease is accepted
+router.post("/:leaseId/payment/create", isAuthenticated_1.isAuthenticated, (0, isAuthenticated_1.restrictTo)("TENANT"), payment_controller_1.createPayment);
 exports.default = router;

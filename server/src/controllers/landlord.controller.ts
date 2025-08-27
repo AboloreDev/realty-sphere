@@ -6,6 +6,7 @@ import {
 } from "../schema/landlord.schema";
 import {
   createLandlordService,
+  getLandlordPaymentServices,
   getLandlordPropertiesService,
   getLandlordService,
   updateLandlordService,
@@ -69,4 +70,18 @@ export const getLandlordProperties = catchAsyncError(async (req, res) => {
 
   // return a response
   return res.status(OK).json(propertiesWithFormattedLocation);
+});
+
+export const getLandlordPayment = catchAsyncError(async (req, res) => {
+  const { tenantId } = req.params;
+
+  // use the service
+  const payments = await getLandlordPaymentServices(tenantId);
+
+  // return a response
+  return res.status(OK).json({
+    success: true,
+    message: " Payment fetched successfully",
+    payments,
+  });
 });

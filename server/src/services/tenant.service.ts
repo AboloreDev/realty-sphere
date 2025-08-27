@@ -204,3 +204,29 @@ export const removeFromFavoriteService = async (
     updatedTenantFavorite,
   };
 };
+
+export const getTenantPaymentServices = async (tenantId: string) => {
+  const payments = await prisma.payment.findMany({
+    where: {
+      lease: { tenantId },
+    },
+    include: {
+      lease: {
+        include: {
+          tenant: { select: { name: true, email: true, phoneNumber: true } },
+          property: {
+            include: {
+              location: true,
+              manager: {
+                select: { name: true, email: true, phoneNumber: true },
+              },
+            },
+          },
+        },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return payments;
+};

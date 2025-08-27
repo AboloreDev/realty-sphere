@@ -107,21 +107,23 @@ export const listApplications = catchAsyncError(
       });
     }
 
-    // after getting the applications, format the application fetch to only show the lease associated with it
+    // after getting the applications, format the application fetch
     const formattedApplications = await Promise.all(
       applications.map(async (application) => {
-        const lease = await prisma.lease.findFirst({
-          where: {
-            tenant: { id: application.tenantId },
-            propertyId: application.propertyId,
-          },
-          orderBy: { startDate: "desc" },
-        });
+        let lease = null;
+        let nextPaymentDate = null;
 
-        // show next payment date if lease exists
-        const nextPaymentDate = lease
-          ? calculateNextPaymentDate(lease.startDate, lease.endDate)
-          : null;
+        // ONLY fetch lease data if application has a leaseId (tenant approved the lease)
+        if (application.leaseId) {
+          lease = await prisma.lease.findUnique({
+            where: { id: application.leaseId },
+          });
+
+          // Calculate next payment date only if lease exists
+          nextPaymentDate = lease
+            ? calculateNextPaymentDate(lease.startDate, lease.endDate)
+            : null;
+        }
 
         return {
           id: application.id,
@@ -139,19 +141,21 @@ export const listApplications = catchAsyncError(
             address: application.property.location.address,
           },
           landlord: application.property.manager,
-          lease: lease
-            ? {
-                id: lease.id,
-                startDate: lease.startDate,
-                endDate: lease.endDate,
-                rent: lease.rent,
-                deposit: lease.deposit,
-                propertyId: lease.propertyId,
-                tenantId: lease.tenantId,
-                leaseStatus: lease.status,
-              }
-            : undefined,
-          nextPaymentDate,
+          // Only include lease data if leaseId exists (tenant approved)
+          lease:
+            lease && application.leaseId
+              ? {
+                  id: lease.id,
+                  startDate: lease.startDate,
+                  endDate: lease.endDate,
+                  rent: lease.rent,
+                  deposit: lease.deposit,
+                  propertyId: lease.propertyId,
+                  tenantId: lease.tenantId,
+                  leaseStatus: lease.status,
+                }
+              : null, // Return null for pending/denied applications
+          nextPaymentDate: application.leaseId ? nextPaymentDate : null,
         };
       })
     );

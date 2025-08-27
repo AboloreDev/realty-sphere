@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.removeFromFavoriteService = exports.addTenantFavoriteService = exports.getTenantResidenciesService = exports.updateTenantService = exports.createTenantService = exports.getTenantById = void 0;
+exports.getTenantPaymentServices = exports.removeFromFavoriteService = exports.addTenantFavoriteService = exports.getTenantResidenciesService = exports.updateTenantService = exports.createTenantService = exports.getTenantById = void 0;
 const wkt_1 = require("@terraformer/wkt");
 const httpStatus_1 = require("../constants/httpStatus");
 const prismaClient_1 = __importDefault(require("../prismaClient"));
@@ -185,3 +185,28 @@ const removeFromFavoriteService = (data) => __awaiter(void 0, void 0, void 0, fu
     };
 });
 exports.removeFromFavoriteService = removeFromFavoriteService;
+const getTenantPaymentServices = (tenantId) => __awaiter(void 0, void 0, void 0, function* () {
+    const payments = yield prismaClient_1.default.payment.findMany({
+        where: {
+            lease: { tenantId },
+        },
+        include: {
+            lease: {
+                include: {
+                    tenant: { select: { name: true, email: true, phoneNumber: true } },
+                    property: {
+                        include: {
+                            location: true,
+                            manager: {
+                                select: { name: true, email: true, phoneNumber: true },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        orderBy: { createdAt: "desc" },
+    });
+    return payments;
+});
+exports.getTenantPaymentServices = getTenantPaymentServices;

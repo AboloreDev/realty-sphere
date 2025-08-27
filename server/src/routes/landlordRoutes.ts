@@ -1,6 +1,7 @@
 import express from "express";
 import {
   getLandlord,
+  getLandlordPayment,
   getLandlordProperties,
   updateLandlord,
 } from "../controllers/landlord.controller";
@@ -22,6 +23,14 @@ router.get(
   isAuthenticated,
   restrictTo("MANAGER"),
   getLandlordProperties
+);
+
+// GET LANDLORD PAYMENT
+router.get(
+  "/landlord/:landlordId/payments",
+  isAuthenticated,
+  restrictTo("MANAGER"),
+  getLandlordPayment
 );
 
 export default router;

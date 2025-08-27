@@ -1,6 +1,7 @@
 [
   {
     "id": 1,
+    "status": "Approved",
     "startDate": "2023-07-01T00:00:00Z",
     "endDate": "2024-06-30T00:00:00Z",
     "rent": 1500.0,

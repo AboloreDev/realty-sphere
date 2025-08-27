@@ -52,8 +52,6 @@ const ApplicationFormModal = ({
       tenantId: user.user.id,
     };
 
-    console.log("Payload:", payload);
-
     try {
       await createApplication(payload).unwrap();
       toast.success("Application submitted successfully");

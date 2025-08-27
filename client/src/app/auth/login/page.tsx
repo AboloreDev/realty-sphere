@@ -84,13 +84,24 @@ const LoginPage = () => {
               <Input type="password" id="password" {...register("password")} />
             </div>
             {/* forgot password */}
-            <div className="text-right">
-              <Link
-                href={"/auth/forgotPassword"}
-                className="text-blue-500 hover:underline"
-              >
-                forgot password?
-              </Link>
+            <div className="flex justify-between items-center flex-row-reverse">
+              <div className="text-right">
+                <Link
+                  href={"/auth/forgotPassword"}
+                  className="text-blue-500 hover:underline"
+                >
+                  forgot password?
+                </Link>
+              </div>
+              {/* back to home */}
+              <div>
+                <Link
+                  href={"/homepage"}
+                  className="text-blue-500 hover:underline"
+                >
+                  back to home
+                </Link>
+              </div>
             </div>
             {/* Button */}{" "}
             <Button variant="outline" disabled={isLoading}>

@@ -17,16 +17,24 @@ const propertyRoutes_1 = __importDefault(require("./routes/propertyRoutes"));
 const applicationRoutes_1 = __importDefault(require("./routes/applicationRoutes"));
 const leaseRoutes_1 = __importDefault(require("./routes/leaseRoutes"));
 const mapsRoutes_1 = __importDefault(require("./routes/mapsRoutes"));
+const paymentRoutes_1 = __importDefault(require("./routes/paymentRoutes"));
 const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const errorHandler_1 = require("./middleware/errorHandler");
 const httpStatus_1 = require("./constants/httpStatus");
 const cloudinaryConfig_1 = require("./utils/cloudinaryConfig");
+const escrow_release_job_1 = require("./controllers/jobs/escrow-release.job");
+const payment_controller_1 = require("./controllers/payment.controller");
 // Cofigurations
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 4000;
 const APP_ORIGIN = " http://localhost:3000";
+app.use("/api/webhooks/stripe", express_1.default.raw({
+    type: "application/json",
+    limit: "2mb",
+}));
+app.post("/api/webhooks/stripe", payment_controller_1.handleStripeWebhook);
 // initialisation
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
@@ -68,9 +76,17 @@ app.use("/api/lease", leaseRoutes_1.default);
 app.use("/api/applications", applicationRoutes_1.default);
 // maps Routes
 app.use("/api", mapsRoutes_1.default);
+// apply payment routes
+app.use("/api/payment", paymentRoutes_1.default);
+// start escrow job
+escrow_release_job_1.EscrowCronJob.start();
 // error handler
 app.use(errorHandler_1.errorHandler);
 //LISTEN ON PORT NUMBER
 app.listen(PORT, () => {
     console.log(`Server is running on PORT ${PORT}`);
+});
+process.on("SIGINT", () => {
+    escrow_release_job_1.EscrowCronJob.stop();
+    process.exit(0);
 });

@@ -10,11 +10,13 @@ import {
   addTenantFavoriteService,
   createTenantService,
   getTenantById,
+  getTenantPaymentServices,
   getTenantResidenciesService,
   removeFromFavoriteService,
   updateTenantService,
 } from "../services/tenant.service";
 import { catchAsyncError } from "../utils/catchAsyncErrors";
+import { AuthRequest } from "../middleware/isAuthenticated";
 
 // get tenant by id
 export const getTenant = catchAsyncError(async (req, res) => {
@@ -103,3 +105,21 @@ export const removeFromFavorite = catchAsyncError(async (req, res) => {
     updatedTenantFavorite,
   });
 });
+
+// get tenant payment status
+export const getTenantPaymentStatus = catchAsyncError(
+  async (req: AuthRequest, res) => {
+    const user = req.user;
+    const tenantId = user?.id as string;
+
+    // use the service
+    const payments = await getTenantPaymentServices(tenantId);
+
+    // return a response
+    return res.status(OK).json({
+      success: true,
+      message: " Payment fetched successfully",
+      payments,
+    });
+  }
+);

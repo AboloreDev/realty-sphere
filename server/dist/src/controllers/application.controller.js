@@ -99,19 +99,20 @@ exports.listApplications = (0, catchAsyncErrors_1.catchAsyncError)((req, res) =>
             },
         });
     }
-    // after getting the applications, format the application fetch to only show the lease associated with it
+    // after getting the applications, format the application fetch
     const formattedApplications = yield Promise.all(applications.map((application) => __awaiter(void 0, void 0, void 0, function* () {
-        const lease = yield prismaClient_1.default.lease.findFirst({
-            where: {
-                tenant: { id: application.tenantId },
-                propertyId: application.propertyId,
-            },
-            orderBy: { startDate: "desc" },
-        });
-        // show next payment date if lease exists
-        const nextPaymentDate = lease
-            ? (0, nextPaymentDateCalcutions_1.default)(lease.startDate, lease.endDate)
-            : null;
+        let lease = null;
+        let nextPaymentDate = null;
+        // ONLY fetch lease data if application has a leaseId (tenant approved the lease)
+        if (application.leaseId) {
+            lease = yield prismaClient_1.default.lease.findUnique({
+                where: { id: application.leaseId },
+            });
+            // Calculate next payment date only if lease exists
+            nextPaymentDate = lease
+                ? (0, nextPaymentDateCalcutions_1.default)(lease.startDate, lease.endDate)
+                : null;
+        }
         return {
             id: application.id,
             applicationDate: application.applicationDate,
@@ -125,7 +126,8 @@ exports.listApplications = (0, catchAsyncErrors_1.catchAsyncError)((req, res) =>
             leaseId: application.leaseId,
             property: Object.assign(Object.assign({}, application.property), { address: application.property.location.address }),
             landlord: application.property.manager,
-            lease: lease
+            // Only include lease data if leaseId exists (tenant approved)
+            lease: lease && application.leaseId
                 ? {
                     id: lease.id,
                     startDate: lease.startDate,
@@ -136,8 +138,8 @@ exports.listApplications = (0, catchAsyncErrors_1.catchAsyncError)((req, res) =>
                     tenantId: lease.tenantId,
                     leaseStatus: lease.status,
                 }
-                : undefined,
-            nextPaymentDate,
+                : null, // Return null for pending/denied applications
+            nextPaymentDate: application.leaseId ? nextPaymentDate : null,
         };
     })));
     // RETURN A RESPONSE

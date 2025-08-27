@@ -127,3 +127,31 @@ export const getLandlordPropertiesService = async (
     propertiesWithFormattedLocation,
   };
 };
+
+export const getLandlordPaymentServices = async (managerId: string) => {
+  const payments = await prisma.payment.findMany({
+    where: {
+      lease: {
+        property: { managerId },
+      },
+    },
+    include: {
+      lease: {
+        include: {
+          tenant: { select: { name: true, email: true, phoneNumber: true } },
+          property: {
+            include: {
+              location: true,
+              manager: {
+                select: { name: true, email: true, phoneNumber: true },
+              },
+            },
+          },
+        },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return payments;
+};
