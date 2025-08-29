@@ -42,7 +42,7 @@ const PaymentSuccessPage = () => {
 
   const handleContinue = () => {
     // Redirect back to dashboard or wherever appropriate
-    router.push("/dashboard/tenant");
+    router.push("/dashboard/tenant/payments");
   };
 
   const handleViewPayment = () => {

@@ -96,9 +96,16 @@ const getTenantResidenciesService = (data) => __awaiter(void 0, void 0, void 0, 
     (0, appAssert_1.default)(tenant, httpStatus_1.NOT_FOUND, "Tenant not found");
     // get the residences
     const residencies = yield prismaClient_1.default.property.findMany({
-        where: { tenants: { some: { id: data.id } } },
+        where: {
+            leases: {
+                some: { tenantId: data.id, payments: { paymentStatus: "Paid" } },
+            },
+        },
         include: {
             location: true,
+            leases: {
+                select: { id: true },
+            },
         },
     });
     // format the residencies location

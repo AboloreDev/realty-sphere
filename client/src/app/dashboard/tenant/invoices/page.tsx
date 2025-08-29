@@ -10,7 +10,10 @@ import {
   useGetAllLeasesQuery,
   useUpdateLeaseStatusMutation,
 } from "@/state/api/leaseApi";
-import { useCreatePaymentForLeaseMutation } from "@/state/api/paymemtApi";
+import {
+  useCreatePaymentForLeaseMutation,
+  useGetTenantPaymentsQuery,
+} from "@/state/api/paymemtApi";
 import { useAppDispatch, useAppSelector } from "@/state/redux";
 import { setActiveTab } from "@/state/slice/applicationSlice";
 import { CircleCheckBig, Download } from "lucide-react";
@@ -20,18 +23,25 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { toast } from "sonner";
 import LeaseDetailsCard from "./LeaseDetailsCard";
+import ConfirmSatisfaction from "./ConfirmSatisfaction";
 
 const Invoices = () => {
   const { data: user } = useGetUserProfileQuery();
-  const { data: leases = [], isLoading } = useGetAllLeasesQuery(user.user.id);
+  const { data: leases = [], isLoading: leasesLoading } = useGetAllLeasesQuery(
+    user.user.id
+  );
   const activeTab = useAppSelector((state) => state.application.activeTab);
   const dispatch = useAppDispatch();
   const [updateLeaseStatus] = useUpdateLeaseStatusMutation();
   const [createPaymentForLease, { isLoading: isPaymentLoading }] =
     useCreatePaymentForLeaseMutation();
+  // Fetch all payments for the tenant
+  const { data: paymentsData, isLoading: paymentsLoading } =
+    useGetTenantPaymentsQuery(user.user.id);
   const router = useRouter();
 
-  console.log(leases);
+  console.log("Payments Data:", paymentsData);
+  console.log("Leases Data:", leases);
 
   // handle status change
   const handleStatusChange = async (id: number, status: string) => {
@@ -59,7 +69,6 @@ const Invoices = () => {
   });
 
   const handleProceedToPayment = async (leaseId: number) => {
-    console.log("Initiating payment for lease ID:", leaseId);
     try {
       const paymentData = {
         amountDue: leases.find((lease) => lease.id === leaseId)?.rent,
@@ -67,7 +76,7 @@ const Invoices = () => {
           new Date().setDate(new Date().getDate() + 365)
         ).toISOString(),
       };
-      console.log("Payment Data:", paymentData);
+
       const response = await createPaymentForLease({
         leaseId,
         paymentData,
@@ -77,7 +86,6 @@ const Invoices = () => {
         router.push(
           `/dashboard/tenant/invoices/[paymentId]/?paymentId=${response.data.id}`
         );
-        console.log("Payment created successfully:", response?.data.id);
       } else {
         console.error(
           "Failed to create payment:",
@@ -90,7 +98,7 @@ const Invoices = () => {
       toast.error("Error creating payment. Please try again.");
     }
   };
-  if (isLoading) {
+  if (leasesLoading || paymentsLoading) {
     return <BouncingLoader />;
   }
 
@@ -141,7 +149,7 @@ const Invoices = () => {
                             : "bg-yellow-100"
                         }`}
                       >
-                        <div className="flex flex-wrap items-center">
+                        <div className="flex items-center">
                           <CircleCheckBig className="w-5 h-5 mr-2 flex-shrink-0" />
                           <span
                             className={`font-semibold ${
@@ -152,8 +160,21 @@ const Invoices = () => {
                                 : "text-yellow-800"
                             }`}
                           >
-                            {lease.status === "Approved" &&
-                              "This lease has been approved."}
+                            {paymentsData?.payments.some(
+                              (payment) =>
+                                payment.leaseId === lease.id &&
+                                payment.paymentStatus === "Paid"
+                            )
+                              ? "Thank you for your payment! Please check out the property and confirm your satisfaction."
+                              : paymentsData?.payments.some(
+                                  (payment) =>
+                                    payment.leaseId === lease.id &&
+                                    payment.paymentStatus === "Pending"
+                                )
+                              ? "Payment is pending. Please wait for the payment to complete."
+                              : lease.status === "Approved"
+                              ? "This lease has been approved. Please proceed to make a payment."
+                              : null}
                             {lease.status === "Denied" &&
                               "This lease has been denied."}
                             {lease.status === "Pending" &&
@@ -163,18 +184,52 @@ const Invoices = () => {
                       </div>
                       {/* Right side */}
                       <div className="flex gap-2 justify-center items-center">
-                        {lease.status === "Approved" && (
+                        {paymentsData?.payments.some(
+                          (payment) =>
+                            payment.leaseId === lease.id &&
+                            payment.paymentStatus === "Paid"
+                        ) ? (
+                          <>
+                            <Button
+                              disabled
+                              className="px-4 py-2 text-sm bg-gray-400 rounded flex items-center"
+                            >
+                              Payment Has Been Made
+                            </Button>
+                            <Button
+                              className="px-4 py-2 text-sm  rounded  flex items-center"
+                              onClick={() => {
+                                toast.success("Downloading receipt...");
+                              }}
+                            >
+                              <Download className="w-5 h-5 mr-2" />
+                              Download Receipt
+                            </Button>
+                          </>
+                        ) : paymentsData?.payments.some(
+                            (payment) =>
+                              payment.leaseId === lease.id &&
+                              payment.paymentStatus === "Pending"
+                          ) ? (
+                          <Button
+                            disabled
+                            className="px-4 py-2 text-sm bg-yellow-600 rounded flex items-center"
+                          >
+                            Pending
+                          </Button>
+                        ) : lease.status === "Approved" ? (
                           <Button
                             disabled={isPaymentLoading}
                             onClick={() => handleProceedToPayment(lease.id)}
-                            className="px-4 py-2 text-sm bg-blue-600 rounded hover:bg-blue-500 flex items-center"
+                            className="px-4 py-2 text-sm flex items-center"
                           >
                             <Download className="w-5 h-5 mr-2" />
                             {isPaymentLoading
                               ? "Processing..."
                               : "Proceed to Payment"}
                           </Button>
-                        )}
+                        ) : null}
+
                         {lease.status === "Pending" && (
                           <>
                             <Button
@@ -205,8 +260,37 @@ const Invoices = () => {
                         )}
                       </div>
                     </div>
-                    <div className="items-center px-4">
+                    <div className="items-center">
                       <LeaseDetailsCard lease={lease} />
+                    </div>
+                    <div className="w-full px-4 mt-4">
+                      {/* Additional actions or information can go here */}
+                      {paymentsData?.payments.some(
+                        (payment) =>
+                          payment.leaseId === lease.id &&
+                          payment.paymentStatus === "Paid" &&
+                          payment.escrowStatus === "IN_ESCROW"
+                      ) && (
+                        <div className=" bg-green-50 text-green-800 rounded-lg flex justify-between items-center px-2 py-4">
+                          <p>
+                            Payment is still in escrow and waiting for your
+                            confirmation, plesde check out the property.
+                          </p>
+
+                          <Button>
+                            <ConfirmSatisfaction
+                              paymentId={
+                                paymentsData?.payments.find(
+                                  (payment) =>
+                                    payment.leaseId === lease.id &&
+                                    payment.paymentStatus === "Paid" &&
+                                    payment.escrowStatus === "IN_ESCROW"
+                                )?.id
+                              }
+                            />
+                          </Button>
+                        </div>
+                      )}
                     </div>
                   </LeaseCard>
                 ))

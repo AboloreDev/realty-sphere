@@ -95,7 +95,7 @@ exports.getTenantPaymentStatus = (0, catchAsyncErrors_1.catchAsyncError)((req, r
     // return a response
     return res.status(httpStatus_1.OK).json({
         success: true,
-        message: " Payment fetched successfully",
+        message: "Payment fetched successfully",
         payments,
     });
 }));

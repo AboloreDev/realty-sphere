@@ -81,7 +81,6 @@ interface PaymentWithDetails {
 const PaymentHistory = () => {
   const { data: user } = useGetUserProfileQuery();
   const tenantId = user?.user.id;
-  console.log("Tenant ID in PaymentHistory:", tenantId);
   const [selectedPaymentId, setSelectedPaymentId] = useState<number | null>(
     null
   );
@@ -98,6 +97,8 @@ const PaymentHistory = () => {
     selectedPaymentId!,
     { skip: !selectedPaymentId }
   );
+
+  console.log("Payment Status Data:", paymentsData);
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
@@ -167,7 +168,7 @@ const PaymentHistory = () => {
 
   if (isLoading) {
     return (
-      <Card>
+      <Card className="p-4">
         <CardHeader>
           <CardTitle>Payment History</CardTitle>
           <CardDescription>Loading your payment records...</CardDescription>
@@ -190,7 +191,7 @@ const PaymentHistory = () => {
 
   if (error) {
     return (
-      <Card>
+      <Card className="p-4">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-red-600">
             <XCircle className="w-5 h-5" />
@@ -208,7 +209,7 @@ const PaymentHistory = () => {
 
   if (payments.length === 0) {
     return (
-      <Card>
+      <Card className="p-4">
         <CardHeader>
           <CardTitle>Payment History</CardTitle>
           <CardDescription>No payment records found</CardDescription>
@@ -242,7 +243,7 @@ const PaymentHistory = () => {
     .reduce((sum: number, p: PaymentWithDetails) => sum + p.amountDue, 0);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-4">
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>

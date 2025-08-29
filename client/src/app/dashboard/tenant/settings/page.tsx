@@ -40,7 +40,7 @@ const TenantSettingsPage = () => {
         );
         toast.success("Tenant Updated Successfully");
       }
-    } catch (error) {
+    } catch (error: any) {
       toast.error("Failed to update Tenant", error);
     }
   };

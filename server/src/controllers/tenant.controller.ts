@@ -118,7 +118,7 @@ export const getTenantPaymentStatus = catchAsyncError(
     // return a response
     return res.status(OK).json({
       success: true,
-      message: " Payment fetched successfully",
+      message: "Payment fetched successfully",
       payments,
     });
   }

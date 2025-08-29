@@ -32,6 +32,8 @@ const ResidentDetails = () => {
   const { data: payments, isLoading: PaymentLoading } =
     useGetPaymentForLeaseQuery(leases?.[0]?.id, { skip: leases?.[0]?.id });
 
+  console.log("pAyments:", payments);
+
   if (propertyLoading || leasesLoading || PaymentLoading)
     return (
       <div>

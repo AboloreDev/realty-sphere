@@ -12,7 +12,7 @@ const PaymentCancelPage = () => {
     if (paymentId) {
       router.push(`/dashboard/tenant/invoices?paymentId=${paymentId}`);
     } else {
-      router.push("/dashboard/tenant");
+      router.push("/dashboard/tenant/payments");
     }
   };
 

@@ -10,7 +10,7 @@ const LeaseDetailsCard = ({ lease }: any) => {
   if (!lease) return null;
 
   return (
-    <Collapsible className="w-full border rounded-md p-4 space-y-3 bg-muted/40">
+    <Collapsible className="w-full border rounded-md px-1 py-1 space-y-3 bg-muted/40">
       <div className="flex items-center justify-between">
         <h4 className="text-base font-medium">
           View and review your lease agreement

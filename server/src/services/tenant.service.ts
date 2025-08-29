@@ -94,9 +94,16 @@ export const getTenantResidenciesService = async (data: getTenantId) => {
 
   // get the residences
   const residencies = await prisma.property.findMany({
-    where: { tenants: { some: { id: data.id } } },
+    where: {
+      leases: {
+        some: { tenantId: data.id, payments: { paymentStatus: "Paid" } },
+      },
+    },
     include: {
       location: true,
+      leases: {
+        select: { id: true },
+      },
     },
   });
 

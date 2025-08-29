@@ -110,7 +110,16 @@ export const paymentApi = createApi({
     // 8. GET PAYMENT FOR SPECIFIC LEASE (your original endpoint, updated)
     getPaymentForLease: builder.query<Payment, number>({
       query: (id) => `lease/${id}/payment`,
-      providesTags: ["Payments"],
+      providesTags: (result, error, leaseId) =>
+        result?.data
+          ? [
+              ...result.data.map((payment: any) => ({
+                type: "Payment" as const,
+                id: payment.id,
+              })),
+              { type: "Payments", id: leaseId },
+            ]
+          : [{ type: "Payments", id: leaseId }],
     }),
 
     createCheckoutSession: builder.mutation<
