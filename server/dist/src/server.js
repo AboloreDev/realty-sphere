@@ -31,7 +31,7 @@ const yamljs_1 = __importDefault(require("yamljs"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 4000;
-const APP_ORIGIN = "http://localhost:3000";
+const APP_ORIGIN = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 app.use("/api/webhooks/stripe", express_1.default.raw({
     type: "application/json",
     limit: "2mb",

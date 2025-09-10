@@ -65,7 +65,7 @@ const Hero = () => {
   };
   return (
     <motion.section
-      className="relative w-full h-screen overflow-hidden prata-regular"
+      className="relative w-full h-64 sm:h-80 md:h-96 lg:h-[500px] prata-regular overflow-hidden"
       variants={fadeIn}
       initial="hidden"
       animate="visible"
@@ -75,8 +75,9 @@ const Hero = () => {
       <Image
         src={heroImage}
         alt="Modern lake house with forest and mountains"
-        fill
-        className="object-cover"
+        width={800}
+        height={600}
+        className="w-full h-64 sm:h-80 md:h-96 lg:h-[500px] object-cover"
         priority
       />
       <div className="absolute inset-0 bg-black/40" />

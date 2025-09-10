@@ -19,10 +19,7 @@ import cookieParser from "cookie-parser";
 import { errorHandler } from "./middleware/errorHandler";
 import { OK } from "./constants/httpStatus";
 import { cloudinaryConfig } from "./utils/cloudinaryConfig";
-import {
-  EscrowCronJob,
-  startEscrowJob,
-} from "./controllers/jobs/escrow-release.job";
+import { EscrowCronJob } from "./controllers/jobs/escrow-release.job";
 import { handleStripeWebhook } from "./controllers/payment.controller";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
@@ -31,7 +28,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-const APP_ORIGIN = "http://localhost:3000";
+const APP_ORIGIN = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
 app.use(
   "/api/webhooks/stripe",
