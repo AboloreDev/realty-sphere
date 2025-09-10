@@ -21,8 +21,6 @@ import { OK } from "./constants/httpStatus";
 import { cloudinaryConfig } from "./utils/cloudinaryConfig";
 import { EscrowCronJob } from "./controllers/jobs/escrow-release.job";
 import { handleStripeWebhook } from "./controllers/payment.controller";
-import swaggerUi from "swagger-ui-express";
-import YAML from "yamljs";
 // Cofigurations
 dotenv.config();
 const app = express();
@@ -55,9 +53,6 @@ app.use(
 );
 app.use(cookieParser());
 
-// Swagger docs route
-const swaggerDocument = YAML.load("./swagger.yaml");
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // cloudinary config
 cloudinaryConfig();
 
