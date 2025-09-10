@@ -197,7 +197,6 @@ const MobileFilterPage = () => {
                 localFilterState.priceRange[0] ?? 0,
                 localFilterState.priceRange[1] ?? 10000,
               ]}
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               onValueChange={(value: any) =>
                 setLocalFilterState((prev) => ({
                   ...prev,

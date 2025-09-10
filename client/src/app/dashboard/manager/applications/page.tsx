@@ -57,7 +57,7 @@ const Applications = () => {
   });
 
   // OPEN MODAL WHEN THE STATUS IS APPROVED
-  /* eslint-disable  @typescript-eslint/no-explicit-any */
+
   const handleModalOpen = (application: any) => {
     if (user) {
       setSelectedApplication(application);

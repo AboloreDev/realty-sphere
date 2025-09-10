@@ -53,7 +53,6 @@ const FiltersBar = () => {
   // function to handle changes in the filter
   const handleFilterChange = (
     key: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     value: any,
     isMin: boolean | null
   ) => {

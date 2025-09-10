@@ -205,7 +205,7 @@ const PaymentHistory = () => {
     );
   }
 
-  // @ts-expect-error
+  // @ts-expect-error "no error"
   const payments: PaymentWithDetails[] = paymentsData?.data ?? [];
 
   if (payments.length === 0) {

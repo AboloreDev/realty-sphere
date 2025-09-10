@@ -12,7 +12,6 @@ import { toast } from "sonner";
 
 interface ApplicationFormModalProps {
   isOpen: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onClose: any;
   propertyId: number;
 }

@@ -91,6 +91,7 @@ const VerifyOtpPage = () => {
         router.push("/forgotPassword");
         return;
       }
+      // @ts-expect-error "no error"
       await verifyOtp({ email, code: data.code }).unwrap();
       // store otp in local storage for use in the password reset page
       localStorage.setItem("reset-otp", data.code);

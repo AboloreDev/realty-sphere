@@ -12,7 +12,6 @@ const Card = ({
   showFavoriteButton = true,
   propertyLink,
 }: CardProps) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [imgSrc, setImgSrc] = useState(property.photoUrls?.[0]);
 
   return (

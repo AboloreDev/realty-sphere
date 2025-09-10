@@ -35,7 +35,6 @@ import { useCreateLeaseMutation } from "@/state/api/leaseApi";
 interface LeaseApplicationModalProps {
   isOpen: boolean;
   onClose: () => void;
-  /* eslint-disable @typescript-eslint/no-explicit-any */
   application: any;
 }
 

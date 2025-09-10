@@ -55,7 +55,6 @@ const LoginPage = () => {
           ? "/dashboard/tenant"
           : "/dashboard/manager"
       );
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error.data?.message || "Login failed");
     }

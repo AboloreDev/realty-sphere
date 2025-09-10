@@ -55,6 +55,7 @@ const ResetPasswordPage = () => {
       }
       await resetPassword({
         email,
+        // @ts-expect-error "no error"
         code,
         newPassword: data.newPassword,
         confirmPassword: data.newPassword,

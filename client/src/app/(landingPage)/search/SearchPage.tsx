@@ -1,24 +1,25 @@
 "use client";
 
-import FiltersBar from "@/app/(landingPage)/search/FiltersBar";
-import FiltersPage from "@/app/(landingPage)/search/FiltersPage";
-import MobileFilterPage from "@/app/(landingPage)/search/MobileFilterPage";
-import PropertyListings from "@/app/(landingPage)/search/PropertyListings";
+import dynamic from "next/dynamic";
+
 import { cleanParams } from "@/lib/utils";
 import { useAppDispatch, useAppSelector } from "@/state/redux";
 import { setFilters } from "@/state/slice/globalSlice";
-import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
+import FiltersBar from "./FiltersBar";
+import FiltersPage from "./FiltersPage";
+import MobileFilterPage from "./MobileFilterPage";
+import PropertyListings from "./PropertyListings";
 
-const TenantPropertiesPage = () => {
+const SearchPage = () => {
   const searchParams = useSearchParams();
   const dispatch = useAppDispatch();
   const isFilterOpen = useAppSelector((state) => state.global.isFiltersOpen);
   // pages/search/page.tsx or app/page.tsx (Next.js App Router)
 
   // Dynamically import your Map component with SSR disabled
-  const Maps = dynamic(() => import("../../../(landingPage)/search/Maps"), {
+  const Maps = dynamic(() => import("./Maps"), {
     ssr: false,
   });
 
@@ -48,7 +49,7 @@ const TenantPropertiesPage = () => {
       {/* filter bar component */}
       <FiltersBar />
       {/* full filter page for desktop*/}
-      <div className="flex flex-col lg:flex-row justify-between flex-1 overflow-hidden gap-8 md:gap-4 p-4">
+      <div className="flex flex-col lg:flex-row justify-between flex-1 overflow-hidden gap-8 md:gap-4 p-2 lg:p-4">
         {/* Filter Panel */}
         <div
           className={`hidden lg:flex h-full overflow-auto transition-all duration-300 ease-in-out  ${
@@ -77,4 +78,4 @@ const TenantPropertiesPage = () => {
   );
 };
 
-export default TenantPropertiesPage;
+export default SearchPage;
