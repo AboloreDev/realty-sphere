@@ -27,7 +27,7 @@ router.get(
 
 // GET LANDLORD PAYMENT
 router.get(
-  "/landlord/:landlordId/payments",
+  "/:mangerId/payments",
   isAuthenticated,
   restrictTo("MANAGER"),
   getLandlordPayment

@@ -42,7 +42,7 @@ const TenantResidencies = () => {
             property={property}
             onFavoriteToggle={() => {}}
             showFavoriteButton={false}
-            propertyLink={`/dashboard/tenant/residencies/${property.id}`}
+            // propertyLink={`/dashboard/tenant/residencies/${property.id}`}
             isFavorite={tenant?.favorites.includes(property.id) || false}
           />
         ))}

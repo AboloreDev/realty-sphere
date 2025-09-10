@@ -13,7 +13,7 @@ import { useGetAllPropertiesQuery } from "@/state/api/api";
 import { useFetchAllApplicationsQuery } from "@/state/api/applicationApi";
 import { useGetUserProfileQuery } from "@/state/api/authApi";
 import { useGetAllLeasesQuery } from "@/state/api/leaseApi";
-import { useGetPaymentForLeaseQuery } from "@/state/api/paymemtApi";
+import { useGetTenantPaymentsQuery } from "@/state/api/paymemtApi";
 import {
   useGetTenantQuery,
   useGetTenantResidenciesQuery,
@@ -24,6 +24,7 @@ import React from "react";
 const TenantPage = () => {
   // Get the user
   const { data: user } = useGetUserProfileQuery();
+  const tenantId = user.user.id;
 
   // Get the lease
   // GET ALL AVAILABLE LEASES FOR THE USER
@@ -36,8 +37,7 @@ const TenantPage = () => {
 
   // Get the acive lease payment
   const { data: payments, isLoading: PaymentLoading } =
-    useGetPaymentForLeaseQuery(leases?.[0]?.id, { skip: !user.user.id });
-  console.log("Payment:", payments);
+    useGetTenantPaymentsQuery(tenantId, { skip: !tenantId });
 
   const { data: tenant } = useGetTenantQuery(user.user.id || "", {
     refetchOnMountOrArgChange: true,
@@ -120,47 +120,11 @@ const TenantPage = () => {
 
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>Active Payment</CardDescription>
+          <CardDescription>Property Payment</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            $ {payments?.amountPaid?.toLocaleString()}
+            {payments?.data?.length}
           </CardTitle>
         </CardHeader>
-
-        <CardFooter className="flex flex-col items-start gap-2 text-sm">
-          <div className="flex items-center gap-2">
-            <p className="font-medium">Amount Due:</p>
-            <span>${payments?.amountDue?.toLocaleString()}</span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <p className="font-medium">Payment Status:</p>
-            <span>{payments?.paymentStatus}</span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <p className="font-medium">Escrow Status:</p>
-            <span>{payments?.escrowStatus}</span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <p className="font-medium">Payment Date:</p>
-            <span>{new Date(payments?.paymentDate).toLocaleDateString()}</span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <p className="font-medium">Due Date:</p>
-            <span>{new Date(payments?.dueDate).toLocaleDateString()}</span>
-          </div>
-
-          {payments?.escrowReleaseDate && (
-            <div className="flex items-center gap-2">
-              <p className="font-medium">Escrow Release Date:</p>
-              <span>
-                {new Date(payments.escrowReleaseDate).toLocaleDateString()}
-              </span>
-            </div>
-          )}
-        </CardFooter>
       </Card>
 
       <Card className="@container/card">

@@ -98,7 +98,7 @@ const processPaymentService = (paymentId, data) => __awaiter(void 0, void 0, voi
 exports.processPaymentService = processPaymentService;
 const confirmSatisfactionService = (paymentId, tenantId) => __awaiter(void 0, void 0, void 0, function* () {
     const payment = yield prismaClient_1.default.payment.findUnique({
-        where: { id: paymentId },
+        where: { id: parseInt(paymentId) },
         include: { lease: true },
     });
     (0, appAssert_1.default)(payment, 400, "Payment not found");
@@ -110,7 +110,7 @@ const confirmSatisfactionService = (paymentId, tenantId) => __awaiter(void 0, vo
         (0, appAssert_1.default)(false, 404, "Payment not in Escrow");
     }
     const updatedPayment = yield prismaClient_1.default.payment.update({
-        where: { id: paymentId },
+        where: { id: parseInt(paymentId) },
         data: {
             escrowStatus: client_1.EscrowStatus.RELEASED,
             escrowReleaseDate: new Date(), // Release immediately

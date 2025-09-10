@@ -10,6 +10,7 @@ import tenantReducer from "./slice/tenantSlice";
 import landlordReducer from "./slice/landlordSlice";
 import globalReducer from "./slice/globalSlice";
 import leaseReducer from "./slice/leaseSlice";
+import messageReducer from "./slice/messageSlice";
 import applicationReducer from "./slice/applicationSlice";
 import paymentReducer from "./slice/paymentSlice";
 import { authApi } from "./api/authApi";
@@ -19,6 +20,7 @@ import { api } from "./api/api";
 import { leaseApi } from "./api/leaseApi";
 import { paymentApi } from "./api/paymemtApi";
 import { applicationApi } from "./api/applicationApi";
+import { messageApi } from "./api/messageApi";
 
 /* REDUX STORE */
 const rootReducer = combineReducers({
@@ -29,6 +31,7 @@ const rootReducer = combineReducers({
   lease: leaseReducer, // lease reducer
   application: applicationReducer, // application reducer
   payment: paymentReducer, // lease reducer
+  message: messageReducer, // message Reducer
   [authApi.reducerPath]: authApi.reducer,
   [tenantApi.reducerPath]: tenantApi.reducer,
   [landlordApi.reducerPath]: landlordApi.reducer,
@@ -36,6 +39,7 @@ const rootReducer = combineReducers({
   [api.reducerPath]: api.reducer, //global api
   [leaseApi.reducerPath]: leaseApi.reducer, // lease api reducer
   [paymentApi.reducerPath]: paymentApi.reducer, // lease api reducer
+  [messageApi.reducerPath]: messageApi.reducer, // message Api reducer
 });
 
 export const makeStore = () => {
@@ -47,6 +51,7 @@ export const makeStore = () => {
         tenantApi.middleware,
         landlordApi.middleware,
         leaseApi.middleware,
+        messageApi.middleware,
         paymentApi.middleware,
         applicationApi.middleware,
         api.middleware //global api

@@ -6,7 +6,10 @@ export interface PaymentWithDetails extends Payment {
   amountDue: number;
   dueDate: string;
   paymentStatus: string;
+  leaseId: number;
   escrowStatus: string;
+  amountPaid: number;
+  paymentDate: string;
   lease: {
     id: number;
     rent: number;

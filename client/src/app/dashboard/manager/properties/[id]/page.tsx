@@ -13,13 +13,11 @@ import {
 } from "@/components/ui/dialog";
 import { useGetSinglePropertyQuery } from "@/state/api/api";
 import { useGetPropertyLeasesQuery } from "@/state/api/leaseApi";
-import { useGetPaymentQuery } from "@/state/api/paymemtApi";
 import dynamic from "next/dynamic";
 
 import { useParams, useRouter } from "next/navigation";
 import React from "react";
 import { toast } from "sonner";
-import TenantInquiriesPage from "./Inquiries";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 
@@ -48,11 +46,8 @@ const ManagerPropertiesDetailsPage = () => {
   const { data: leases, isLoading: leasesLoading } =
     useGetPropertyLeasesQuery(propertyId);
 
-  const { data: payments, isLoading: paymentLoading } =
-    useGetPaymentQuery(propertyId);
-
   // Handle loading and error states
-  if (propertyLoading || leasesLoading || paymentLoading) {
+  if (propertyLoading || leasesLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
         <BouncingLoader />
@@ -81,28 +76,6 @@ const ManagerPropertiesDetailsPage = () => {
 
           {/* // property details overview */}
           <div className="flex flex-col justify-between gap-6 p-4 md:p-8 md:mx-6 lg:mx-10">
-            <div className="p-2">
-              <Dialog>
-                <DialogTrigger asChild>
-                  <button className="text-blue-600 underline text-sm cursor-pointer">
-                    Click here to view the list of tenant inquiries
-                  </button>
-                </DialogTrigger>
-
-                <DialogContent className="max-w-md">
-                  <DialogHeader>
-                    <DialogTitle>Tenant Inquiries</DialogTitle>
-                  </DialogHeader>
-
-                  {/* 🧠 Pass in actual props from propertyWithCoordinate */}
-                  <TenantInquiriesPage
-                    leases={leases ?? []}
-                    payments={payments ?? []}
-                  />
-                </DialogContent>
-              </Dialog>
-            </div>
-
             <div className="p-4 flex-1">
               <PropertyOverview propertyId={propertyId} />
               <PropertyDetails propertyId={propertyId} />

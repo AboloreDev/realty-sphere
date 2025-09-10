@@ -40,9 +40,6 @@ const Invoices = () => {
     useGetTenantPaymentsQuery(user.user.id);
   const router = useRouter();
 
-  console.log("Payments Data:", paymentsData);
-  console.log("Leases Data:", leases);
-
   // handle status change
   const handleStatusChange = async (id: number, status: string) => {
     await updateLeaseStatus({ id, status });
@@ -160,13 +157,13 @@ const Invoices = () => {
                                 : "text-yellow-800"
                             }`}
                           >
-                            {paymentsData?.payments.some(
+                            {paymentsData?.data?.some(
                               (payment) =>
-                                payment.leaseId === lease.id &&
+                                payment?.leaseId === lease.id &&
                                 payment.paymentStatus === "Paid"
                             )
                               ? "Thank you for your payment! Please check out the property and confirm your satisfaction."
-                              : paymentsData?.payments.some(
+                              : paymentsData?.data?.some(
                                   (payment) =>
                                     payment.leaseId === lease.id &&
                                     payment.paymentStatus === "Pending"
@@ -184,7 +181,7 @@ const Invoices = () => {
                       </div>
                       {/* Right side */}
                       <div className="flex gap-2 justify-center items-center">
-                        {paymentsData?.payments.some(
+                        {paymentsData?.data?.some(
                           (payment) =>
                             payment.leaseId === lease.id &&
                             payment.paymentStatus === "Paid"
@@ -206,7 +203,7 @@ const Invoices = () => {
                               Download Receipt
                             </Button>
                           </>
-                        ) : paymentsData?.payments.some(
+                        ) : paymentsData?.data?.some(
                             (payment) =>
                               payment.leaseId === lease.id &&
                               payment.paymentStatus === "Pending"
@@ -265,7 +262,7 @@ const Invoices = () => {
                     </div>
                     <div className="w-full px-4 mt-4">
                       {/* Additional actions or information can go here */}
-                      {paymentsData?.payments.some(
+                      {paymentsData?.data?.some(
                         (payment) =>
                           payment.leaseId === lease.id &&
                           payment.paymentStatus === "Paid" &&
@@ -279,8 +276,9 @@ const Invoices = () => {
 
                           <Button>
                             <ConfirmSatisfaction
+                              // @ts-expect-error "no error"
                               paymentId={
-                                paymentsData?.payments.find(
+                                paymentsData?.data?.find(
                                   (payment) =>
                                     payment.leaseId === lease.id &&
                                     payment.paymentStatus === "Paid" &&

@@ -96,6 +96,8 @@ model User {
   leases            Lease[] @relation("TenantLeases")
   otps             Otp[]  @relation("UserOtps")
   sessions             Session[] @relation("UserSessions")
+  messages      Message[] @relation("UserMessages") 
+  chats         Chat[]    @relation("UserChats")   
 }
 
 model Otp {
@@ -107,7 +109,7 @@ model Otp {
   emailVerified Boolean @default(false)
   user      User     @relation("UserOtps", fields: [userId], references: [id], onDelete: Cascade)
   @@index([userId])
-}
+} 
 
 model Session {
   id          String   @id @default(uuid())
@@ -115,7 +117,7 @@ model Session {
   userId      String
   refreshToken String
   createdAt   DateTime @default(now())
-  expiresAt   DateTime
+  expiresAt   DateTime 
 }
 
 model Property {
@@ -147,6 +149,7 @@ model Property {
   applications Application[]
   favoritedBy  User[]        @relation("TenantFavorites")
   tenants      User[]        @relation("TenantProperties")
+  chats        Chat[]        @relation("PropertyChats")
 }
 
 model Location {
@@ -211,4 +214,32 @@ model Payment {
   leaseId            Int          @unique
   lease       Lease          @relation(fields: [leaseId], references: [id])
 
+}
+
+model Chat {
+  id              Int       @id @default(autoincrement())
+  userId          String   // The user
+  propertyId      Int       // Which property this chat is about
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  // Relations
+  user            User    @relation("UserChats", fields: [userId], references: [id])
+  property        Property  @relation("PropertyChats", fields: [propertyId], references: [id])
+  messages        Message[] @relation("ChatMessages")
+  
+  @@unique([userId, propertyId]) // Ensure one chat per tenant-manager-property combination
+}
+
+model Message {
+  id             Int      @id @default(autoincrement())
+  content        String
+  senderId       String   // Changed from userId to senderId for clarity
+  chatId         Int
+  createdAt      DateTime @default(now())
+  isRead         Boolean  @default(false)
+  
+  // Relations
+  sender         User     @relation("UserMessages", fields: [senderId], references: [id])
+  chat           Chat     @relation("ChatMessages", fields: [chatId], references: [id])
 }

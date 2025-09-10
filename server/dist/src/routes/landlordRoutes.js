@@ -16,5 +16,5 @@ router.patch("/:id", isAuthenticated_1.isAuthenticated, (0, isAuthenticated_1.re
 // GET LANDLORD SINGLE PROPERTY
 router.get("/:id/properties", isAuthenticated_1.isAuthenticated, (0, isAuthenticated_1.restrictTo)("MANAGER"), landlord_controller_1.getLandlordProperties);
 // GET LANDLORD PAYMENT
-router.get("/landlord/:landlordId/payments", isAuthenticated_1.isAuthenticated, (0, isAuthenticated_1.restrictTo)("MANAGER"), landlord_controller_1.getLandlordPayment);
+router.get("/:mangerId/payments", isAuthenticated_1.isAuthenticated, (0, isAuthenticated_1.restrictTo)("MANAGER"), landlord_controller_1.getLandlordPayment);
 exports.default = router;

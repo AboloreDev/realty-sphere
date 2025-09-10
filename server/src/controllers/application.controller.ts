@@ -16,15 +16,13 @@ export const createApplication = catchAsyncError(
   async (req: AuthRequest, res) => {
     try {
       const user = req.user!;
-      console.log("Request body:", req.body); // Debug: Log the incoming body
+      const { applicationDate, propertyId, name, email, message, phoneNumber } =
+        req.body;
 
       // Check if req.body is defined
       if (!req.body) {
         return appAssert(false, BAD_REQUEST, "Request body is missing");
       }
-
-      const { applicationDate, propertyId, name, email, message, phoneNumber } =
-        req.body;
 
       if (user.role !== "TENANT") {
         return appAssert(false, FORBIDDEN, "Not a Tenant");

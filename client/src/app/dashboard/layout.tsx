@@ -1,6 +1,5 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import ProtectedRoute from "@/components/code/ProtectedRoute";
-import { SectionCards } from "@/components/section-cards";
 
 // import { SectionCards } from "@/components/section-cards";
 import { SiteHeader } from "@/components/site-header";

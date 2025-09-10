@@ -29,7 +29,7 @@ const payment_controller_1 = require("./controllers/payment.controller");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 4000;
-const APP_ORIGIN = " http://localhost:3000";
+const APP_ORIGIN = "http://localhost:3001";
 app.use("/api/webhooks/stripe", express_1.default.raw({
     type: "application/json",
     limit: "2mb",

@@ -13,7 +13,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-import { useAppDispatch, useAppSelector } from "@/state/redux";
+import { useAppDispatch } from "@/state/redux";
 import { Separator } from "@/components/ui/separator"; // Assuming Radix-based
 import {
   Tooltip,
@@ -36,6 +36,7 @@ import {
   tenantNavMain,
   tenantNavSecondary,
 } from "@/constants/sidebarData";
+import { clearSelectedUser } from "@/state/slice/messageSlice";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data: user } = useGetUserProfileQuery();
@@ -63,6 +64,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     try {
       await logout().unwrap();
       dispatch(clearUser());
+      dispatch(clearSelectedUser());
       authApi.util.resetApiState();
       toast.success("Logged out successfully!");
       router.push("/auth/login");

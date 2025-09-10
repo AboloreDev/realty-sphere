@@ -65,7 +65,7 @@ exports.processPayment = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => _
 exports.confirmSatisfaction = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const { tenantId } = req.body;
-    const payment = yield (0, payment_service_1.confirmSatisfactionService)(parseInt(id), tenantId);
+    const payment = yield (0, payment_service_1.confirmSatisfactionService)(id, tenantId);
     return res.status(httpStatus_1.OK).json({
         success: true,
         message: "Payment release to landlord ",
@@ -94,7 +94,7 @@ exports.getPaymentStatus = (0, catchAsyncErrors_1.catchAsyncError)((req, res) =>
     };
     return res.status(httpStatus_1.OK).json({
         success: true,
-        payment: statusResponse,
+        data: statusResponse,
     });
 }));
 exports.createCheckoutSession = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {

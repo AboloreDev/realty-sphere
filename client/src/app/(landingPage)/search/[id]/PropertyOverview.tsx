@@ -7,8 +7,6 @@ const PropertyOverview = ({ propertyId }: PropertyOverviewProps) => {
   const { data: propertyWithCoordinate } =
     useGetSinglePropertyQuery(propertyId);
 
-  console.log(propertyWithCoordinate);
-
   const property = propertyWithCoordinate;
 
   return (

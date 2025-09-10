@@ -103,11 +103,11 @@ export const processPaymentService = async (
 };
 
 export const confirmSatisfactionService = async (
-  paymentId: number,
+  paymentId: string,
   tenantId: string
 ) => {
   const payment = await prisma.payment.findUnique({
-    where: { id: paymentId },
+    where: { id: parseInt(paymentId) },
     include: { lease: true },
   });
 
@@ -128,7 +128,7 @@ export const confirmSatisfactionService = async (
   }
 
   const updatedPayment = await prisma.payment.update({
-    where: { id: paymentId },
+    where: { id: parseInt(paymentId) },
     data: {
       escrowStatus: EscrowStatus.RELEASED,
       escrowReleaseDate: new Date(), // Release immediately

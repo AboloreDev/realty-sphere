@@ -8,7 +8,7 @@ import React from "react";
 import { toast } from "sonner";
 
 interface ConfirmSatisfactionProps {
-  paymentId: number;
+  paymentId: string;
 }
 
 const ConfirmSatisfaction = ({ paymentId }: ConfirmSatisfactionProps) => {

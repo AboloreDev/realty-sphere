@@ -11,6 +11,7 @@ import {
   useUpdateApplicationStatusMutation,
 } from "@/state/api/applicationApi";
 import { useGetUserProfileQuery } from "@/state/api/authApi";
+
 import { useAppDispatch, useAppSelector } from "@/state/redux";
 import { setActiveTab } from "@/state/slice/applicationSlice";
 
@@ -24,11 +25,11 @@ import {
 import Link from "next/link";
 
 import React, { useState } from "react";
+import { toast } from "sonner";
 
 const Applications = () => {
   // get the user
   const { data: user } = useGetUserProfileQuery();
-  // get the active tab states from landlord slice
   const activeTab = useAppSelector((state) => state.application.activeTab);
   const dispatch = useAppDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -39,6 +40,8 @@ const Applications = () => {
     user.user.id || "",
     { skip: !user?.user?.id }
   );
+
+  console.log(applications);
 
   // fetch the updateApplicationStatus Api
   const [updateApplicationStatus] = useUpdateApplicationStatusMutation();
@@ -66,6 +69,7 @@ const Applications = () => {
     setIsModalOpen(false);
     setSelectedApplication(null);
   };
+
   const getEmptyMessage = (tab: string) => {
     switch (tab) {
       case "all":
@@ -219,10 +223,11 @@ const Applications = () => {
                         )}
                         {application.status === "Denied" && (
                           <Button
-                            className={` py-2 px-4 rounded-md flex items-center
-                          justify-center hover:bg-secondary-500 hover:text-primary-50`}
+                            onClick={() => toast.warning("Coming Soon")}
+                            variant="destructive"
+                            className="py-2 px-4 rounded-md flex items-center justify-center hover:bg-secondary-500 hover:text-primary-50"
                           >
-                            Contact User
+                            Contact Applicant
                           </Button>
                         )}
                       </div>

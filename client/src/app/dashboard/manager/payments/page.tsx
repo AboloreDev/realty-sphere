@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import {
   useGetTenantPaymentsQuery,
   useGetPaymentStatusQuery,
+  useGetLandlordPaymentsQuery,
 } from "@/state/api/paymemtApi";
 import {
   Table,
@@ -80,7 +81,7 @@ interface PaymentWithDetails {
 
 const PaymentHistory = () => {
   const { data: user } = useGetUserProfileQuery();
-  const tenantId = user?.user.id;
+  const managerId = user?.user.id;
   const [selectedPaymentId, setSelectedPaymentId] = useState<number | null>(
     null
   );
@@ -90,15 +91,13 @@ const PaymentHistory = () => {
     data: paymentsData,
     isLoading,
     error,
-  } = useGetTenantPaymentsQuery(tenantId);
+  } = useGetLandlordPaymentsQuery(managerId);
 
   // Fetch detailed status for selected payment
   const { data: paymentStatusData } = useGetPaymentStatusQuery(
     selectedPaymentId!,
     { skip: !selectedPaymentId }
   );
-
-  console.log("Payment Status", paymentStatusData);
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
@@ -210,26 +209,24 @@ const PaymentHistory = () => {
 
   if (payments.length === 0) {
     return (
-      <div className="p-4">
-        <Card className="p-4">
-          <CardHeader>
-            <CardTitle>Payment History</CardTitle>
-            <CardDescription>No payment records found</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-center py-8">
-              <CreditCard className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-              <p className="text-gray-600 mb-4">
-                You haven&apos;t made any payments yet.
-              </p>
-              <p className="text-sm text-gray-500">
-                Payment records will appear here once you start making rent
-                payments.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      <Card className="p-4">
+        <CardHeader>
+          <CardTitle>Payment History</CardTitle>
+          <CardDescription>No payment records found</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-8">
+            <CreditCard className="w-12 h-12 mx-auto text-gray-400 mb-4" />
+            <p className="text-gray-600 mb-4">
+              You haven&apos;t made any payments yet.
+            </p>
+            <p className="text-sm text-gray-500">
+              Payment records will appear here once you start making rent
+              payments.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
     );
   }
 

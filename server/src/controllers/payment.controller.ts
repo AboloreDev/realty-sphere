@@ -73,7 +73,7 @@ export const confirmSatisfaction = catchAsyncError(async (req, res) => {
   const { id } = req.params;
   const { tenantId } = req.body;
 
-  const payment = await confirmSatisfactionService(parseInt(id), tenantId);
+  const payment = await confirmSatisfactionService(id, tenantId);
   return res.status(OK).json({
     success: true,
     message: "Payment release to landlord ",
@@ -110,7 +110,7 @@ export const getPaymentStatus = catchAsyncError(async (req, res) => {
 
   return res.status(OK).json({
     success: true,
-    payment: statusResponse,
+    data: statusResponse,
   });
 });
 

@@ -73,15 +73,15 @@ export const getLandlordProperties = catchAsyncError(async (req, res) => {
 });
 
 export const getLandlordPayment = catchAsyncError(async (req, res) => {
-  const { tenantId } = req.params;
+  const { managerId } = req.params;
 
   // use the service
-  const payments = await getLandlordPaymentServices(tenantId);
+  const payments = await getLandlordPaymentServices(managerId);
 
   // return a response
   return res.status(OK).json({
     success: true,
-    message: " Payment fetched successfully",
-    payments,
+    message: "Payment fetched successfully",
+    data: payments,
   });
 });

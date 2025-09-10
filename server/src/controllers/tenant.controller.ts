@@ -119,7 +119,7 @@ export const getTenantPaymentStatus = catchAsyncError(
     return res.status(OK).json({
       success: true,
       message: "Payment fetched successfully",
-      payments,
+      data: payments,
     });
   }
 );

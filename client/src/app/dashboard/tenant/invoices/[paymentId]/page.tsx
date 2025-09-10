@@ -14,8 +14,6 @@ const PaymentPage = () => {
   // Get paymentId from query parameter: ?paymentId=123
   const paymentId = searchParams.get("paymentId");
 
-  console.log("Payment ID from URL:", paymentId);
-
   const [createCheckoutSession, { isLoading, error }] =
     useCreateCheckoutSessionMutation();
 
@@ -23,8 +21,6 @@ const PaymentPage = () => {
     Number(paymentId),
     { skip: !paymentId }
   );
-
-  console.log("Checkout Status:", checkoutStatus);
 
   // Poll for status after redirect from Stripe
   useEffect(() => {
@@ -34,7 +30,7 @@ const PaymentPage = () => {
         refetch();
         if (checkoutStatus?.data?.payment.paymentStatus === "Paid") {
           clearInterval(interval);
-          alert("Payment completed successfully!");
+          toast.success("Payment completed successfully!");
         }
       }, 3000);
       return () => clearInterval(interval);

@@ -46,7 +46,7 @@ const SettingsPage = () => {
         // set a toast
         toast.success("Landlord updated Successfully");
       }
-    } catch (error) {
+    } catch (error: any) {
       toast.error("Error updating landlord details", error);
     }
   };

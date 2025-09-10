@@ -3,7 +3,6 @@ import morgan from "morgan";
 import cors from "cors";
 import helmet from "helmet";
 import bodyParser from "body-parser";
-import multer from "multer";
 import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
@@ -14,6 +13,7 @@ import applicationRoutes from "./routes/applicationRoutes";
 import leaseRoutes from "./routes/leaseRoutes";
 import mapsRoutes from "./routes/mapsRoutes";
 import paymentRoutes from "./routes/paymentRoutes";
+
 import rateLimit from "express-rate-limit";
 import cookieParser from "cookie-parser";
 import { errorHandler } from "./middleware/errorHandler";
@@ -29,7 +29,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-const APP_ORIGIN = " http://localhost:3000";
+const APP_ORIGIN = "http://localhost:3001";
 
 app.use(
   "/api/webhooks/stripe",
@@ -93,6 +93,7 @@ app.use("/api/applications", applicationRoutes);
 app.use("/api", mapsRoutes);
 // apply payment routes
 app.use("/api/payment", paymentRoutes);
+
 // start escrow job
 EscrowCronJob.start();
 

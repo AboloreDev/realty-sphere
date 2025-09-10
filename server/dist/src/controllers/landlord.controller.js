@@ -67,13 +67,13 @@ exports.getLandlordProperties = (0, catchAsyncErrors_1.catchAsyncError)((req, re
     return res.status(httpStatus_1.OK).json(propertiesWithFormattedLocation);
 }));
 exports.getLandlordPayment = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { tenantId } = req.params;
+    const { managerId } = req.params;
     // use the service
-    const payments = yield (0, landlord_service_1.getLandlordPaymentServices)(tenantId);
+    const payments = yield (0, landlord_service_1.getLandlordPaymentServices)(managerId);
     // return a response
     return res.status(httpStatus_1.OK).json({
         success: true,
-        message: " Payment fetched successfully",
-        payments,
+        message: "Payment fetched successfully",
+        data: payments,
     });
 }));

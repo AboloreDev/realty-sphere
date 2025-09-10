@@ -21,12 +21,11 @@ const nextPaymentDateCalcutions_1 = __importDefault(require("../utils/nextPaymen
 exports.createApplication = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const user = req.user;
-        console.log("Request body:", req.body); // Debug: Log the incoming body
+        const { applicationDate, propertyId, name, email, message, phoneNumber } = req.body;
         // Check if req.body is defined
         if (!req.body) {
             return (0, appAssert_1.default)(false, httpStatus_1.BAD_REQUEST, "Request body is missing");
         }
-        const { applicationDate, propertyId, name, email, message, phoneNumber } = req.body;
         if (user.role !== "TENANT") {
             return (0, appAssert_1.default)(false, httpStatus_1.FORBIDDEN, "Not a Tenant");
         }

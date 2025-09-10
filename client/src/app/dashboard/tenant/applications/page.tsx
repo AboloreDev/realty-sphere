@@ -3,13 +3,18 @@
 import ApplicationCard from "@/components/code/ApplicationCard";
 import BouncingLoader from "@/components/code/BouncingLoader";
 import Header from "@/components/code/Header";
+import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useFetchAllApplicationsQuery } from "@/state/api/applicationApi";
 import { useGetUserProfileQuery } from "@/state/api/authApi";
+
 import { useAppDispatch, useAppSelector } from "@/state/redux";
 import { setActiveTab } from "@/state/slice/applicationSlice";
+
 import { CircleCheckBig, Clock, XCircle } from "lucide-react";
+
 import React from "react";
+import { toast } from "sonner";
 
 const Applications = () => {
   const { data: user } = useGetUserProfileQuery();
@@ -43,8 +48,6 @@ const Applications = () => {
   if (isLoading) {
     return <BouncingLoader />;
   }
-
-  console.log(applications);
 
   return (
     <div className="p-6">
@@ -115,9 +118,18 @@ const Applications = () => {
                             Your application is pending approval
                           </div>
                         ) : (
-                          <div className="bg-red-100 p-4 text-red-700 grow flex items-center">
-                            <XCircle className="w-5 h-5 mr-2" />
-                            Your application has been denied
+                          <div className="flex items-center">
+                            <div className="bg-red-100 p-4 text-red-700 grow flex items-center">
+                              <XCircle className="w-5 h-5 mr-2" />
+                              Your application has been denied
+                            </div>
+                            <Button
+                              onClick={() => toast.warning("Coming soon")}
+                              variant="destructive"
+                              className="py-2 px-4 rounded-md flex items-center justify-center hover:bg-secondary-500 hover:text-primary-50"
+                            >
+                              Contact Manager
+                            </Button>
                           </div>
                         )}
                       </div>

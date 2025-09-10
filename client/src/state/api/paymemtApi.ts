@@ -73,7 +73,7 @@ export const paymentApi = createApi({
     // 5. CONFIRM SATISFACTION (release escrow early)
     confirmSatisfaction: builder.mutation<
       ApiResponse<PaymentWithDetails>,
-      { paymentId: number; satisfactionData: ConfirmSatisfactionRequest }
+      { paymentId: string; satisfactionData: ConfirmSatisfactionRequest }
     >({
       query: ({ paymentId, satisfactionData }) => ({
         url: `/payment/${paymentId}/confirm-satisfaction`,
@@ -101,8 +101,8 @@ export const paymentApi = createApi({
       ApiResponse<PaymentWithDetails[]>,
       string
     >({
-      query: (landlordId) => ({
-        url: `/landlord/${landlordId}/payments`,
+      query: (managerId) => ({
+        url: `/landlord/${managerId}/payments`,
       }),
       providesTags: ["Payments"],
     }),
@@ -110,16 +110,7 @@ export const paymentApi = createApi({
     // 8. GET PAYMENT FOR SPECIFIC LEASE (your original endpoint, updated)
     getPaymentForLease: builder.query<Payment, number>({
       query: (id) => `lease/${id}/payment`,
-      providesTags: (result, error, leaseId) =>
-        result?.data
-          ? [
-              ...result.data.map((payment: any) => ({
-                type: "Payment" as const,
-                id: payment.id,
-              })),
-              { type: "Payments", id: leaseId },
-            ]
-          : [{ type: "Payments", id: leaseId }],
+      providesTags: ["Payments"],
     }),
 
     createCheckoutSession: builder.mutation<

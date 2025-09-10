@@ -2,7 +2,6 @@ import {
   Home,
   Heart,
   FileText,
-  Users,
   Settings,
   Calculator,
   Currency,
@@ -34,6 +33,7 @@ export const tenantNavMain = [
     icon: Currency,
   },
   { name: "Leases", href: "/dashboard/tenant/invoices", icon: FilePen },
+
   { name: "Properties", href: "/dashboard/tenant/property", icon: Settings },
   {
     name: "Calculator",
@@ -54,12 +54,17 @@ export const managerNavMain = [
     href: "/dashboard/manager/applications",
     icon: FileText,
   },
-  { name: "Tenants", href: "/dashboard/manager/tenants", icon: Users },
+  {
+    name: "Payment History",
+    href: "/dashboard/manager/payments",
+    icon: Currency,
+  },
   {
     name: "Create Listings",
     href: "/dashboard/manager/listings",
     icon: HouseIcon,
   },
+
   { name: "Leases", href: "/dashboard/manager/invoices", icon: FilePen },
 ];
 

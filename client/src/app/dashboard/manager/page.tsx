@@ -13,12 +13,13 @@ import { useFetchAllApplicationsQuery } from "@/state/api/applicationApi";
 import { useGetUserProfileQuery } from "@/state/api/authApi";
 import { useGetLandlordPropertyQuery } from "@/state/api/landlordApi";
 import { useGetAllLeasesQuery } from "@/state/api/leaseApi";
-import { useGetPaymentForLeaseQuery } from "@/state/api/paymemtApi";
+import { useGetLandlordPaymentsQuery } from "@/state/api/paymemtApi";
 import React from "react";
 
 const LandlordPage = () => {
   // Get the user
   const { data: user } = useGetUserProfileQuery();
+  const managerId = user.user.id;
 
   // Get the lease
   // GET ALL AVAILABLE LEASES FOR THE USER
@@ -30,7 +31,7 @@ const LandlordPage = () => {
   );
   // Get the acive lease payment
   const { data: payments, isLoading: PaymentLoading } =
-    useGetPaymentForLeaseQuery(leases?.[0]?.id, { skip: !user.user.id });
+    useGetLandlordPaymentsQuery(managerId, { skip: !managerId });
 
   // fetch the applications()
   const { data: applications, isLoading: applicationsLoading } =
@@ -155,9 +156,9 @@ const LandlordPage = () => {
 
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>Active Payment</CardDescription>
+          <CardDescription>Tenant Payment</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            {payments?.length || 0}
+            {payments?.data?.length}
           </CardTitle>
         </CardHeader>
       </Card>
