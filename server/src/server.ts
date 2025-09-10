@@ -29,6 +29,7 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 const APP_ORIGIN = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+console.log(process.env.DATABASE_URL);
 
 app.use(
   "/api/webhooks/stripe",
