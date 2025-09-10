@@ -76,7 +76,7 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
             <div className="mt-4 flex flex-col gap-2">
               <ThemeToggle />
               <Button onClick={onClose} size="sm">
-                Sign In
+                <Link href={"/auth/login"}>Login</Link>
               </Button>
 
               <Button
@@ -85,7 +85,7 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
                 size="sm"
                 className="text-black hover:text-black"
               >
-                Sign Up
+                <Link href={"/auth/register"}>Register</Link>
               </Button>
             </div>
           </motion.div>

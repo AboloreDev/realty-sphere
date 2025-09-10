@@ -20,7 +20,7 @@ export const tenantApi = createApi({
     updateTenant: builder.mutation<UpdatedTenantResponse, UpdatedTenantRequest>(
       {
         query: ({ id, data }) => ({
-          url: `/tenant/${id}`,
+          url: `/api/tenant/${id}`,
           method: "PATCH",
           body: data,
         }),
@@ -36,7 +36,7 @@ export const tenantApi = createApi({
     // get tenant
     getTenant: builder.query<User, string>({
       query: (id) => ({
-        url: `/tenant/${id}`,
+        url: `/api/tenant/${id}`,
       }),
       providesTags: (result) => [{ type: "Tenants", id: result?.id }],
       async onQueryStarted(_, { queryFulfilled }) {
@@ -49,7 +49,7 @@ export const tenantApi = createApi({
     // add to favorites
     addToFavorites: builder.mutation<User, { id: string; propertyId: number }>({
       query: ({ id, propertyId }) => ({
-        url: `/tenant/${id}/favorites/${propertyId}`,
+        url: `/api/tenant/${id}/favorites/${propertyId}`,
         method: "POST",
       }),
       invalidatesTags: (result) => [
@@ -67,7 +67,7 @@ export const tenantApi = createApi({
     removeFavorites: builder.mutation<User, { id: string; propertyId: number }>(
       {
         query: ({ id, propertyId }) => ({
-          url: `/tenant/${id}/favorites/${propertyId}`,
+          url: `/api/tenant/${id}/favorites/${propertyId}`,
           method: "DELETE",
         }),
         invalidatesTags: (result) => [
@@ -85,7 +85,7 @@ export const tenantApi = createApi({
     // get the tenant current residencies and other previous ones
     getTenantResidencies: builder.query<Property[], string>({
       query: (id) => ({
-        url: `/tenant/${id}/residencies`,
+        url: `/api/tenant/${id}/residencies`,
       }),
 
       providesTags: (result) =>
@@ -108,7 +108,7 @@ export const tenantApi = createApi({
       string
     >({
       query: (tenantId) => ({
-        url: `/tenant/${tenantId}/payments`,
+        url: `/api/tenant/${tenantId}/payments`,
       }),
       providesTags: ["Payments"],
       async onQueryStarted(_, { queryFulfilled }) {

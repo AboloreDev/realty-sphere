@@ -17,7 +17,7 @@ export const authApi = createApi({
   endpoints: (builder) => ({
     registerUser: builder.mutation<AuthResponse, RegisterUserTypes>({
       query: (data) => ({
-        url: "/auth/register",
+        url: "/api/auth/register",
         method: "POST",
         body: data,
       }),
@@ -25,7 +25,7 @@ export const authApi = createApi({
     }),
     loginUser: builder.mutation<AuthResponse, LoginUserTypes>({
       query: (credentials) => ({
-        url: "/auth/login",
+        url: "/api/auth/login",
         method: "POST",
         body: credentials,
       }),
@@ -33,7 +33,7 @@ export const authApi = createApi({
     }),
     forgotPassword: builder.mutation<ApiResponse<object>, { email: string }>({
       query: (data) => ({
-        url: "/auth/forgot-password",
+        url: "/api/auth/forgot-password",
         method: "POST",
         body: data,
       }),
@@ -43,7 +43,7 @@ export const authApi = createApi({
       { email: string; otp: string }
     >({
       query: (data) => ({
-        url: "/auth/reset-password/verify",
+        url: "/api/auth/reset-password/verify",
         method: "POST",
         body: data,
       }),
@@ -58,21 +58,21 @@ export const authApi = createApi({
       }
     >({
       query: (data) => ({
-        url: "/auth/reset-password",
+        url: "/api/auth/reset-password",
         method: "POST",
         body: data,
       }),
     }),
     logout: builder.mutation<ApiResponse<object>, void>({
       query: () => ({
-        url: "/auth/logout",
+        url: "/api/auth/logout",
         method: "POST",
       }),
       invalidatesTags: ["User", "Auth"],
     }),
     // Authenticate the user - FIXED with cache busting
     getUserProfile: builder.query<User, void>({
-      query: () => "/user",
+      query: () => "/api/user",
       providesTags: ["User"],
     }),
   }),

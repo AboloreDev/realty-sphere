@@ -25,7 +25,7 @@ export const landlordApi = createApi({
     // create a new listing
     createNewProperty: builder.mutation<Property, FormData>({
       query: (newProperty) => ({
-        url: `/properties`,
+        url: `/api/properties`,
         method: "POST",
         body: newProperty,
       }),
@@ -48,7 +48,7 @@ export const landlordApi = createApi({
       updatedLandlordRequest
     >({
       query: ({ id, data }) => ({
-        url: `/landlord/${id}`,
+        url: `/api/landlord/${id}`,
         method: "PATCH",
         body: data,
       }),
@@ -63,7 +63,7 @@ export const landlordApi = createApi({
     // get tenant
     getLandlord: builder.query<User, string>({
       query: (id) => ({
-        url: `/landlord/${id}`,
+        url: `/api/landlord/${id}`,
       }),
       providesTags: (result) => [{ type: "Landlords", id: result?.id }],
       async onQueryStarted(_, { queryFulfilled }) {
@@ -76,7 +76,7 @@ export const landlordApi = createApi({
     // get the list of landlord properties
     getLandlordProperty: builder.query<Property[], string>({
       query: (id) => ({
-        url: `/landlord/${id}/properties`,
+        url: `/api/landlord/${id}/properties`,
       }),
 
       providesTags: (result) =>

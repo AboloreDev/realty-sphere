@@ -16,7 +16,7 @@ export const applicationApi = createApi({
       { id: number; status: string }
     >({
       query: ({ id, status }) => ({
-        url: `/applications/${id}/status`,
+        url: `/api/applications/${id}/status`,
         method: "PATCH",
         body: { status },
       }),
@@ -33,7 +33,7 @@ export const applicationApi = createApi({
 
     // get applications by id
     fetchAllApplications: builder.query<Application[], void>({
-      query: () => "/applications",
+      query: () => "/api/applications",
       transformResponse: (response: { formattedApplications: Application }) =>
         response.formattedApplications,
       providesTags: ["Applications"],
@@ -47,7 +47,7 @@ export const applicationApi = createApi({
     // Create Application
     createApplication: builder.mutation<Application, Partial<Application>>({
       query: (data) => ({
-        url: "/applications",
+        url: "/api/applications",
         method: "POST",
         body: data,
       }),

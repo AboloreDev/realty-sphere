@@ -12,7 +12,7 @@ export const leaseApi = createApi({
   endpoints: (builder) => ({
     // GET ALL LEASE
     getAllLeases: builder.query<Lease[], number>({
-      query: () => "/lease",
+      query: () => "/api/lease",
       transformResponse: (response: { leases: Lease }) => response.leases,
       providesTags: ["Leases"],
       async onQueryStarted(_, { queryFulfilled }) {
@@ -25,7 +25,7 @@ export const leaseApi = createApi({
     // get leases for a specific property
     getPropertyLeases: builder.query<Lease[], number>({
       query: (propertyId) => ({
-        url: `properties/${propertyId}/leases`,
+        url: `/api/properties/${propertyId}/leases`,
       }),
       transformResponse: (response: { leases: Lease[] }) => response.leases,
       providesTags: ["Leases"],
@@ -39,7 +39,7 @@ export const leaseApi = createApi({
     // Create Lease
     createLease: builder.mutation<Lease, Partial<Lease>>({
       query: (data) => ({
-        url: "/lease",
+        url: "/api/lease",
         method: "POST",
         body: data,
       }),
@@ -61,7 +61,7 @@ export const leaseApi = createApi({
     // UPDATE lease STATUS
     updateLeaseStatus: builder.mutation<Lease, { id: number; status: string }>({
       query: ({ id, status }) => ({
-        url: `/lease/${id}/accept`,
+        url: `/api/lease/${id}/accept`,
         method: "PATCH",
         body: { status },
       }),
@@ -79,7 +79,7 @@ export const leaseApi = createApi({
     // get the lease details
     getLeaseDetails: builder.query<Lease[], number>({
       query: (id) => ({
-        url: `/lease/${id}`,
+        url: `/api/lease/${id}`,
       }),
       providesTags: ["Leases"],
       async onQueryStarted(_, { queryFulfilled }) {

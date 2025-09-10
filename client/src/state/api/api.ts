@@ -34,7 +34,7 @@ export const api = createApi({
           latitude: filters.coordinates?.[1],
           longitude: filters.coordinates?.[0],
         });
-        return { url: "/properties", params };
+        return { url: "/api/properties", params };
       },
       transformResponse: (
         response: {
@@ -68,7 +68,7 @@ export const api = createApi({
     // get single property
     getSingleProperty: build.query<Property, number>({
       query: (id) => ({
-        url: `/properties/${id}`,
+        url: `/api/properties/${id}`,
       }),
       transformResponse: (response: {
         success: boolean;
@@ -78,6 +78,11 @@ export const api = createApi({
         return response.propertyWithCoordinate;
       },
       providesTags: (result, error, id) => [{ type: "PropertyDetails", id }],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to fetch properties.",
+        });
+      },
     }),
   }),
 });

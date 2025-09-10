@@ -26,7 +26,7 @@ export const paymentApi = createApi({
       { leaseId: number; paymentData: CreatePaymentRequest }
     >({
       query: ({ leaseId, paymentData }) => ({
-        url: `/lease/${leaseId}/payment/create`,
+        url: `/api/lease/${leaseId}/payment/create`,
         method: "POST",
         body: paymentData,
       }),
@@ -41,7 +41,7 @@ export const paymentApi = createApi({
     // 2. GET PAYMENT BY ID WITH STATUS
     getPaymentById: builder.query<ApiResponse<PaymentWithDetails>, number>({
       query: (paymentId) => ({
-        url: `/payment/${paymentId}`,
+        url: `/api/payment/${paymentId}`,
       }),
       providesTags: (result, error, paymentId) => [
         { type: "Payment", id: paymentId },
@@ -57,7 +57,7 @@ export const paymentApi = createApi({
     getPaymentStatus: builder.query<ApiResponse<PaymentStatusResponse>, number>(
       {
         query: (paymentId) => ({
-          url: `/payment/${paymentId}/status`,
+          url: `/api/payment/${paymentId}/status`,
         }),
         providesTags: (result, error, paymentId) => [
           { type: "Payment", id: paymentId },
@@ -76,7 +76,7 @@ export const paymentApi = createApi({
       { paymentId: number; paymentData: ProcessPaymentRequest }
     >({
       query: ({ paymentId, paymentData }) => ({
-        url: `/payment/${paymentId}/pay`,
+        url: `/api/payment/${paymentId}/pay`,
         method: "POST",
         body: paymentData,
       }),
@@ -97,7 +97,7 @@ export const paymentApi = createApi({
       { paymentId: string; satisfactionData: ConfirmSatisfactionRequest }
     >({
       query: ({ paymentId, satisfactionData }) => ({
-        url: `/payment/${paymentId}/confirm-satisfaction`,
+        url: `/api/payment/${paymentId}/confirm-satisfaction`,
         method: "POST",
         body: satisfactionData,
       }),
@@ -116,7 +116,7 @@ export const paymentApi = createApi({
     getTenantPayments: builder.query<ApiResponse<PaymentWithDetails[]>, string>(
       {
         query: (tenantId) => ({
-          url: `/tenant/${tenantId}/payments`,
+          url: `/api/tenant/${tenantId}/payments`,
         }),
         providesTags: ["Payments"],
         async onQueryStarted(_, { queryFulfilled }) {
@@ -133,7 +133,7 @@ export const paymentApi = createApi({
       string
     >({
       query: (managerId) => ({
-        url: `/landlord/${managerId}/payments`,
+        url: `/api/landlord/${managerId}/payments`,
       }),
       providesTags: ["Payments"],
       async onQueryStarted(_, { queryFulfilled }) {
@@ -145,7 +145,7 @@ export const paymentApi = createApi({
 
     // 8. GET PAYMENT FOR SPECIFIC LEASE (your original endpoint, updated)
     getPaymentForLease: builder.query<Payment, number>({
-      query: (id) => `lease/${id}/payment`,
+      query: (id) => `/api/lease/${id}/payment`,
       providesTags: ["Payments"],
     }),
 
@@ -154,7 +154,7 @@ export const paymentApi = createApi({
       number
     >({
       query: (paymentId) => ({
-        url: `/payment/${paymentId}/checkout`,
+        url: `/api/payment/${paymentId}/checkout`,
         method: "POST",
       }),
       invalidatesTags: (result, error, paymentId) => [
@@ -172,7 +172,7 @@ export const paymentApi = createApi({
       number
     >({
       query: (paymentId) => ({
-        url: `/payment/${paymentId}/checkout-status`,
+        url: `/api/payment/${paymentId}/checkout-status`,
       }),
       providesTags: (result, error, paymentId) => [
         { type: "Payment", id: paymentId },
