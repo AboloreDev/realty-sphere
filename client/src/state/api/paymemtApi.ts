@@ -10,6 +10,7 @@ import {
   ProcessPaymentRequest,
 } from "../types/paymentTypes";
 import { Payment } from "@/types/prismaTypes";
+import { withToast } from "@/lib/utils";
 
 export const paymentApi = createApi({
   baseQuery: fetchBaseQuery({
@@ -30,6 +31,11 @@ export const paymentApi = createApi({
         body: paymentData,
       }),
       invalidatesTags: ["Payments", "Payment"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to create payment.",
+        });
+      },
     }),
 
     // 2. GET PAYMENT BY ID WITH STATUS
@@ -40,6 +46,11 @@ export const paymentApi = createApi({
       providesTags: (result, error, paymentId) => [
         { type: "Payment", id: paymentId },
       ],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to fetch payment.",
+        });
+      },
     }),
 
     // 3. GET PAYMENT STATUS (detailed status info)
@@ -51,6 +62,11 @@ export const paymentApi = createApi({
         providesTags: (result, error, paymentId) => [
           { type: "Payment", id: paymentId },
         ],
+        async onQueryStarted(_, { queryFulfilled }) {
+          await withToast(queryFulfilled, {
+            error: "Failed to fetch payment status.",
+          });
+        },
       }
     ),
 
@@ -68,6 +84,11 @@ export const paymentApi = createApi({
         { type: "Payment", id: paymentId },
         "Payments",
       ],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to process payment.",
+        });
+      },
     }),
 
     // 5. CONFIRM SATISFACTION (release escrow early)
@@ -84,6 +105,11 @@ export const paymentApi = createApi({
         { type: "Payment", id: paymentId },
         "Payments",
       ],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to confirm satisfaction.",
+        });
+      },
     }),
 
     // 6. GET TENANT PAYMENTS (tenant dashboard)
@@ -93,6 +119,11 @@ export const paymentApi = createApi({
           url: `/tenant/${tenantId}/payments`,
         }),
         providesTags: ["Payments"],
+        async onQueryStarted(_, { queryFulfilled }) {
+          await withToast(queryFulfilled, {
+            error: "Failed to fetch tenant payment.",
+          });
+        },
       }
     ),
 
@@ -105,6 +136,11 @@ export const paymentApi = createApi({
         url: `/landlord/${managerId}/payments`,
       }),
       providesTags: ["Payments"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to fetch landlord payment.",
+        });
+      },
     }),
 
     // 8. GET PAYMENT FOR SPECIFIC LEASE (your original endpoint, updated)
@@ -124,6 +160,11 @@ export const paymentApi = createApi({
       invalidatesTags: (result, error, paymentId) => [
         { type: "Payment", id: paymentId },
       ],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to create checkout.",
+        });
+      },
     }),
 
     getCheckoutStatus: builder.query<
@@ -136,6 +177,11 @@ export const paymentApi = createApi({
       providesTags: (result, error, paymentId) => [
         { type: "Payment", id: paymentId },
       ],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to fetch checkout status.",
+        });
+      },
     }),
   }),
 });

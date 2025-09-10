@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Lease } from "@/types/prismaTypes";
+import { withToast } from "@/lib/utils";
 
 export const leaseApi = createApi({
   baseQuery: fetchBaseQuery({
@@ -14,6 +15,11 @@ export const leaseApi = createApi({
       query: () => "/lease",
       transformResponse: (response: { leases: Lease }) => response.leases,
       providesTags: ["Leases"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to fetch lease.",
+        });
+      },
     }),
 
     // get leases for a specific property
@@ -23,6 +29,11 @@ export const leaseApi = createApi({
       }),
       transformResponse: (response: { leases: Lease[] }) => response.leases,
       providesTags: ["Leases"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to fetch lease.",
+        });
+      },
     }),
 
     // Create Lease
@@ -40,6 +51,11 @@ export const leaseApi = createApi({
         return response.newLease;
       },
       invalidatesTags: ["Leases"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to create lease.",
+        });
+      },
     }),
 
     // UPDATE lease STATUS
@@ -53,6 +69,11 @@ export const leaseApi = createApi({
         response.updatedLease,
 
       invalidatesTags: ["Leases"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to update lease.",
+        });
+      },
     }),
 
     // get the lease details
@@ -61,6 +82,11 @@ export const leaseApi = createApi({
         url: `/lease/${id}`,
       }),
       providesTags: ["Leases"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to fetch lease details.",
+        });
+      },
     }),
   }),
 });

@@ -6,6 +6,7 @@ import {
 } from "../types/tenantTypes";
 import { Property, User } from "@/types/prismaTypes";
 import { PaymentWithDetails } from "../types/paymentTypes";
+import { withToast } from "@/lib/utils";
 
 export const tenantApi = createApi({
   baseQuery: fetchBaseQuery({
@@ -24,6 +25,11 @@ export const tenantApi = createApi({
           body: data,
         }),
         invalidatesTags: ["updateTenant"],
+        async onQueryStarted(_, { queryFulfilled }) {
+          await withToast(queryFulfilled, {
+            error: "Failed to update tenant.",
+          });
+        },
       }
     ),
 
@@ -33,6 +39,11 @@ export const tenantApi = createApi({
         url: `/tenant/${id}`,
       }),
       providesTags: (result) => [{ type: "Tenants", id: result?.id }],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to fetch tenant.",
+        });
+      },
     }),
 
     // add to favorites
@@ -45,6 +56,11 @@ export const tenantApi = createApi({
         { type: "Tenants", id: result?.id },
         { type: "Properties", id: "LIST" },
       ],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to add favorites.",
+        });
+      },
     }),
 
     // remove favorites
@@ -58,6 +74,11 @@ export const tenantApi = createApi({
           { type: "Tenants", id: result?.id },
           { type: "Properties", id: "LIST" },
         ],
+        async onQueryStarted(_, { queryFulfilled }) {
+          await withToast(queryFulfilled, {
+            error: "Failed to remove favorites.",
+          });
+        },
       }
     ),
 
@@ -74,6 +95,11 @@ export const tenantApi = createApi({
               { type: "Properties", id: "LIST" },
             ]
           : [{ type: "Properties", id: "LIST" }],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to get tenant residencies.",
+        });
+      },
     }),
 
     // Add to your payment API slice
@@ -85,6 +111,11 @@ export const tenantApi = createApi({
         url: `/tenant/${tenantId}/payments`,
       }),
       providesTags: ["Payments"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to fetch tenant payments.",
+        });
+      },
     }),
   }),
 });

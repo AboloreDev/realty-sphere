@@ -5,6 +5,7 @@ import {
   updatedLandlordResponse,
 } from "../types/landlordTypes";
 import { Property, User } from "@/types/prismaTypes";
+import { withToast } from "@/lib/utils";
 
 // CREATE API FUNCTION
 export const landlordApi = createApi({
@@ -35,6 +36,11 @@ export const landlordApi = createApi({
         },
         { type: "Landlords", id: result?.manager?.id },
       ],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to create properties.",
+        });
+      },
     }),
     // updadte Landlord details
     updateLandlord: builder.mutation<
@@ -47,6 +53,11 @@ export const landlordApi = createApi({
         body: data,
       }),
       invalidatesTags: ["updateLandlord"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to update landlord.",
+        });
+      },
     }),
 
     // get tenant
@@ -55,6 +66,11 @@ export const landlordApi = createApi({
         url: `/landlord/${id}`,
       }),
       providesTags: (result) => [{ type: "Landlords", id: result?.id }],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to fetch landlord.",
+        });
+      },
     }),
 
     // get the list of landlord properties
@@ -70,6 +86,11 @@ export const landlordApi = createApi({
               { type: "Properties", id: "LIST" },
             ]
           : [{ type: "Properties", id: "LIST" }],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to fetch landlord properties.",
+        });
+      },
     }),
   }),
 });

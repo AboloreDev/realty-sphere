@@ -1,3 +1,4 @@
+import { withToast } from "@/lib/utils";
 import { Application, Lease } from "@/types/prismaTypes";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
@@ -23,6 +24,11 @@ export const applicationApi = createApi({
         response.updateApplication,
 
       invalidatesTags: ["Applications", "Leases"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to update applications.",
+        });
+      },
     }),
 
     // get applications by id
@@ -31,6 +37,11 @@ export const applicationApi = createApi({
       transformResponse: (response: { formattedApplications: Application }) =>
         response.formattedApplications,
       providesTags: ["Applications"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to fetch applications.",
+        });
+      },
     }),
 
     // Create Application
@@ -48,6 +59,11 @@ export const applicationApi = createApi({
         return response.newApplication;
       },
       invalidatesTags: ["Applications"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to create application.",
+        });
+      },
     }),
   }),
 });

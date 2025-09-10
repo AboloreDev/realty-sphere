@@ -24,10 +24,12 @@ import {
   startEscrowJob,
 } from "./controllers/jobs/escrow-release.job";
 import { handleStripeWebhook } from "./controllers/payment.controller";
+import swaggerUi from "swagger-ui-express";
+import YAML from "yamljs";
 // Cofigurations
 dotenv.config();
 const app = express();
-const PORT = process.env.PORT || 4000;
+const PORT = Number(process.env.PORT) || 4000;
 
 const APP_ORIGIN = "http://localhost:3001";
 
@@ -56,6 +58,9 @@ app.use(
 );
 app.use(cookieParser());
 
+// Swagger docs route
+const swaggerDocument = YAML.load("./swagger.yaml");
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // cloudinary config
 cloudinaryConfig();
 
@@ -101,7 +106,7 @@ EscrowCronJob.start();
 app.use(errorHandler);
 
 //LISTEN ON PORT NUMBER
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server is running on PORT ${PORT}`);
 });
 

@@ -23,7 +23,7 @@ export const getAllLease = catchAsyncError(async (req: AuthRequest, res) => {
     leases = await prisma.lease.findMany({
       where: { tenantId: user.id },
       include: {
-        property: { include: { manager: true } },
+        property: { include: { manager: true, location: true } },
         tenant: true,
       },
     });
@@ -33,7 +33,7 @@ export const getAllLease = catchAsyncError(async (req: AuthRequest, res) => {
     leases = await prisma.lease.findMany({
       where: { property: { managerId: user?.id } },
       include: {
-        property: { include: { manager: true } },
+        property: { include: { manager: true, location: true } },
         tenant: true,
       },
     });

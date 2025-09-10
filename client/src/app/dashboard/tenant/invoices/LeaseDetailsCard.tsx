@@ -7,6 +7,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 
 const LeaseDetailsCard = ({ lease }: any) => {
+  console.log(lease);
   if (!lease) return null;
 
   return (
@@ -64,7 +65,7 @@ const LeaseDetailsCard = ({ lease }: any) => {
               <strong>Description:</strong> {lease.property?.description}
             </p>
             <p>
-              <strong>Monthly Price:</strong> ${lease.property?.pricePerMonth}
+              <strong>Yearly Price:</strong> ${lease.property?.pricePerMonth}
             </p>
 
             <p>

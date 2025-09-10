@@ -1,4 +1,4 @@
-import { cleanParams } from "@/lib/utils";
+import { cleanParams, withToast } from "@/lib/utils";
 import { Property } from "@/types/prismaTypes";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { FiltersState } from "../slice/globalSlice";
@@ -58,6 +58,11 @@ export const api = createApi({
               "Properties",
             ]
           : [{ type: "Properties", id: "LIST" }, "Properties"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to fetch properties.",
+        });
+      },
     }),
 
     // get single property

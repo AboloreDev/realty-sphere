@@ -28,7 +28,7 @@ exports.getAllLease = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __aw
         leases = yield prismaClient_1.default.lease.findMany({
             where: { tenantId: user.id },
             include: {
-                property: { include: { manager: true } },
+                property: { include: { manager: true, location: true } },
                 tenant: true,
             },
         });
@@ -38,7 +38,7 @@ exports.getAllLease = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __aw
         leases = yield prismaClient_1.default.lease.findMany({
             where: { property: { managerId: user === null || user === void 0 ? void 0 : user.id } },
             include: {
-                property: { include: { manager: true } },
+                property: { include: { manager: true, location: true } },
                 tenant: true,
             },
         });

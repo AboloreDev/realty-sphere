@@ -1,0 +1,1187 @@
+openapi: 3.0.0
+info:
+  title: Nestora API
+  version: 1.0.0
+  description: Nestora API documentation for my Express + TypeScript backend
+
+servers:
+  - url: http://localhost:4000
+    description: Local development server
+  - url: https://api.myapp.com
+    description: Production server
+
+openapi: 3.0.0
+info:
+  title: Auth API
+  version: 1.0.0
+  description: Authentication endpoints for users
+
+servers:
+  - url: http://localhost:5000
+    description: Local development
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT token 
+
+paths:
+  /api/auth/register:
+    post:
+      summary: Register a new user
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterInput"
+      responses:
+        "201":
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+  /api/auth/login:
+    post:
+      summary: Login a user
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginInput"
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+
+  /api/auth/verify-email/{code}:
+    post:
+      summary: Verify email with code
+      tags: [Auth]
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Email verified successfully
+        "400":
+          description: Invalid or expired code
+
+  /api/auth/resend-email:
+    post:
+      summary: Resend email verification
+      tags: [Auth]
+      responses:
+        "200":
+          description: Verification email sent
+
+  /api/auth/forgot-password:
+    post:
+      summary: Send password reset email
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ForgotPasswordInput"
+      responses:
+        "200":
+          description: Password reset email sent
+
+  /api/auth/reset-password/verify:
+    post:
+      summary: Verify reset password code
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VerifyResetCodeInput"
+      responses:
+        "200":
+          description: Reset code valid
+        "400":
+          description: Invalid or expired reset code
+
+  /api/auth/reset-password:
+    post:
+      summary: Reset user password
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResetPasswordInput"
+      responses:
+        "200":
+          description: Password reset successful
+
+  /api/auth/logout:
+    post:
+      summary: Logout a user
+      tags: [Auth]
+      responses:
+        "200":
+          description: User logged out
+
+  /api/users:
+    get:
+      summary: Get logged-in user profile
+      tags: [Users]
+      security:
+        - cookieAuth: []
+      responses:
+        "200":
+          description: User profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Unauthorized
+          
+  /api/applications:
+    get:
+      summary: List all applications
+      tags: [Applications]
+      security:
+        - cookieAuth: []
+      responses:
+        "200":
+          description: List of applications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Application"
+
+    post:
+      summary: Create a new application (Tenant only)
+      tags: [Applications]
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApplicationInput"
+      responses:
+        "201":
+          description: Application created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Application"
+
+  /api/applications/{id}/status:
+    patch:
+      summary: Update application status (Manager only)
+      tags: [Applications]
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [PENDING, APPROVED, REJECTED]
+                  example: APPROVED
+      responses:
+        "200":
+          description: Application status updated
+        "404":
+          description: Application not found
+
+  /api/applications/{id}:
+    get:
+      summary: Get application details
+      tags: [Applications]
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Application details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Application"
+        "404":
+          description: Application not found
+  /api/landlords/{id}:
+    get:
+      summary: Get landlord by ID (Manager only)
+      tags: [Landlords]
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Landlord details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Landlord"
+        "404":
+          description: Landlord not found
+
+    patch:
+      summary: Update landlord details (Manager only)
+      tags: [Landlords]
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LandlordUpdate"
+      responses:
+        "200":
+          description: Landlord updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Landlord"
+        "404":
+          description: Landlord not found
+
+  /api/landlords/{id}/properties:
+    get:
+      summary: Get landlord properties (Manager only)
+      tags: [Landlords]
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of landlord properties
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Property"
+
+  /api/landlords/{managerId}/payment:
+    get:
+      summary: Get landlord payment records (Manager only)
+      tags: [Landlords]
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: managerId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of landlord payment
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Payment"
+    /api/leases:
+    get:
+      summary: Get all leases
+      tags: [Leases]
+      security:
+        - cookieAuth: []
+      responses:
+        "200":
+          description: List of leases
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Lease"
+
+    post:
+      summary: Create a new lease (Manager only)
+      tags: [Leases]
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeaseInput"
+      responses:
+        "201":
+          description: Lease created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Lease"
+  /api/leases/{id}:
+    get:
+      summary: Get lease details
+      tags: [Leases]
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Lease details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Lease"
+        "404":
+          description: Lease not found
+
+  /api/leases/{id}/payment:
+    get:
+      summary: Get lease payment details
+      tags: [Leases]
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Lease payment info
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payment"
+        "404":
+          description: Payment not found
+
+  /api/leases/{id}/accept:
+    patch:
+      summary: Accept a lease (Tenant only)
+      tags: [Leases]
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Lease accepted successfully
+        "403":
+          description: Forbidden (Only tenant can accept)
+  /api/leases/{leaseId}/payment/create:
+    post:
+      summary: Create payment for accepted lease (Tenant only)
+      tags: [Leases]
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: leaseId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: Payment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payment"
+    /api/payment/{id}:
+    get:
+      summary: Get payment details by ID
+      tags: [payment]
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Payment details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payment"
+        "404":
+          description: Payment not found
+
+  /api/payment/{id}/pay:
+    post:
+      summary: Process a payment
+      tags: [payment]
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Payment processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payment"
+        "400":
+          description: Payment failed
+
+  /api/payment/{id}/confirm-satisfaction:
+    post:
+      summary: Confirm satisfaction and release escrow
+      tags: [payment]
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Escrow released successfully
+        "400":
+          description: Invalid confirmation request
+
+  /api/payment/{id}/status:
+    get:
+      summary: Get payment status
+      tags: [payment]
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Current payment status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "COMPLETED"
+        "404":
+          description: Payment not found
+
+  /api/payment/{id}/checkout:
+    post:
+      summary: Create a checkout session
+      tags: [payment]
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: Checkout session created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  checkoutUrl:
+                    type: string
+                    example: "https://checkout.stripe.com/session/xyz"
+
+  /api/payment/{id}/checkout-status:
+    get:
+      summary: Get checkout session status
+      tags: [payment]
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Checkout session status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [PENDING, COMPLETED, FAILED]
+                    example: PENDING
+                    paths:
+  /api/tenant/{id}:
+    get:
+      summary: Get tenant by ID
+      tags: [tenant]
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Tenant details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tenant"
+        "404":
+          description: Tenant not found
+
+    patch:
+      summary: Update tenant details (Tenant only)
+      tags: [tenant]
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TenantUpdate"
+      responses:
+        "200":
+          description: Tenant updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tenant"
+        "404":
+          description: Tenant not found
+
+  /api/tenant:
+    post:
+      summary: Create a new tenant
+      tags: [tenant]
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TenantInput"
+      responses:
+        "201":
+          description: Tenant created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tenant"
+
+  /api/tenant/{id}/residencies:
+    get:
+      summary: Get tenant residencies
+      tags: [tenant]
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of residencies
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Lease"
+
+  /api/tenant/{id}/favorites/{propertyId}:
+    post:
+      summary: Add property to tenant favorites
+      tags: [tenant]
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: propertyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: Property added to favorites
+
+    delete:
+      summary: Remove property from tenant favorites
+      tags: [tenant]
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: propertyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Property removed from favorites
+
+  /api/tenant/{tenantId}/payment:
+    get:
+      summary: Get tenant payment status
+      tags: [tenant]
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: tenantId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Tenant payment records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Payment"
+    /api/properties:
+    get:
+      summary: Get all properties
+      tags: [Properties]
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            example: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            example: 10
+        - name: location
+          in: query
+          schema:
+            type: string
+            example: "Lagos"
+        - name: priceMin
+          in: query
+          schema:
+            type: number
+            example: 50000
+        - name: priceMax
+          in: query
+          schema:
+            type: number
+            example: 250000
+      responses:
+        "200":
+          description: List of properties
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Property"
+
+    post:
+      summary: Create new property (Manager only, requires Admin approval)
+      tags: [Properties]
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PropertyInput"
+      responses:
+        "201":
+          description: Property created successfully (pending admin approval)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Property"
+
+  /api/properties/{id}:
+    get:
+      summary: Get property by ID
+      tags: [Properties]
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Property details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Property"
+        "404":
+          description: Property not found
+
+    patch:
+      summary: Update property details (Manager only)
+      tags: [Properties]
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PropertyUpdate"
+      responses:
+        "200":
+          description: Property updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Property"
+
+    delete:
+      summary: Delete property (Manager only)
+      tags: [Properties]
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Property deleted successfully
+
+  /api/properties/{id}/approve:
+    post:
+      summary: Approve property listing (Admin only)
+      tags: [Properties]
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Property approved successfully
+          
+
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "123"
+        name:
+          type: string
+          example: "Jane Doe"
+        email:
+          type: string
+          example: "jane@example.com"
+        verified:
+          type: boolean
+          example: false
+
+    RegisterInput:
+      type: object
+      required:
+        - name
+        - email
+        - password
+      properties:
+        name:
+          type: string
+          example: "Jane Doe"
+        email:
+          type: string
+          example: "jane@example.com"
+        password:
+          type: string
+          example: "StrongPassword123!"
+
+    LoginInput:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          example: "jane@example.com"
+        password:
+          type: string
+          example: "StrongPassword123!"
+
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          example: "jwt.token.here"
+        user:
+          $ref: "#/components/schemas/User"
+
+    ForgotPasswordInput:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          example: "jane@example.com"
+
+    VerifyResetCodeInput:
+      type: object
+      required:
+        - code
+      properties:
+        code:
+          type: string
+          example: "123456"
+
+    ResetPasswordInput:
+      type: object
+      required:
+        - email
+        - code
+        - newPassword
+      properties:
+        email:
+          type: string
+          example: "jane@example.com"
+        code:
+          type: string
+          example: "123456"
+        newPassword:
+          type: string
+          example: "NewStrongPassword123!"
+    Application:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "app_12345"
+        tenantId:
+          type: string
+          example: "tenant_98765"
+        propertyId:
+          type: string
+          example: "prop_555"
+        status:
+          type: string
+          enum: [PENDING, APPROVED, REJECTED]
+          example: PENDING
+
+    ApplicationInput:
+      type: object
+      required: [propertyId]
+      properties:
+        propertyId:
+          type: string
+          example: "prop_555"
+    Landlord:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "landlord_123"
+        name:
+          type: string
+          example: "David Johnson"
+        email:
+          type: string
+          example: "david@example.com"
+        phone:
+          type: string
+          example: "+2348012345678"
+
+    LandlordUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "David Johnson"
+        email:
+          type: string
+          example: "newmail@example.com"
+        phone:
+          type: string
+          example: "+2348098765432"
+          Lease:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "lease_001"
+        tenantId:
+          type: string
+          example: "tenant_123"
+        landlordId:
+          type: string
+          example: "landlord_456"
+        propertyId:
+          type: string
+          example: "prop_789"
+        status:
+          type: string
+          enum: [PENDING, ACTIVE, TERMINATED]
+          example: PENDING
+        startDate:
+          type: string
+          format: date
+          example: "2025-01-01"
+        endDate:
+          type: string
+          format: date
+          example: "2025-12-31"
+
+    LeaseInput:
+      type: object
+      required: [tenantId, landlordId, propertyId, startDate, endDate]
+      properties:
+        tenantId:
+          type: string
+          example: "tenant_123"
+        landlordId:
+          type: string
+          example: "landlord_456"
+        propertyId:
+          type: string
+          example: "prop_789"
+        startDate:
+          type: string
+          format: date
+          example: "2025-01-01"
+        endDate:
+          type: string
+          format: date
+          example: "2025-12-31"
+      Payment:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "pay_001"
+        leaseId:
+          type: string
+          example: "lease_123"
+        tenantId:
+          type: string
+          example: "tenant_456"
+        amount:
+          type: number
+          example: 1500.00
+        currency:
+          type: string
+          example: "USD"
+        status:
+          type: string
+          enum: [PENDING, COMPLETED, FAILED, ESCROW_HELD]
+          example: ESCROW_HELD
+        createdAt:
+          type: string
+          format: date-time
+          example: "2025-09-10T12:00:00Z"
+    Tenant:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "tenant_001"
+        name:
+          type: string
+          example: "Jane Doe"
+        email:
+          type: string
+          example: "jane@example.com"
+        phone:
+          type: string
+          example: "+2348012345678"
+
+    TenantInput:
+      type: object
+      required: [name, email]
+      properties:
+        name:
+          type: string
+          example: "Jane Doe"
+        email:
+          type: string
+          example: "jane@example.com"
+        phone:
+          type: string
+          example: "+2348012345678"
+
+    TenantUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Jane Updated"
+        email:
+          type: string
+          example: "updated@example.com"
+        phone:
+          type: string
+          example: "+2348098765432"
+    Property:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "prop_001"
+        title:
+          type: string
+          example: "3-Bedroom Apartment"
+        description:
+          type: string
+          example: "Spacious 3-bedroom apartment in Lagos"
+        price:
+          type: number
+          example: 150000
+        location:
+          type: string
+          example: "Lekki, Lagos"
+        status:
+          type: string
+          enum: [pending, approved, rejected]
+          example: "pending"
+
+    PropertyInput:
+      type: object
+      required: [title, description, price, location]
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        location:
+          type: string
+
+    PropertyUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        location:
+          type: string

@@ -25,10 +25,12 @@ const httpStatus_1 = require("./constants/httpStatus");
 const cloudinaryConfig_1 = require("./utils/cloudinaryConfig");
 const escrow_release_job_1 = require("./controllers/jobs/escrow-release.job");
 const payment_controller_1 = require("./controllers/payment.controller");
+const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
+const yamljs_1 = __importDefault(require("yamljs"));
 // Cofigurations
 dotenv_1.default.config();
 const app = (0, express_1.default)();
-const PORT = process.env.PORT || 4000;
+const PORT = Number(process.env.PORT) || 4000;
 const APP_ORIGIN = "http://localhost:3001";
 app.use("/api/webhooks/stripe", express_1.default.raw({
     type: "application/json",
@@ -47,6 +49,9 @@ app.use((0, cors_1.default)({
     credentials: true,
 }));
 app.use((0, cookie_parser_1.default)());
+// Swagger docs route
+const swaggerDocument = yamljs_1.default.load("./swagger.yaml");
+app.use("/api-docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerDocument));
 // cloudinary config
 (0, cloudinaryConfig_1.cloudinaryConfig)();
 // routes definition
@@ -83,7 +88,7 @@ escrow_release_job_1.EscrowCronJob.start();
 // error handler
 app.use(errorHandler_1.errorHandler);
 //LISTEN ON PORT NUMBER
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server is running on PORT ${PORT}`);
 });
 process.on("SIGINT", () => {
