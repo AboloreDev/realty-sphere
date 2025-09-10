@@ -30,7 +30,7 @@ const yamljs_1 = __importDefault(require("yamljs"));
 // Cofigurations
 dotenv_1.default.config();
 const app = (0, express_1.default)();
-const PORT = Number(process.env.PORT) || 4000;
+const PORT = process.env.PORT || 3000;
 const APP_ORIGIN = "http://localhost:3000";
 app.use("/api/webhooks/stripe", express_1.default.raw({
     type: "application/json",
@@ -88,7 +88,7 @@ escrow_release_job_1.EscrowCronJob.start();
 // error handler
 app.use(errorHandler_1.errorHandler);
 //LISTEN ON PORT NUMBER
-app.listen(PORT, "0.0.0.0", () => {
+app.listen(PORT, () => {
     console.log(`Server is running on PORT ${PORT}`);
 });
 process.on("SIGINT", () => {

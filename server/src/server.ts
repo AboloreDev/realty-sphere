@@ -29,7 +29,7 @@ import YAML from "yamljs";
 // Cofigurations
 dotenv.config();
 const app = express();
-const PORT = Number(process.env.PORT) || 4000;
+const PORT = process.env.PORT || 3000;
 
 const APP_ORIGIN = "http://localhost:3000";
 
@@ -106,7 +106,7 @@ EscrowCronJob.start();
 app.use(errorHandler);
 
 //LISTEN ON PORT NUMBER
-app.listen(PORT, "0.0.0.0", () => {
+app.listen(PORT, () => {
   console.log(`Server is running on PORT ${PORT}`);
 });
 
