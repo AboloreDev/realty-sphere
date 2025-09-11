@@ -11,7 +11,7 @@ const secure = process.env.NODE_ENV !== "development";
 const defaults = {
     sameSite: "none",
     httpOnly: true,
-    secure: true,
+    secure,
 };
 const getAccessTokenCookieOptions = () => (Object.assign(Object.assign({}, defaults), { expires: new Date(Date.now() + 2 * 60 * 60 * 1000) }));
 const getRefreshTokenCookieOptions = () => (Object.assign(Object.assign({}, defaults), { expires: new Date(Date.now() + 2 * 60 * 60 * 1000) }));
