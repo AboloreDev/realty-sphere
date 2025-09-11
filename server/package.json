@@ -4,11 +4,14 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npm run build && concurrently \"npx tsc -w\" \"nodemon --exec ts-node  src/server.ts\"",
+    "dev": "npm run build && concurrently \"npx tsc -w\" \"nodemon --exec ts-node src/server.ts\"",
     "build": "rimraf dist && npx tsc",
     "start": "npm run build && node ./dist/server.js",
-    "seed": "ts-node prisma/seed.ts",
+    "postbuild": "prisma generate && prisma db push",
+    "db:push": "prisma db push",
+    "db:seed": "prisma db seed",
     "prisma:generate": "prisma generate",
+    "prisma:studio": "prisma studio",
     "postprisma:generate": "shx cp -r node_modules/.prisma/client/index.d.ts ../client/src/types/prismaTypes.d.ts"
   },
   "author": "",
