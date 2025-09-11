@@ -50,11 +50,15 @@ const LoginPage = () => {
     try {
       const response = await loginMutation(data).unwrap();
       toast.success("Login Successful");
-      router.push(
-        response.user.role === "TENANT"
-          ? "/dashboard/tenant"
-          : "/dashboard/manager"
-      );
+
+      // Add delay for mobile browsers to properly set cookies
+      setTimeout(() => {
+        router.push(
+          response.user.role === "TENANT"
+            ? "/dashboard/tenant"
+            : "/dashboard/manager"
+        );
+      }, 2000); // 500ms delay - increase to 1000ms if still having issues
     } catch (error: any) {
       toast.error(error.data?.message || "Login failed");
     }

@@ -57,13 +57,16 @@ const RegisterPage = () => {
 
     try {
       const response = await registerMutation(data).unwrap();
-
       toast.success("Registration successful!");
-      router.push(
-        response.user.role === "TENANT"
-          ? "/dashboard/tenant"
-          : "/dashboard/manager"
-      );
+
+      // Add delay for mobile browsers to properly set cookies
+      setTimeout(() => {
+        router.push(
+          response.user.role === "TENANT"
+            ? "/dashboard/tenant"
+            : "/dashboard/manager"
+        );
+      }, 2000); // 500ms delay - increase to 1000ms if still having issues
     } catch (error: any) {
       // "@ts-expect-error" type of any
       toast.error(error.data?.message || "Registration failed");
