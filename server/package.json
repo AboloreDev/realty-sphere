@@ -10,6 +10,7 @@
     "postbuild": "prisma generate && prisma db push",
     "db:push": "prisma db push",
     "db:seed": "prisma db seed",
+    "seed": "ts-node prisma/seed.ts",
     "prisma:generate": "prisma generate",
     "prisma:studio": "prisma studio",
     "postprisma:generate": "shx cp -r node_modules/.prisma/client/index.d.ts ../client/src/types/prismaTypes.d.ts"
