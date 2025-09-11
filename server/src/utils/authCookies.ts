@@ -13,12 +13,12 @@ const defaults: CookieOptions = {
 
 const getAccessTokenCookieOptions = (): CookieOptions => ({
   ...defaults,
-  expires: new Date(Date.now() + 2 * 60 * 60 * 1000),
+  expires: new Date(Date.now() + 9 * 60 * 60 * 1000),
 });
 
 const getRefreshTokenCookieOptions = (): CookieOptions => ({
   ...defaults,
-  expires: new Date(Date.now() + 2 * 60 * 60 * 1000),
+  expires: new Date(Date.now() + 9 * 60 * 60 * 1000),
 });
 
 // Interface for the parameters required to set authentication cookies
