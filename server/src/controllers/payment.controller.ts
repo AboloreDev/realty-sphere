@@ -167,8 +167,8 @@ export const createCheckoutSession = catchAsyncError(async (req, res) => {
       client_reference_id: payment.id.toString(), // Important: links payment to session
 
       // Success/Cancel URLs
-      success_url: `${process.env.FRONTEND_URL}/payment/success?session_id={CHECKOUT_SESSION_ID}&payment_id=${payment.id}`,
-      cancel_url: `${process.env.FRONTEND_URL}/payment/cancel?payment_id=${payment.id}`,
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/payment/success?session_id={CHECKOUT_SESSION_ID}&payment_id=${payment.id}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/payment/cancel?payment_id=${payment.id}`,
 
       // Metadata for webhook
       metadata: {

@@ -36,7 +36,21 @@ const Navbar = () => {
 
   return user ? (
     <div className="p-2 w-full">
-      <BackButton />
+      {user.role === "TENANT" ? (
+        <div>
+          <BackButton />
+          <Link href={"/dashboard/tenant"} className="text-blue-600">
+            Continue to your dashboard
+          </Link>
+        </div>
+      ) : (
+        <div>
+          <BackButton />
+          <Link href={"/dashboard/manager"} className="text-blue-600">
+            Continue to your dashboard
+          </Link>
+        </div>
+      )}
     </div>
   ) : (
     <header className="sticky top-0 z-50 backdrop-blur-md shadow-sm prata-regular">
