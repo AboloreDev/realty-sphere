@@ -28,7 +28,7 @@ dotenv.config();
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 
-const APP_ORIGIN = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+const APP_ORIGIN = process.env.NEXT_PUBLIC_APP_URL;
 
 app.use(
   "/api/webhooks/stripe",
