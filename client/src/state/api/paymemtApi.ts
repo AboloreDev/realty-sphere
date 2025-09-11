@@ -11,12 +11,10 @@ import {
 } from "../types/paymentTypes";
 import { Payment } from "@/types/prismaTypes";
 import { withToast } from "@/lib/utils";
+import { baseQueryWithAuth } from "@/constants/baseQueryWithAuth";
 
 export const paymentApi = createApi({
-  baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
-    credentials: "include",
-  }),
+  baseQuery: baseQueryWithAuth,
   reducerPath: "paymentApi",
   tagTypes: ["Payment", "Payments"],
   endpoints: (builder) => ({

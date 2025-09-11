@@ -89,7 +89,7 @@ const RegisterPage = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4">
-      <Card className=" w-[350px] md:w-[500px] p-4">
+      <Card className=" w-[400px] md:w-[500px] p-2 md:p-4">
         {/* Card title */}
         <CardHeader>
           <CardTitle className="text-center prata-regular">Register</CardTitle>

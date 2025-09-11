@@ -6,24 +6,10 @@ import {
   RegisterUserTypes,
 } from "../types";
 import { User } from "@/types/prismaTypes";
+import { baseQueryWithAuth } from "@/constants/baseQueryWithAuth";
 
 export const authApi = createApi({
-  baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
-    credentials: "include",
-    prepareHeaders: (headers, { getState }) => {
-      // Add Authorization header for mobile compatibility
-      const token =
-        typeof window !== "undefined"
-          ? localStorage.getItem("accessToken")
-          : null;
-      if (token) {
-        headers.set("authorization", `Bearer ${token}`);
-      }
-      headers.set("content-type", "application/json");
-      return headers;
-    },
-  }),
+  baseQuery: baseQueryWithAuth,
   reducerPath: "authApi",
   tagTypes: ["User", "Auth", "register", "login", "logout"],
   endpoints: (builder) => ({

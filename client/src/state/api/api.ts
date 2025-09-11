@@ -2,12 +2,10 @@ import { cleanParams, withToast } from "@/lib/utils";
 import { Property } from "@/types/prismaTypes";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { FiltersState } from "../slice/globalSlice";
+import { baseQueryWithAuth } from "@/constants/baseQueryWithAuth";
 
 export const api = createApi({
-  baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
-    credentials: "include",
-  }),
+  baseQuery: baseQueryWithAuth,
   reducerPath: "api",
   tagTypes: ["Properties", "PropertyDetails"],
   endpoints: (build) => ({

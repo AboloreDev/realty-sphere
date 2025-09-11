@@ -7,12 +7,10 @@ import {
 import { Property, User } from "@/types/prismaTypes";
 import { PaymentWithDetails } from "../types/paymentTypes";
 import { withToast } from "@/lib/utils";
+import { baseQueryWithAuth } from "@/constants/baseQueryWithAuth";
 
 export const tenantApi = createApi({
-  baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
-    credentials: "include",
-  }),
+  baseQuery: baseQueryWithAuth,
   reducerPath: "tenantApi",
   tagTypes: ["updateTenant", "Tenants", "Properties", "Payments"],
   endpoints: (builder) => ({

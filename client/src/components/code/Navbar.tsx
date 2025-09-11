@@ -14,7 +14,7 @@ const navLinks = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
   { label: "Contact Us", href: "/contact" },
-  { label: "Search", href: "/search" },
+  { label: "Properties", href: "/search" },
 ];
 
 const Navbar = () => {

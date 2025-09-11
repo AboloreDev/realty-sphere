@@ -1,12 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { ApiResponse } from "../types";
 import { Chat, Message } from "@/types/prismaTypes";
+import { baseQueryWithAuth } from "@/constants/baseQueryWithAuth";
 
 export const messageApi = createApi({
-  baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
-    credentials: "include",
-  }),
+  baseQuery: baseQueryWithAuth,
   reducerPath: "messageApi",
   tagTypes: ["Messages", "Chat"],
   endpoints: (builder) => ({

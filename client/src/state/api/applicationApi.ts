@@ -1,12 +1,10 @@
+import { baseQueryWithAuth } from "@/constants/baseQueryWithAuth";
 import { withToast } from "@/lib/utils";
 import { Application, Lease } from "@/types/prismaTypes";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const applicationApi = createApi({
-  baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
-    credentials: "include",
-  }),
+  baseQuery: baseQueryWithAuth,
   reducerPath: "applicationApi",
   tagTypes: ["Applications", "Leases", "Tenants"],
   endpoints: (builder) => ({

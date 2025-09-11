@@ -6,13 +6,11 @@ import {
 } from "../types/landlordTypes";
 import { Property, User } from "@/types/prismaTypes";
 import { withToast } from "@/lib/utils";
+import { baseQueryWithAuth } from "@/constants/baseQueryWithAuth";
 
 // CREATE API FUNCTION
 export const landlordApi = createApi({
-  baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
-    credentials: "include",
-  }),
+  baseQuery: baseQueryWithAuth,
   reducerPath: "landlordApi",
   tagTypes: [
     "updateLandlord",

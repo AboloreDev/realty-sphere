@@ -18,7 +18,7 @@ const navLinks = [
   { label: "About", href: "/about" },
 
   { label: "Contact Us", href: "/contact" },
-  { label: "Serach", href: "/search" },
+  { label: "Properties", href: "/search" },
 ];
 
 const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
