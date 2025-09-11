@@ -13,7 +13,15 @@ interface ProtectedRouteProps {
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const router = useRouter();
   const pathname = usePathname();
-  const { data: userResponse, isLoading, isError } = useGetUserProfileQuery();
+  const {
+    data: userResponse,
+    isLoading,
+    isError,
+  } = useGetUserProfileQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+    refetchOnFocus: true,
+    refetchOnReconnect: true,
+  });
 
   useEffect(() => {
     if (isLoading) return;
@@ -26,7 +34,6 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     }
 
     const userRole = userResponse?.user?.role;
-    console.log("User role:", userRole);
 
     // Block unauthorized access
     if (pathname.startsWith("/dashboard/tenant") && userRole !== "TENANT") {

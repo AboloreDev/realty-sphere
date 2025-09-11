@@ -14,15 +14,17 @@ import { loginSchema } from "@/lib/schemas";
 import { useLoginUserMutation } from "@/state/api/authApi";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 const LoginPage = () => {
   // get the mutation from redux
   const [loginMutation, { isLoading }] = useLoginUserMutation();
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   // route handler
   const router = useRouter();
@@ -50,6 +52,7 @@ const LoginPage = () => {
     try {
       const response = await loginMutation(data).unwrap();
       toast.success("Login Successful");
+      setIsRedirecting(false);
 
       // Add delay for mobile browsers to properly set cookies
       setTimeout(() => {
@@ -58,11 +61,18 @@ const LoginPage = () => {
             ? "/dashboard/tenant"
             : "/dashboard/manager"
         );
-      }, 2000); // 500ms delay - increase to 1000ms if still having issues
+      }, 10000);
+      setIsRedirecting(true);
     } catch (error: any) {
       toast.error(error.data?.message || "Login failed");
     }
   };
+
+  if (isRedirecting) {
+    <div className="text-center mt-4">
+      <Loader2 />
+    </div>;
+  }
   return (
     <div className="flex items-center justify-center min-h-screen p-4">
       <Card className=" w-[350px] md:w-[500px] p-4">

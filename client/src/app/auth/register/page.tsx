@@ -14,17 +14,19 @@ import { Label } from "@/components/ui/label";
 import { registerSchema } from "@/lib/schemas";
 import { useRegisterUserMutation } from "@/state/api/authApi";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 const RegisterPage = () => {
   // getting the mutation from the redux toolkit
   const [registerMutation, { isLoading }] = useRegisterUserMutation();
+  const [isRedirecting, setIsRedirecting] = useState(false);
   // router
   const router = useRouter();
   // zod schema
@@ -58,6 +60,7 @@ const RegisterPage = () => {
     try {
       const response = await registerMutation(data).unwrap();
       toast.success("Registration successful!");
+      setIsRedirecting(true);
 
       // Add delay for mobile browsers to properly set cookies
       setTimeout(() => {
@@ -66,12 +69,20 @@ const RegisterPage = () => {
             ? "/dashboard/tenant"
             : "/dashboard/manager"
         );
-      }, 2000); // 500ms delay - increase to 1000ms if still having issues
+        setIsRedirecting(false);
+      }, 10000);
     } catch (error: any) {
       // "@ts-expect-error" type of any
       toast.error(error.data?.message || "Registration failed");
     }
   };
+
+  if (isRedirecting) {
+    <div className="text-center mt-4">
+      <Loader2 />
+    </div>;
+  }
+
   return (
     <div className="flex items-center justify-center min-h-screen p-4">
       <Card className=" w-[350px] md:w-[500px] p-4">
