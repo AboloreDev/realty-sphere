@@ -26,7 +26,7 @@ import YAML from "yamljs";
 // Cofigurations
 dotenv.config();
 const app = express();
-const PORT = Number(process.env.PORT) || 4000;
+const PORT = Number(process.env.PORT) || 3000;
 
 const APP_ORIGIN = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
