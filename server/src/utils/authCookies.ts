@@ -3,12 +3,11 @@ import { CookieOptions, Response } from "express";
 // checking if the environment is development or production
 // If it's development, cookies will not be secure, otherwise they will be
 // secure in production to ensure security best practices.
-const isProd = process.env.NODE_ENV === "production";
 
 const defaults: CookieOptions = {
-  sameSite: isProd ? "none" : "lax",
+  sameSite: "none",
   httpOnly: true,
-  secure: isProd,
+  secure: true,
 };
 
 const getAccessTokenCookieOptions = (): CookieOptions => ({
