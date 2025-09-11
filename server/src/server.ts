@@ -45,6 +45,7 @@ app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(morgan("common"));
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
 app.use(
   cors({
     origin: [
@@ -55,7 +56,6 @@ app.use(
     credentials: true,
   })
 );
-app.use(cookieParser());
 
 // Swagger docs route
 const swaggerDocument = YAML.load("./swagger.yaml");

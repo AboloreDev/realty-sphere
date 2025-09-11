@@ -3,15 +3,12 @@ import { CookieOptions, Response } from "express";
 // checking if the environment is development or production
 // If it's development, cookies will not be secure, otherwise they will be
 // secure in production to ensure security best practices.
-const secure = process.env.NODE_ENV !== "development";
+const isProd = process.env.NODE_ENV === "production";
 
-// Default cookie options
-// These options will be applied to both accessToken and refreshToken cookies
-// SameSite is set to "strict" to prevent CSRF attacks, httpOnly is set to true to prevent client-side scripts from accessing the cookies, and secure is set based on the environment
 const defaults: CookieOptions = {
-  sameSite: "none",
+  sameSite: isProd ? "none" : "lax",
   httpOnly: true,
-  secure,
+  secure: isProd,
 };
 
 const getAccessTokenCookieOptions = (): CookieOptions => ({
