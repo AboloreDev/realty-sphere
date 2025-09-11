@@ -30,7 +30,7 @@ const yamljs_1 = __importDefault(require("yamljs"));
 // Cofigurations
 dotenv_1.default.config();
 const app = (0, express_1.default)();
-const PORT = Number(process.env.PORT) || 3000;
+const PORT = Number(process.env.PORT) || 4000;
 app.use("/api/webhooks/stripe", express_1.default.raw({
     type: "application/json",
     limit: "2mb",
@@ -45,6 +45,7 @@ app.use((0, morgan_1.default)("common"));
 app.use(body_parser_1.default.urlencoded({ extended: false }));
 app.use((0, cors_1.default)({
     origin: [
+        "http://localhost:3000",
         "https://realty-sphere.vercel.app",
         "https://realty-sphere-housing.vercel.app",
     ],

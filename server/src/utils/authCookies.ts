@@ -9,9 +9,9 @@ const secure = process.env.NODE_ENV !== "development";
 // These options will be applied to both accessToken and refreshToken cookies
 // SameSite is set to "strict" to prevent CSRF attacks, httpOnly is set to true to prevent client-side scripts from accessing the cookies, and secure is set based on the environment
 const defaults: CookieOptions = {
-  sameSite: "strict",
+  sameSite: "none",
   httpOnly: true,
-  secure,
+  secure: true,
 };
 
 const getAccessTokenCookieOptions = (): CookieOptions => ({

@@ -9,9 +9,9 @@ const secure = process.env.NODE_ENV !== "development";
 // These options will be applied to both accessToken and refreshToken cookies
 // SameSite is set to "strict" to prevent CSRF attacks, httpOnly is set to true to prevent client-side scripts from accessing the cookies, and secure is set based on the environment
 const defaults = {
-    sameSite: "strict",
+    sameSite: "none",
     httpOnly: true,
-    secure,
+    secure: true,
 };
 const getAccessTokenCookieOptions = () => (Object.assign(Object.assign({}, defaults), { expires: new Date(Date.now() + 2 * 60 * 60 * 1000) }));
 const getRefreshTokenCookieOptions = () => (Object.assign(Object.assign({}, defaults), { expires: new Date(Date.now() + 2 * 60 * 60 * 1000) }));

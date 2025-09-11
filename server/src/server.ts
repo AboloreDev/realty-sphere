@@ -26,7 +26,7 @@ import YAML from "yamljs";
 // Cofigurations
 dotenv.config();
 const app = express();
-const PORT = Number(process.env.PORT) || 3000;
+const PORT = Number(process.env.PORT) || 4000;
 
 app.use(
   "/api/webhooks/stripe",
@@ -48,6 +48,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(
   cors({
     origin: [
+      "http://localhost:3000",
       "https://realty-sphere.vercel.app",
       "https://realty-sphere-housing.vercel.app",
     ],
