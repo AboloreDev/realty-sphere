@@ -28,8 +28,6 @@ dotenv.config();
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 
-const APP_ORIGIN = process.env.NEXT_PUBLIC_APP_URL;
-
 app.use(
   "/api/webhooks/stripe",
   express.raw({
@@ -49,7 +47,10 @@ app.use(morgan("common"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(
   cors({
-    origin: APP_ORIGIN,
+    origin: [
+      "https://realty-sphere.vercel.app",
+      "https://realty-sphere-housing.vercel.app",
+    ],
     credentials: true,
   })
 );
