@@ -22,7 +22,17 @@ export const isAuthenticated = async (
   next: NextFunction
 ) => {
   try {
-    const accessToken = req.cookies.accessToken as string | undefined;
+    // Try to get token from cookie first (desktop)
+    let accessToken = req.cookies?.accessToken as string | undefined;
+
+    // If no cookie, try Authorization header (mobile)
+    if (!accessToken) {
+      const authHeader = req.headers.authorization;
+      if (authHeader?.startsWith("Bearer ")) {
+        accessToken = authHeader.substring(7);
+      }
+    }
+
     appAssert(
       accessToken,
       UNAUTHORIZED,
@@ -34,6 +44,7 @@ export const isAuthenticated = async (
       accessToken,
       process.env.JWT_SECRET!
     ) as JwtPayload;
+
     appAssert(
       decoded.userId,
       UNAUTHORIZED,
@@ -45,6 +56,7 @@ export const isAuthenticated = async (
       where: { id: decoded.userId },
       select: { id: true, email: true, role: true },
     });
+
     appAssert(
       user,
       UNAUTHORIZED,

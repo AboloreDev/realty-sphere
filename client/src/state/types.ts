@@ -10,6 +10,11 @@ export interface AuthResponse {
   success: boolean;
   message: string;
   user: User;
+  tokens?: {
+    // Make it optional for backward compatibility
+    accessToken: string;
+    refreshToken: string;
+  };
 }
 
 export interface ApiResponse<T> {

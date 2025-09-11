@@ -60,6 +60,10 @@ const RegisterPage = () => {
     try {
       const response = await registerMutation(data).unwrap();
       toast.success("Registration successful!");
+      if (response.tokens) {
+        localStorage.setItem("accessToken", response.tokens.accessToken);
+        localStorage.setItem("refreshToken", response.tokens.refreshToken);
+      }
       setIsRedirecting(true);
 
       // Add delay for mobile browsers to properly set cookies
@@ -70,7 +74,7 @@ const RegisterPage = () => {
             : "/dashboard/manager"
         );
         setIsRedirecting(false);
-      }, 10000);
+      }, 1000);
     } catch (error: any) {
       // "@ts-expect-error" type of any
       toast.error(error.data?.message || "Registration failed");

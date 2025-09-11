@@ -51,6 +51,10 @@ const LoginPage = () => {
     }
     try {
       const response = await loginMutation(data).unwrap();
+      if (response.tokens) {
+        localStorage.setItem("accessToken", response.tokens.accessToken);
+        localStorage.setItem("refreshToken", response.tokens.refreshToken);
+      }
       toast.success("Login Successful");
       setIsRedirecting(false);
 
@@ -61,7 +65,7 @@ const LoginPage = () => {
             ? "/dashboard/tenant"
             : "/dashboard/manager"
         );
-      }, 10000);
+      }, 1000);
       setIsRedirecting(true);
     } catch (error: any) {
       toast.error(error.data?.message || "Login failed");

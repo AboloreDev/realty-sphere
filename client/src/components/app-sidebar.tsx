@@ -66,6 +66,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       dispatch(clearUser());
       dispatch(clearSelectedUser());
       authApi.util.resetApiState();
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
       toast.success("Logged out successfully!");
       router.push("/auth/login");
     } catch (err: any) {

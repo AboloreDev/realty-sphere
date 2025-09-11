@@ -18,8 +18,17 @@ const httpStatus_1 = require("../constants/httpStatus");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const prismaClient_1 = __importDefault(require("../prismaClient"));
 const isAuthenticated = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     try {
-        const accessToken = req.cookies.accessToken;
+        // Try to get token from cookie first (desktop)
+        let accessToken = (_a = req.cookies) === null || _a === void 0 ? void 0 : _a.accessToken;
+        // If no cookie, try Authorization header (mobile)
+        if (!accessToken) {
+            const authHeader = req.headers.authorization;
+            if (authHeader === null || authHeader === void 0 ? void 0 : authHeader.startsWith("Bearer ")) {
+                accessToken = authHeader.substring(7);
+            }
+        }
         (0, appAssert_1.default)(accessToken, httpStatus_1.UNAUTHORIZED, "Unauthorized: No access token provided", "InvalidAccessToken" /* AppErrorCode.InvalidAccessToken */);
         const decoded = jsonwebtoken_1.default.verify(accessToken, process.env.JWT_SECRET);
         (0, appAssert_1.default)(decoded.userId, httpStatus_1.UNAUTHORIZED, "Unauthorized: Invalid token payload", "InvalidAccessToken" /* AppErrorCode.InvalidAccessToken */);

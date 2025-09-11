@@ -1,3 +1,4 @@
+import { token } from "morgan";
 import { CREATED, OK } from "../constants/httpStatus";
 import {
   forgotPasswordSchema,
@@ -39,6 +40,10 @@ export const registerUser = catchAsyncError(async (req, res) => {
       role: user.role,
       phoneNumber: user.phoneNumber,
     },
+    tokens: {
+      accessToken,
+      refreshToken,
+    },
   });
 });
 export const loginUser = catchAsyncError(async (req, res) => {
@@ -58,6 +63,10 @@ export const loginUser = catchAsyncError(async (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role,
+    },
+    tokens: {
+      accessToken,
+      refreshToken,
     },
   });
 });

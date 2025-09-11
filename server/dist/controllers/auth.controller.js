@@ -32,6 +32,10 @@ exports.registerUser = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __a
             role: user.role,
             phoneNumber: user.phoneNumber,
         },
+        tokens: {
+            accessToken,
+            refreshToken,
+        },
     });
 }));
 exports.loginUser = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -49,6 +53,10 @@ exports.loginUser = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awai
             name: user.name,
             email: user.email,
             role: user.role,
+        },
+        tokens: {
+            accessToken,
+            refreshToken,
         },
     });
 }));
