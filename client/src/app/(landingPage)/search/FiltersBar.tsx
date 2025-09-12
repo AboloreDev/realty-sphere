@@ -104,7 +104,7 @@ const FiltersBar = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:4000/api/geocode?query=${encodeURIComponent(
+        `https://nestora-backend-api.onrender.com/api/geocode?query=${encodeURIComponent(
           searchInput
         )}&format=json&limit=1`
       );
