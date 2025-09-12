@@ -19,12 +19,16 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { useAppDispatch, useAppSelector } from "@/state/redux";
+import { setShowPassword } from "@/state/slice/globalSlice";
 
 const LoginPage = () => {
   // get the mutation from redux
   const [loginMutation, { isLoading }] = useLoginUserMutation();
   const [isRedirecting, setIsRedirecting] = useState(false);
+  const showPassword = useAppSelector((state) => state.global.showPassword);
+  const dispatch = useAppDispatch();
 
   // route handler
   const router = useRouter();
@@ -36,6 +40,10 @@ const LoginPage = () => {
   } = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
   });
+
+  const handlePasswordToggle = () => {
+    dispatch(setShowPassword());
+  };
 
   // submit handler
   const onSubmit = async (data: z.infer<typeof loginSchema>) => {
@@ -96,9 +104,17 @@ const LoginPage = () => {
               <Input type="email" id="email" {...register("email")} />
             </div>
             {/* Password */}
-            <div className="flex flex-col space-y-2">
+            <div className="flex flex-col space-y-2 relative">
               <Label>Password</Label>
               <Input type="password" id="password" {...register("password")} />
+              <button
+                type="button"
+                onClick={handlePasswordToggle}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                tabIndex={-1}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
             </div>
             {/* forgot password */}
             <div className="flex justify-between items-center flex-row-reverse">

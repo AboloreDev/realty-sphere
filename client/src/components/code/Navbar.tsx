@@ -36,15 +36,15 @@ const Navbar = () => {
 
   return user ? (
     <div className="p-2 w-full">
-      {user.role === "TENANT" ? (
-        <div>
+      {user?.user?.role === "TENANT" ? (
+        <div className="flex justify-between items-center">
           <BackButton />
           <Link href={"/dashboard/tenant"} className="text-blue-600">
             Continue to your dashboard
           </Link>
         </div>
       ) : (
-        <div>
+        <div className="flex justify-between items-center">
           <BackButton />
           <Link href={"/dashboard/manager"} className="text-blue-600">
             Continue to your dashboard

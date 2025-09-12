@@ -21,6 +21,7 @@ interface InitialStateTypes {
   viewMode: "grid" | "list";
   filters: FiltersState;
   isModalOpen: boolean;
+  showPassword: boolean;
 }
 
 // initial state
@@ -39,6 +40,7 @@ export const initialState: InitialStateTypes = {
   },
   viewMode: "grid",
   isModalOpen: false,
+  showPassword: false,
 };
 
 // slobal slice declraation
@@ -58,10 +60,18 @@ export const globalSlice = createSlice({
     toggleModalOpen: (state) => {
       state.isModalOpen = !state.isModalOpen;
     },
+    setShowPassword: (state) => {
+      state.showPassword = !state.showPassword;
+    },
   },
 });
 
-export const { setFilters, toggleFiltersOpen, setViewMode, toggleModalOpen } =
-  globalSlice.actions;
+export const {
+  setFilters,
+  toggleFiltersOpen,
+  setViewMode,
+  toggleModalOpen,
+  setShowPassword,
+} = globalSlice.actions;
 
 export default globalSlice.reducer;

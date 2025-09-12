@@ -21,12 +21,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { useAppDispatch, useAppSelector } from "@/state/redux";
+import { setShowPassword } from "@/state/slice/globalSlice";
 
 const RegisterPage = () => {
   // getting the mutation from the redux toolkit
   const [registerMutation, { isLoading }] = useRegisterUserMutation();
   const [isRedirecting, setIsRedirecting] = useState(false);
+  const showPassword = useAppSelector((state) => state.global.showPassword);
+  const dispatch = useAppDispatch();
   // router
   const router = useRouter();
   // zod schema
@@ -43,6 +47,10 @@ const RegisterPage = () => {
 
   //   watch for role on form
   const selectedRole = watch("role");
+
+  const handlePasswordToggle = () => {
+    dispatch(setShowPassword());
+  };
 
   // submit handler
   const onSubmit = async (data: z.infer<typeof registerSchema>) => {
@@ -120,18 +128,38 @@ const RegisterPage = () => {
               />
             </div>
             {/* Password */}
-            <div className="flex flex-col space-y-2">
+            <div className="flex flex-col space-y-2 relative">
               <Label>Password</Label>
-              <Input type="password" id="password" {...register("password")} />
+              <Input
+                type="password"
+                id="password"
+                {...register("password")}
+              />{" "}
+              <button
+                type="button"
+                onClick={handlePasswordToggle}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                tabIndex={-1}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
             </div>
             {/* Confirm Password */}
-            <div className="flex flex-col space-y-2">
+            <div className="flex flex-col space-y-2 relative">
               <Label>Confirm Paasword</Label>
               <Input
                 type="confirm password"
                 id="confirmPassword"
                 {...register("confirmPassword")}
-              />
+              />{" "}
+              <button
+                type="button"
+                onClick={handlePasswordToggle}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                tabIndex={-1}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
             </div>
             {/* Role */}
             <div className="flex flex-col space-y-2">
