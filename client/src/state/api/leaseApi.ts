@@ -64,7 +64,7 @@ export const leaseApi = createApi({
       },
       number
     >({
-      query: (propertyId) => `/api/properties/${propertyId}/lease-status`,
+      query: (propertyId) => `/api/lease/properties/${propertyId}/leaseStatus`,
       providesTags: ["Leases", "Properties"],
     }),
 
