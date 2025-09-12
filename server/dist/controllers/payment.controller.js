@@ -340,11 +340,6 @@ function processWebhookEvent(event) {
 function handleCheckoutCompleted(session) {
     return __awaiter(this, void 0, void 0, function* () {
         var _a;
-        console.log("🎯 Processing checkout completion");
-        console.log("Session ID:", session.id);
-        console.log("Payment Status:", session.payment_status);
-        console.log("Amount Total:", session.amount_total);
-        console.log("Metadata:", session.metadata);
         // Validate session
         if (session.payment_status !== "paid") {
             console.log("⚠️ Session completed but payment not confirmed");

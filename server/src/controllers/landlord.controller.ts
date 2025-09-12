@@ -1,4 +1,5 @@
 import { OK } from "../constants/httpStatus";
+import { AuthRequest } from "../middleware/isAuthenticated";
 import {
   createLandlordSchema,
   getLandlordSchema,
@@ -72,16 +73,19 @@ export const getLandlordProperties = catchAsyncError(async (req, res) => {
   return res.status(OK).json(propertiesWithFormattedLocation);
 });
 
-export const getLandlordPayment = catchAsyncError(async (req, res) => {
-  const { managerId } = req.params;
+export const getLandlordPayment = catchAsyncError(
+  async (req: AuthRequest, res) => {
+    const user = req.user;
+    const managerId = user?.id as string;
 
-  // use the service
-  const payments = await getLandlordPaymentServices(managerId);
+    // use the service
+    const payments = await getLandlordPaymentServices(managerId);
 
-  // return a response
-  return res.status(OK).json({
-    success: true,
-    message: "Payment fetched successfully",
-    data: payments,
-  });
-});
+    // return a response
+    return res.status(OK).json({
+      success: true,
+      message: "Payment fetched successfully",
+      data: payments,
+    });
+  }
+);

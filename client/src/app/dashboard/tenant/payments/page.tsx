@@ -98,8 +98,6 @@ const PaymentHistory = () => {
     { skip: !selectedPaymentId }
   );
 
-  console.log("Payment Status", paymentStatusData);
-
   const getStatusBadge = (status: string) => {
     const statusConfig = {
       Pending: {

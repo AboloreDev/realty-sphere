@@ -67,7 +67,8 @@ exports.getLandlordProperties = (0, catchAsyncErrors_1.catchAsyncError)((req, re
     return res.status(httpStatus_1.OK).json(propertiesWithFormattedLocation);
 }));
 exports.getLandlordPayment = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { managerId } = req.params;
+    const user = req.user;
+    const managerId = user === null || user === void 0 ? void 0 : user.id;
     // use the service
     const payments = yield (0, landlord_service_1.getLandlordPaymentServices)(managerId);
     // return a response

@@ -47,6 +47,7 @@ const CreateListings = () => {
   const onSubmit = async (data: PropertyFormData) => {
     if (user?.user?.role !== "MANAGER") {
       toast.error("Unauthorised, Only manager can create a listing");
+      return;
     }
 
     const formData = new FormData();
@@ -67,9 +68,8 @@ const CreateListings = () => {
         formData.append(key, String(value));
       }
     });
-    formData.append("managerId", user?.user?.id);
 
-    await createProperty(formData);
+    await createProperty(formData).unwrap();
     toast.success("Property Listed Successfully");
   };
 

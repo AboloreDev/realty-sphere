@@ -101,10 +101,17 @@ exports.getSingleProperty = (0, catchAsyncErrors_1.catchAsyncError)((req, res) =
     }
 }));
 exports.createPropertyListing = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b, _c, _d;
+    var _a, _b, _c, _d, _e;
+    const managerId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
+    if (!managerId) {
+        return res.status(401).json({
+            success: false,
+            message: "Unauthorized - Manager ID not found in token",
+        });
+    }
     const files = req.files;
     // get the request from the body
-    const _e = req.body, { address, city, state, country, postalCode, managerId } = _e, propertyData = __rest(_e, ["address", "city", "state", "country", "postalCode", "managerId"]);
+    const _f = req.body, { address, city, state, country, postalCode } = _f, propertyData = __rest(_f, ["address", "city", "state", "country", "postalCode"]);
     // upload photos
     const imageUrls = [];
     if (files && files.length > 0) {
@@ -134,10 +141,10 @@ exports.createPropertyListing = (0, catchAsyncErrors_1.catchAsyncError)((req, re
             "User-Agent": "NestoraRealEstate (taikoxyz@gmail.com)",
         },
     });
-    const [longitude, latitude] = ((_a = geoCodingResponse.data[0]) === null || _a === void 0 ? void 0 : _a.lon) && ((_b = geoCodingResponse.data[0]) === null || _b === void 0 ? void 0 : _b.lat)
+    const [longitude, latitude] = ((_b = geoCodingResponse.data[0]) === null || _b === void 0 ? void 0 : _b.lon) && ((_c = geoCodingResponse.data[0]) === null || _c === void 0 ? void 0 : _c.lat)
         ? [
-            parseFloat((_c = geoCodingResponse.data[0]) === null || _c === void 0 ? void 0 : _c.lon),
             parseFloat((_d = geoCodingResponse.data[0]) === null || _d === void 0 ? void 0 : _d.lon),
+            parseFloat((_e = geoCodingResponse.data[0]) === null || _e === void 0 ? void 0 : _e.lat),
         ]
         : [0, 0];
     // create location
@@ -145,7 +152,6 @@ exports.createPropertyListing = (0, catchAsyncErrors_1.catchAsyncError)((req, re
     // pass the values
     // return the values as coordinates
     const [location] = yield prismaClient_1.default.$queryRaw `
-
       INSERT INTO "Location" (address, city, state,country,"postalCode", coordinates)
       VALUES (${address}, ${city}, ${state}, ${country}, ${postalCode}, ST_SetSRID(ST_Makepoint(${longitude}, ${latitude}), 4326))
       RETURNING id, address, city, state, country,"postalCode", ST_AsText(coordinates) as coordinates
@@ -159,7 +165,13 @@ exports.createPropertyListing = (0, catchAsyncErrors_1.catchAsyncError)((req, re
                 : [], isPetsAllowed: propertyData.isPetsAllowed === "true", isParkingIncluded: propertyData.isParkingIncluded === "true", pricePerMonth: parseFloat(propertyData.pricePerMonth), securityDeposit: parseFloat(propertyData.securityDeposit), applicationFee: parseFloat(propertyData.applicationFee), beds: parseInt(propertyData.beds), baths: parseInt(propertyData.baths), squareFeet: parseInt(propertyData.squareFeet) }),
         include: {
             location: true,
-            manager: true,
+            manager: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                },
+            },
         },
     });
     // return a response
