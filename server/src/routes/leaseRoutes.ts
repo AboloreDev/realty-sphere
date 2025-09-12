@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  checkPropertyLease,
   createLease,
   getAllLease,
   getLeaseDetails,
@@ -16,6 +17,7 @@ router.get("/:id/payment", isAuthenticated, getLeasePayment);
 router.post("/", isAuthenticated, restrictTo("MANAGER"), createLease);
 router.patch("/:id/accept", isAuthenticated, restrictTo("TENANT"), updateLease);
 router.get("/:id", isAuthenticated, getLeaseDetails);
+router.get("/:propertyId/lease-status", isAuthenticated, checkPropertyLease);
 // Create payment when lease is accepted
 router.post(
   "/:leaseId/payment/create",

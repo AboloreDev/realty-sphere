@@ -11,6 +11,7 @@ import {
   useUpdateApplicationStatusMutation,
 } from "@/state/api/applicationApi";
 import { useGetUserProfileQuery } from "@/state/api/authApi";
+import { useLazyCheckPropertyLeaseQuery } from "@/state/api/leaseApi";
 
 import { useAppDispatch, useAppSelector } from "@/state/redux";
 import { setActiveTab } from "@/state/slice/applicationSlice";
@@ -34,14 +35,13 @@ const Applications = () => {
   const dispatch = useAppDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState(null);
+  const [checkPropertyLease] = useLazyCheckPropertyLeaseQuery();
 
   // fetch the applications()
   const { data: applications, isLoading } = useFetchAllApplicationsQuery(
     user.user.id || "",
     { skip: !user?.user?.id }
   );
-
-  console.log(applications);
 
   // fetch the updateApplicationStatus Api
   const [updateApplicationStatus] = useUpdateApplicationStatusMutation();
@@ -58,10 +58,22 @@ const Applications = () => {
 
   // OPEN MODAL WHEN THE STATUS IS APPROVED
 
-  const handleModalOpen = (application: any) => {
-    if (user) {
+  const handleModalOpen = async (application: any) => {
+    try {
+      // Check if this specific property has an active lease
+      const result = await checkPropertyLease(application.propertyId).unwrap();
+
+      if (result.hasActiveLease) {
+        toast.error("This property has an active lease");
+        return;
+      }
+
+      // If no active lease, proceed with lease creation
       setSelectedApplication(application);
       setIsModalOpen(true);
+    } catch (error) {
+      console.error("Error checking lease status:", error);
+      toast.error("Failed to check lease status");
     }
   };
 
@@ -188,7 +200,10 @@ const Applications = () => {
                         {application.status === "Approved" &&
                           (application.leaseId ? (
                             // Lease already created - show disabled button
-                            <Button disabled variant="outline">
+                            <Button
+                              disabled={application.status === "Approved"}
+                              variant="outline"
+                            >
                               <CheckCircle className="w-5 h-5 mr-2" />
                               Lease Created
                             </Button>

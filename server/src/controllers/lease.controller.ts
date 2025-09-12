@@ -249,6 +249,45 @@ export const createLease = catchAsyncError(async (req: AuthRequest, res) => {
   });
 });
 
+export const checkPropertyLease = catchAsyncError(
+  async (req: AuthRequest, res) => {
+    const { propertyId } = req.params;
+    const user = req.user!;
+
+    const property = await prisma.property.findUnique({
+      where: { id: Number(propertyId) },
+      include: {
+        leases: {
+          where: {
+            status: { in: ["Approved", "Pending"] },
+          },
+        },
+      },
+    });
+
+    if (!property) {
+      return res.status(NOT_FOUND).json({
+        success: false,
+        message: "Property not found",
+      });
+    }
+
+    // Check if user owns this property
+    if (property.managerId !== user.id) {
+      return res.status(FORBIDDEN).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+
+    res.json({
+      success: true,
+      hasActiveLease: property.leases.length > 0,
+      activeLeaseCount: property.leases.length,
+    });
+  }
+);
+
 export const updateLease = catchAsyncError(async (req: AuthRequest, res) => {
   const user = req.user!;
   const { id } = req.params;

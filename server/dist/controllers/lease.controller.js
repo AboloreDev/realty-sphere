@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getLeaseDetails = exports.updateLease = exports.createLease = exports.getLeasePayment = exports.getAllLease = void 0;
+exports.getLeaseDetails = exports.updateLease = exports.checkPropertyLease = exports.createLease = exports.getLeasePayment = exports.getAllLease = void 0;
 const httpStatus_1 = require("../constants/httpStatus");
 const prismaClient_1 = __importDefault(require("../prismaClient"));
 const appAssert_1 = __importDefault(require("../utils/appAssert"));
@@ -173,6 +173,38 @@ exports.createLease = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __aw
         success: true,
         message: "Lease created successfully",
         lease,
+    });
+}));
+exports.checkPropertyLease = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { propertyId } = req.params;
+    const user = req.user;
+    const property = yield prismaClient_1.default.property.findUnique({
+        where: { id: Number(propertyId) },
+        include: {
+            leases: {
+                where: {
+                    status: { in: ["Approved", "Pending"] },
+                },
+            },
+        },
+    });
+    if (!property) {
+        return res.status(httpStatus_1.NOT_FOUND).json({
+            success: false,
+            message: "Property not found",
+        });
+    }
+    // Check if user owns this property
+    if (property.managerId !== user.id) {
+        return res.status(httpStatus_1.FORBIDDEN).json({
+            success: false,
+            message: "Unauthorized",
+        });
+    }
+    res.json({
+        success: true,
+        hasActiveLease: property.leases.length > 0,
+        activeLeaseCount: property.leases.length,
     });
 }));
 exports.updateLease = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {

@@ -6,7 +6,7 @@ import { baseQueryWithAuth } from "@/constants/baseQueryWithAuth";
 export const leaseApi = createApi({
   baseQuery: baseQueryWithAuth,
   reducerPath: "leaseApi",
-  tagTypes: ["Leases"],
+  tagTypes: ["Leases", "Properties"],
   endpoints: (builder) => ({
     // GET ALL LEASE
     getAllLeases: builder.query<Lease[], number>({
@@ -56,6 +56,18 @@ export const leaseApi = createApi({
       },
     }),
 
+    checkPropertyLease: builder.query<
+      {
+        success: boolean;
+        hasActiveLease: boolean;
+        activeLeaseCount: number;
+      },
+      number
+    >({
+      query: (propertyId) => `/api/properties/${propertyId}/lease-status`,
+      providesTags: ["Leases", "Properties"],
+    }),
+
     // UPDATE lease STATUS
     updateLeaseStatus: builder.mutation<Lease, { id: number; status: string }>({
       query: ({ id, status }) => ({
@@ -94,4 +106,5 @@ export const {
   useCreateLeaseMutation,
   useUpdateLeaseStatusMutation,
   useGetLeaseDetailsQuery,
+  useLazyCheckPropertyLeaseQuery,
 } = leaseApi;

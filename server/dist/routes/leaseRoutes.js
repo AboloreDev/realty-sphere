@@ -13,6 +13,7 @@ router.get("/:id/payment", isAuthenticated_1.isAuthenticated, lease_controller_1
 router.post("/", isAuthenticated_1.isAuthenticated, (0, isAuthenticated_1.restrictTo)("MANAGER"), lease_controller_1.createLease);
 router.patch("/:id/accept", isAuthenticated_1.isAuthenticated, (0, isAuthenticated_1.restrictTo)("TENANT"), lease_controller_1.updateLease);
 router.get("/:id", isAuthenticated_1.isAuthenticated, lease_controller_1.getLeaseDetails);
+router.get("/:propertyId/lease-status", isAuthenticated_1.isAuthenticated, lease_controller_1.checkPropertyLease);
 // Create payment when lease is accepted
 router.post("/:leaseId/payment/create", isAuthenticated_1.isAuthenticated, (0, isAuthenticated_1.restrictTo)("TENANT"), payment_controller_1.createPayment);
 exports.default = router;
