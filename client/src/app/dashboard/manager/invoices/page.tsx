@@ -19,8 +19,6 @@ const Invoices = () => {
   const activeTab = useAppSelector((state) => state.application.activeTab);
   const dispatch = useAppDispatch();
 
-  console.log(leases);
-
   const getEmptyMessage = (tab: string) => {
     switch (tab) {
       case "all":
