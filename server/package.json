@@ -5,7 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npm run build && concurrently \"npx tsc -w\" \"nodemon --exec ts-node src/server.ts\"",
-    "build": "rimraf dist && npx tsc",
+    "build": "npx rimraf dist && npx tsc",
     "start": "npm run build && node ./dist/server.js",
     "postbuild": "prisma generate && prisma db push",
     "db:push": "prisma db push",
@@ -64,7 +64,6 @@
     "@types/yamljs": "^0.2.34",
     "concurrently": "^9.1.2",
     "nodemon": "^3.1.10",
-    "rimraf": "^6.0.1",
     "shx": "^0.4.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
