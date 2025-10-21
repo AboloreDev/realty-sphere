@@ -14,7 +14,6 @@ interface JwtPayload {
 
 export interface AuthRequest extends Request {
   user?: { id: string; email: string; role: "TENANT" | "MANAGER" };
-  body?: any;
 }
 
 export const isAuthenticated = async (
