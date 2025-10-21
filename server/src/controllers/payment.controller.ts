@@ -410,7 +410,7 @@ async function handleCheckoutCompleted(session: any) {
 
   try {
     // Start database transaction for atomicity
-    const result = await prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async (tx: any) => {
       // Find the payment
       const payment = await tx.payment.findUnique({
         where: { id: paymentIdInt },
@@ -520,27 +520,4 @@ async function handlePaymentFailed(paymentIntent: any) {
   } catch (error) {
     console.error("Error handling failed payment:", error);
   }
-}
-
-if (process.env.NODE_ENV === "development") {
-  router.post("/api/test/webhook/:sessionId", async (req, res) => {
-    try {
-      const session = await stripe.checkout.sessions.retrieve(
-        req.params.sessionId
-      );
-
-      if (session.status === "complete") {
-        await handleCheckoutCompleted(session);
-        res.json({ success: true, message: "Webhook processed manually" });
-      } else {
-        res.json({
-          success: false,
-          message: "Session not complete",
-          status: session.status,
-        });
-      }
-    } catch (error: any) {
-      res.status(500).json({ error: error.message });
-    }
-  });
 }
