@@ -13,7 +13,6 @@ import applicationRoutes from "./routes/applicationRoutes";
 import leaseRoutes from "./routes/leaseRoutes";
 import mapsRoutes from "./routes/mapsRoutes";
 import paymentRoutes from "./routes/paymentRoutes";
-
 import rateLimit from "express-rate-limit";
 import cookieParser from "cookie-parser";
 import { errorHandler } from "./middleware/errorHandler";
