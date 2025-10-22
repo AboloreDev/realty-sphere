@@ -43,7 +43,7 @@ export const getAllLease = catchAsyncError(async (req: AuthRequest, res) => {
   }
 
   // Format leases with next payment date
-  const formattedLeases = leases.map((lease) => {
+  const formattedLeases = leases.map((lease: any) => {
     const nextPaymentDate = calculateNextPaymentDate(
       lease.startDate,
       lease.endDate
@@ -214,7 +214,7 @@ export const createLease = catchAsyncError(async (req: AuthRequest, res) => {
   );
 
   // create a lease and update the application then wait till the tenant approves it
-  const lease = await prisma.$transaction(async (prisma) => {
+  const lease = await prisma.$transaction(async (prisma: any) => {
     const newLease = await prisma.lease.create({
       data: {
         startDate: new Date(startDate),
@@ -332,7 +332,7 @@ export const updateLease = catchAsyncError(async (req: AuthRequest, res) => {
   }
 
   // Update lease in transaction
-  const updatedLease = await prisma.$transaction(async (prisma) => {
+  const updatedLease = await prisma.$transaction(async (prisma: any) => {
     const lease = await prisma.lease.update({
       where: { id: Number(id) },
       data: { status },

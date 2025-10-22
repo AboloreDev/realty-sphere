@@ -10,12 +10,10 @@ import { PaymentStatusResponse } from "../types/payment.types";
 import appAssert from "../utils/appAssert";
 import { catchAsyncError } from "../utils/catchAsyncErrors";
 import Stripe from "stripe";
-import dotenv from "dotenv";
 import { AuthRequest } from "../middleware/isAuthenticated";
 import { processPaymentSchema } from "../schema/payment.schema";
 import express from "express";
 const router = express.Router();
-dotenv.config();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
 export const getPaymentById = catchAsyncError(async (req: AuthRequest, res) => {
