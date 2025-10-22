@@ -1,7 +1,7 @@
 import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const baseQueryWithAuth = fetchBaseQuery({
-  baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+  baseUrl: "http://35.173.226.149",
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     // Add Authorization header for mobile compatibility
