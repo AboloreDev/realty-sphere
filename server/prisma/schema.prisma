@@ -5,7 +5,7 @@ generator client {
 
 datasource db {
   provider   = "postgresql"
-  url        = "postgresql://neondb_owner:npg_ZU8C9fHpxQmV@ep-icy-smoke-ad7tdvdz-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+  url        = env("DATABASE_URL")
   extensions = [postgis]
 }
 

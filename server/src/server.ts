@@ -1,9 +1,10 @@
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
 import helmet from "helmet";
 import bodyParser from "body-parser";
-import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
 import tenantRoutes from "./routes/tenantRoutes";
@@ -23,7 +24,6 @@ import { handleStripeWebhook } from "./controllers/payment.controller";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
 // Cofigurations
-dotenv.config();
 const app = express();
 const PORT = Number(process.env.PORT) || 4000;
 
