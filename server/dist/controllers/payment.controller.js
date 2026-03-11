@@ -19,11 +19,9 @@ const payment_service_1 = require("../services/payment.service");
 const appAssert_1 = __importDefault(require("../utils/appAssert"));
 const catchAsyncErrors_1 = require("../utils/catchAsyncErrors");
 const stripe_1 = __importDefault(require("stripe"));
-const dotenv_1 = __importDefault(require("dotenv"));
 const payment_schema_1 = require("../schema/payment.schema");
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
-dotenv_1.default.config();
 const stripe = new stripe_1.default(process.env.STRIPE_SECRET_KEY);
 exports.getPaymentById = (0, catchAsyncErrors_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
@@ -463,25 +461,4 @@ function handlePaymentFailed(paymentIntent) {
             console.error("Error handling failed payment:", error);
         }
     });
-}
-if (process.env.NODE_ENV === "development") {
-    router.post("/api/test/webhook/:sessionId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const session = yield stripe.checkout.sessions.retrieve(req.params.sessionId);
-            if (session.status === "complete") {
-                yield handleCheckoutCompleted(session);
-                res.json({ success: true, message: "Webhook processed manually" });
-            }
-            else {
-                res.json({
-                    success: false,
-                    message: "Session not complete",
-                    status: session.status,
-                });
-            }
-        }
-        catch (error) {
-            res.status(500).json({ error: error.message });
-        }
-    }));
 }

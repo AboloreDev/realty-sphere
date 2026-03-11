@@ -32,7 +32,7 @@ app.use(
   express.raw({
     type: "application/json",
     limit: "2mb",
-  })
+  }),
 );
 
 app.post("/api/webhooks/stripe", handleStripeWebhook);
@@ -53,7 +53,7 @@ app.use(
       "https://realty-sphere-housing.vercel.app",
     ],
     credentials: true,
-  })
+  }),
 );
 
 // Swagger docs route
@@ -74,7 +74,7 @@ app.use(
   rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 100,
-  })
+  }),
 );
 
 // routes

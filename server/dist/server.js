@@ -3,12 +3,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 const express_1 = __importDefault(require("express"));
 const morgan_1 = __importDefault(require("morgan"));
 const cors_1 = __importDefault(require("cors"));
 const helmet_1 = __importDefault(require("helmet"));
 const body_parser_1 = __importDefault(require("body-parser"));
-const dotenv_1 = __importDefault(require("dotenv"));
 const authRoutes_1 = __importDefault(require("./routes/authRoutes"));
 const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
 const tenantRoutes_1 = __importDefault(require("./routes/tenantRoutes"));
@@ -28,7 +29,6 @@ const payment_controller_1 = require("./controllers/payment.controller");
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const yamljs_1 = __importDefault(require("yamljs"));
 // Cofigurations
-dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = Number(process.env.PORT) || 4000;
 app.use("/api/webhooks/stripe", express_1.default.raw({
